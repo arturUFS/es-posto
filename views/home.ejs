@@ -1,15 +1,227 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Home</title>
-</head>
-<body>
-  <h1>Usuários</h1>
-  <ul>
-    <% users.forEach(user => { %>
-      <li><%= user.name %> - <%= user.email %></li>
-    <% }) %>
-  </ul>
-</body>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gas Station</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      body {
+        display: flex;
+      }
+
+      .sidebar {
+        width: 250px;
+        background: #f8d7da;
+        padding: 20px;
+        height: 100vh;
+      }
+
+      .sidebar .profile {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .sidebar button {
+        cursor: pointer;
+        background: none;
+      }
+
+      .profile img {
+        width: 100px;
+        border-radius: 50%;
+        background: black;
+      }
+
+      .profile h2 {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .profile p {
+        color: #b91a1a;
+      }
+
+      .login-title {
+        margin-bottom: 10px;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 39px;
+        color: #000000;
+      }
+
+      .login-title::before {
+        content: "";
+        width: 3.5px;
+        height: 22px;
+        background-color: #cc1f1f;
+        margin-right: 5px;
+      }
+
+      .menu {
+        list-style: none;
+      }
+
+      .menu img {
+        width: 10%;
+        height: auto;
+      }
+
+      .menu li {
+        display: flex;
+        margin: 10px 0;
+        flex-direction: row;
+        gap: 10px;
+      }
+
+      .menu a {
+        text-decoration: none;
+        display: flex;
+        width: 100%;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        color: black;
+        border-radius: 5px;
+      }
+
+      .menu a:hover {
+        color: white;
+        background: #c11111;
+        align-items: center;
+      }
+
+      .logout {
+        display: flex;
+        position: absolute;
+        align-items: center;
+        text-align: center;
+        margin-left: 60px;
+        font-size: 16px;
+        bottom: 20px;
+        gap: 15px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .logout img {
+        width: 15%;
+      }
+
+      .content {
+        flex: 1;
+        padding: 20px;
+        text-align: center;
+        background: #fff;
+        margin-top: 15px;
+      }
+
+      .search {
+        text-align: right;
+        margin-bottom: 20px;
+      }
+
+      .search input {
+        padding: 5px;
+        width: 200px;
+      }
+
+      .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .buttons button {
+        width: 100%;
+        padding: 45px;
+        background: #c11111;
+        color: white;
+        font-size: 26px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .buttons button:hover {
+        background: darkred;
+      }
+
+      .buttons2 {
+        display: flex;
+        justify-content: center;
+        gap: 55px;
+        margin-top: 20px;
+      }
+
+      .buttons2 button {
+        width: 50%;
+        padding: 65px;
+        background: #c11111;
+        color: white;
+        font-size: 26px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .buttons2 button:hover {
+        background: darkred;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="profile">
+        <h1 class="login-title">GAS STATION</h1>
+        <img src="/assets/logo_gas 1.png" alt="Profile" />
+        <h2><%= nomeFuncionario %></h2>
+        <p>Funcionário</p>
+      </div>
+      <ul class="menu">
+        <li>
+          <a href="#"
+            ><img src="/assets/home-lg-alt 1.png" alt="home" />Início</a
+          >
+        </li>
+        <li><a href="#">Combustível</a></li>
+        <li><a href="#">Produtos</a></li>
+        <li><a href="#">Serviços</a></li>
+        <li><a href="#">Funcionários</a></li>
+        <li><a href="#">Fornecedores</a></li>
+      </ul>
+      <button id="logoutButton" class="logout">
+        Logout<img src="/assets/Vector (1).png" alt="sair" />
+      </button>
+    </div>
+    <div class="content">
+      <div class="buttons">
+        <button>Combustível</button>
+        <button>Produtos</button>
+        <button>Serviços</button>
+      </div>
+      <div class="buttons2">
+        <button>Funcionários</button>
+        <button>Fornecedores</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      window.location.href = "/logout"; // Redireciona para a rota de logout
+    });
+  </script>
 </html>

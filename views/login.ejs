@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gas Station - Login</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      body {
+        background-color: #cc1f1f;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .logo-container {
+        position: absolute;
+        width: 18%;
+        left: 0px;
+        top: 0px;
+        border-radius: 195px;
+      }
+
+      .logo-icon {
+        color: #cc1f1f;
+        font-size: 40px;
+      }
+
+      .login-card {
+        align-items: center;
+        background-color: white;
+        border-radius: 8px;
+        padding: 30px;
+        width: 320px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .login-title {
+        margin-bottom: 10px;
+        margin-left: 10px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 39px;
+        color: #000000;
+      }
+
+      .login-title::before {
+        content: "";
+        width: 3.5px;
+        height: 25px;
+        background-color: #cc1f1f;
+        margin-right: 5px;
+      }
+
+      .subtitles {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .login-subtitle {
+        margin-top: 10px;
+        display: flex;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 27px;
+        color: #000000;
+      }
+
+      .login-subtitle2 {
+        margin-bottom: 20px;
+        display: flex;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 17px;
+        color: #6c6c6c;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      input::placeholder {
+        color: gray;
+        font-size: 12px;
+        font-style: normal;
+        opacity: 0.7; /* Define a transparência */
+      }
+
+      .login-button {
+        width: 100%;
+        padding: 12px;
+        background-color: #cc1f1f;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .login-button:hover {
+        background-color: #b51a1a;
+      }
+
+      .bottom-shape {
+        position: absolute;
+        width: 275px;
+        height: 900px;
+        left: 40%;
+        top: 250px;
+        background: #240707;
+        border-radius: 137.5px;
+        transform: rotate(-89.73deg);
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      src="/assets/logo_gas 1.png"
+      alt="Logo do Posto"
+      class="logo-container"
+    />
+
+    <div class="login-card">
+      <h1 class="login-title">Gas Station</h1>
+      <div class="subtitles">
+        <p class="login-subtitle">LOGIN</p>
+        <p class="login-subtitle2">Entre com suas credenciais de login</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Usuário</label>
+          <input
+            type="text"
+            id="usuario"
+            class="form-input"
+            placeholder="Insira seu usuário"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input
+            type="password"
+            id="senha"
+            class="form-input"
+            placeholder="Insira sua senha"
+            required
+          />
+        </div>
+
+        <button type="submit" class="login-button">Realizar Login</button>
+      </form>
+    </div>
+
+    <div class="bottom-shape"></div>
+  </body>
+  <script>
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault(); // Impede o recarregamento da página
+
+        const usuario = document.getElementById("usuario").value;
+        const senha = document.getElementById("senha").value;
+
+        const response = await fetch("/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario, senha }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          localStorage.setItem("token", data.token); // Armazena o token JWT
+          window.location.href = `/home?nome=${encodeURIComponent(data.nome)}`;
+        }
+      });
+  </script>
+</html>
