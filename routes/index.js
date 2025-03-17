@@ -22,9 +22,20 @@ router.get("/home", (req, res) => {
   res.render("home", { nomeFuncionario });
 });
 
+router.get("/page_combustivel", (req, res) => {
+  const nomeFuncionario = req.query.nome || "Usuário";
+  res.render("page_combustivel", { nomeFuncionario});
+});
+
+router.get("/page_produtos", (req, res) => {
+  const nomeFuncionario = req.query.nome || "Usuário";
+  res.render("page_produtos", { nomeFuncionario});
+});
+
 router.get("/page_funcionario", (req, res) => {
   const nomeFuncionario = req.query.nome || "Usuário";
   res.render("page_funcionario", { nomeFuncionario});
 });
+
 
 module.exports = router;
