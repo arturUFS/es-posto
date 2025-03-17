@@ -72,11 +72,6 @@
     background-color: #f2c1c1;
   }
 
-  .menu li:nth-child(5) a {
-    background-color: #b91a1a;
-    color: white;
-  }
-
   .menu li a img {
     margin-right: 10px;
     width: 16px;
