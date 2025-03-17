@@ -22,4 +22,9 @@ router.get("/home", (req, res) => {
   res.render("home", { nomeFuncionario });
 });
 
+router.get("/page_funcionario", (req, res) => {
+  const nomeFuncionario = req.query.nome || "Usuário";
+  res.render("page_funcionario", { nomeFuncionario});
+});
+
 module.exports = router;
