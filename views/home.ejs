@@ -32,13 +32,13 @@
     </div>
     <div class="content">
       <div class="buttons">
-        <button>Combustível</button>
-        <button>Produtos</button>
-        <button>Serviços</button>
+        <button id="page_combustivel">Combustível</button>
+        <button id="page_produtos">Produtos</button>
+        <button id="page_servicos">Serviços</button>
       </div>
       <div class="buttons2">
-        <button>Funcionários</button>
-        <button>Fornecedores</button>
+        <button id="page_funcionario">Funcionários</button>
+        <button id="page_fornecedores">Fornecedores</button>
       </div>
     </div>
   </body>
@@ -46,5 +46,20 @@
     document.getElementById("logoutButton").addEventListener("click", () => {
       window.location.href = "/logout"; // Redireciona para a rota de logout
     });
+    document.getElementById("page_combustivel").addEventListener("click", ()=>{
+      window.location.href = "/page_combustivel" //Redireciona para a rota de page_combustivel
+    })
+    document.getElementById("page_produtos").addEventListener("click", ()=>{
+      window.location.href = "/page_produtos" //Redireciona para a rota de page_produtos
+    })
+    document.getElementById("page_servicos").addEventListener("click", ()=>{
+      window.location.href = "/page_servicos" //Redireciona para a rota de page_servicos
+    })
+    document.getElementById("page_funcionario").addEventListener("click", ()=>{
+      window.location.href = "/page_funcionario" //Redireciona para a rota de page_funcionario
+    })
+    document.getElementById("page_fornecedores").addEventListener("click", ()=>{
+      window.location.href = "/page_fornecedores" //Redireciona para a rota de page_fornecedores
+    })
   </script>
 </html>
