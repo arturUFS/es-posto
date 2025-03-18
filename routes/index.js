@@ -4,6 +4,7 @@ const exemploController = require("../controllers/exemploController");
 const authController = require("../controllers/authController");
 const homeController = require("../controllers/homeController");
 const funcionarioController = require("../controllers/funcionarioController");
+const combustivelController = require("../controllers/combustivelController");
 
 router.get("/", exemploController.index);
 
@@ -21,14 +22,10 @@ router.get("/logout", (req, res) => {
 
 router.get("/home", homeController.index);
 
-router.get("/combustivel", (req, res) => {
-  const nomeFuncionario = req.query.nome || "Usuário";
-  res.render("combustivel", { nomeFuncionario});
-});
+router.get("/combustivel", combustivelController.index);
 
 router.get("/produtos", (req, res) => {
-  const nomeFuncionario = req.query.nome || "Usuário";
-  res.render("produtos", { nomeFuncionario});
+  
 });
 
 router.get("/funcionario", funcionarioController.index);
