@@ -7,7 +7,7 @@ const exemploController = {
     try {
       // Buscar todos os usuários usando Sequelize
       const users = await Usuario.findAll();
-      const funcs = await Funcionario.findAll({include: Endereco});
+      //const funcs = await Funcionario.findAll({include: Endereco});
       console.log(users);
       res.render("exemplo", { users });
     } catch (err) {
