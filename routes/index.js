@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const homeController = require("../controllers/homeController");
-const authController = require("../controllers/authController");
 const exemploController = require("../controllers/exemploController");
-const authMiddleware = require("../middlewares/authMiddleware");
+const authController = require("../controllers/authController");
+const homeController = require("../controllers/homeController");
+const funcionarioController = require("../controllers/funcionarioController");
 
 router.get("/", exemploController.index);
 
@@ -19,9 +19,19 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.get("/home", (req, res) => {
-  const nomeFuncionario = req.query.nome || "Usuário"; // Se não tiver nome, usa 'Usuário'
-  res.render("home", { nomeFuncionario });
+router.get("/home", homeController.index);
+
+router.get("/combustivel", (req, res) => {
+  const nomeFuncionario = req.query.nome || "Usuário";
+  res.render("combustivel", { nomeFuncionario});
 });
+
+router.get("/produtos", (req, res) => {
+  const nomeFuncionario = req.query.nome || "Usuário";
+  res.render("produtos", { nomeFuncionario});
+});
+
+router.get("/funcionario", funcionarioController.index);
+
 
 module.exports = router;
