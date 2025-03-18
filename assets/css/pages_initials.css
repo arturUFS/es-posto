@@ -16,44 +16,62 @@
     height: 100vh;
   }
 
-  .login-title {
-    font-size: 18px;
-    font-weight: bold;
+  .sidebar .profile {
+    text-align: center;
     margin-bottom: 20px;
-    padding-left: 10px;
-    border-left: 3px solid #b91a1a;
   }
 
-  .profile {
+.sidebar button {
+    cursor: pointer;
+    background: none;
+  }
+
+ .login-title {
+    margin-bottom: 10px;
+    margin-left: 10px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    margin-bottom: 30px;
+    text-align: center;
+    font-family: "Montserrat", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 39px;
+    color: #000000;
+  }
+
+  .login-title::before {
+    content: "";
+    width: 3.5px;
+    height: 22px;
+    background-color: #cc1f1f;
+    margin-right: 5px;
   }
 
   .profile img {
     width: 100px;
-    height: 100px;
     border-radius: 50%;
-    background-color: #222;
-    margin: 15px 0;
+    background-color: black;
   }
 
   .profile h2 {
     font-size: 16px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 
   .profile p {
     color: #b91a1a;
-    font-size: 14px;
   }
 
   .menu {
     list-style-type: none;
-    flex-grow: 1;
   }
 
+  .menu img {
+    width: 10%;
+    height: auto;
+  }
+  
   .menu li {
     margin-bottom: 15px;
   }
@@ -80,26 +98,24 @@
 
   .logout {
     display: flex;
+    position: absolute;
     align-items: center;
-    justify-content: center;
-    background: none;
+    text-align: center;
+    margin-left: 60px;
+    font-size: 16px;
+    bottom: 20px;
+    gap: 15px;
     border: none;
     cursor: pointer;
-    color: #333;
-    font-size: 14px;
-    margin-top: 20px;
-    padding: 10px;
   }
 
   .logout img {
-    margin-left: 10px;
-    width: 16px;
-    height: 16px;
+    width: 15%;
   }
 
   .content {
     flex-grow: 1;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
