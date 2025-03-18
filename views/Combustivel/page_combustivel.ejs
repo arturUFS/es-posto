@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gas Station - Combustível</title>
+    <link rel="stylesheet" href="assets/css/pages_initials.css" />
+  <style>
+     .menu li:nth-child(2) a {
+        background-color: #c31010;
+        color: white;
+      }
+  </style>
+</head>
+  <body>
+    <div class="sidebar">
+      <div class="profile">
+        <h1 class="login-title">GAS STATION</h1>
+        <img src="/assets/logo_gas 1.png" alt="Profile" />
+        <h2><%= nomeFuncionario %></h2>
+        <p>Funcionário</p>
+      </div>
+      <ul class="menu">
+        <li>
+          <a href="#"
+            ><img src="/assets/home-lg-alt 1.png" alt="home" />Início</a
+          >
+        </li>
+        <li><a href="#">Combustível</a></li>
+        <li><a href="#">Produtos</a></li>
+        <li><a href="#">Serviços</a></li>
+        <li><a href="#">Funcionários</a></li>
+        <li><a href="#">Fornecedores</a></li>
+      </ul>
+      <button id="logoutButton" class="logout">
+        Logout<img src="/assets/Vector (1).png" alt="sair" />
+      </button>
+    </div>
+    <div class="content">
+      <button>Registro de Venda de Combustível</button>
+      <button>Atualizar Preço do Combustível</button>
+      <button>Cadastrar Combustível</button>
+      <button>Relatório de Vendas</button>
+      <button>Verificar Quantidade de Combustível Disponível</button>
+    </div>
+  </body>
+  <script>
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      window.location.href = "/logout"; // Redireciona para a rota de logout
+    });
+  </script>
+</html>
