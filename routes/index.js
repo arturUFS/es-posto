@@ -5,6 +5,7 @@ const authController = require("../controllers/authController");
 const homeController = require("../controllers/homeController");
 const funcionarioController = require("../controllers/funcionarioController");
 const combustivelController = require("../controllers/combustivelController");
+const produtoController = require("../controllers/produtoController");
 
 router.get("/", homeController.index);
 
@@ -24,11 +25,8 @@ router.get("/home", homeController.index);
 
 router.get("/combustivel", combustivelController.index);
 
-router.get("/produtos", (req, res) => {
-  
-});
+router.get("/produtos", produtoController.index);
 
 router.get("/funcionario", funcionarioController.index);
-
 
 module.exports = router;
