@@ -5,7 +5,7 @@
         <i class="arrow-left">←</i>
       </button>
       <h2>Cadastrar Funcionário</h2>
-      <button class="home-button">
+      <button class="home-button" onclick="window.location.href='/home'">
         <i class="home-icon"
           ><img src="/assets/home-lg-alt 1.png" alt="home"
         /></i>
@@ -17,7 +17,14 @@
         <div class="form-row">
           <div class="form-group">
             <label for="cpf">CPF:</label>
-            <input type="text" id="cpf" placeholder="000.000.000-00" required />
+            <input
+              type="text"
+              id="cpf"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              minlength="14"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="nome">Nome:</label>
@@ -26,7 +33,7 @@
           <div class="form-group">
             <label for="dataNascimento">Data de Nascimento:</label>
             <input
-              type="text"
+              type="date"
               id="dataNascimento"
               placeholder="DD/MM/AAAA"
               required
@@ -50,6 +57,8 @@
               type="text"
               id="telefone"
               placeholder="(XX) XXXXX-XXXX"
+              maxlength="15"
+              minlength="15"
               required
             />
           </div>
@@ -58,19 +67,32 @@
         <div class="form-row">
           <div class="form-group">
             <label for="cep">CEP:</label>
-            <input type="text" id="cep" placeholder="00000-000" required />
+            <input
+              type="text"
+              id="cep"
+              placeholder="00000-000"
+              maxlength="9"
+              minlength="9"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="estado">Estado:</label>
-            <select id="estado" required>
-              <option value="" disabled selected>Selecione o estado</option>
-            </select>
+            <input
+              type="text"
+              id="estado"
+              placeholder="Digite o estado"
+              required
+            />
           </div>
           <div class="form-group">
             <label for="cidade">Cidade:</label>
-            <select id="cidade" required>
-              <option value="" disabled selected>Selecione a cidade</option>
-            </select>
+            <input
+              type="text"
+              id="cidade"
+              placeholder="Digite a cidade"
+              required
+            />
           </div>
         </div>
 
@@ -131,3 +153,116 @@
     </div>
   </div>
 </div>
+<script>
+  document.getElementById("cpf").addEventListener("input", function (event) {
+    let cpf = event.target.value;
+
+    // Remove tudo que não for número
+    cpf = cpf.replace(/\D/g, "");
+
+    // Aplica a máscara (000.000.000-00)
+    if (cpf.length <= 11) {
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    }
+
+    event.target.value = cpf;
+  });
+
+  // Máscara de Telefone ((XX) XXXXX-XXXX)
+  document
+    .getElementById("telefone")
+    .addEventListener("input", function (event) {
+      let telefone = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (telefone.length > 2) {
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+      }
+      if (telefone.length > 7) {
+        telefone = telefone.replace(/^(\(\d{2}\) \d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = telefone;
+    });
+
+  // Máscara de CEP (00000-000)
+  document.getElementById("cep").addEventListener("input", function (event) {
+    let cep = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+    if (cep.length <= 8) {
+      cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+    }
+
+    event.target.value = cep;
+  });
+
+  document
+    .getElementById("formCadastrar")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+
+      // Capturando os valores do formulário
+      const cpf = document.getElementById("cpf").value;
+      const nome = document.getElementById("nome").value;
+      const dataNascimento = document.getElementById("dataNascimento").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+
+      const cep = document.getElementById("cep").value;
+      const estado = document.getElementById("estado").value;
+      const cidade = document.getElementById("cidade").value;
+      const bairro = document.getElementById("bairro").value;
+      const logradouro = document.getElementById("logradouro").value;
+      const complemento = document.getElementById("complemento").value;
+
+      const usuario = document.getElementById("usuario").value;
+      const senha = document.getElementById("senha").value;
+
+      // Montando o objeto com os dados
+      const dadosFuncionario = {
+        cpf,
+        nome,
+        email,
+        telefone,
+        datanascimento: dataNascimento,
+        endereco: {
+          cep,
+          estado,
+          cidade,
+          bairro,
+          logradouro,
+          complemento,
+        },
+        usuario: {
+          username: usuario,
+          senha,
+        },
+      };
+
+      try {
+        // Enviando os dados para o backend via fetch API
+        const response = await fetch("/funcionario/cadastrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosFuncionario),
+        });
+
+        const data = await response.json();
+        alert(data.message); // Exibir mensagem de sucesso ou erro
+
+        if (response.ok) {
+          fecharModal("modalCadastrar"); // Fecha o modal após cadastro bem-sucedido
+          document.getElementById("formCadastrar").reset(); // Limpa o formulário
+        }
+      } catch (error) {
+        console.error("Erro ao cadastrar funcionário:", error);
+        alert("Erro ao cadastrar funcionário. Tente novamente.");
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

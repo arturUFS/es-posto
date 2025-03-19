@@ -35,5 +35,6 @@ router.get("/funcionario", funcionarioController.index);
 
 router.get("/fornecedores", fornecedorController.index);
 
+router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
 
 export default router;
