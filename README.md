@@ -74,7 +74,7 @@ Estão organizadas em Módulos:
 - Módulo de Produto
 - Módulo de Serviço
 - MóduLo de Combustível
-- Models: todos os models/entidade/ classe/ tabela estão aqui (menos as de funcionário, forneedor, produto, serviço e combustível)
+- Models: todos os models/entidade/ classe/ tabela estão aqui (menos as de funcionário, fornecedor, produto, serviço e combustível)
 - Funções gerais: Issues que não se encaixam acima
 
 ### Novas issues
@@ -90,6 +90,7 @@ SEMPRE atualize a main localmente antes de começar uma nova tarefa.
 - ```git pull```. atualize sua main local
 - ```git checkout nome_branch```. troque para sua branch
 - ```git rebase main```. atualize sua branch com a nova main
+- - ```git push```. enviando para a branch atualizada para a nuvem
   
 ### Adicionando algo que eu fiz na branch na nuvem
 - ```git branch```. identifique a branch que você está
