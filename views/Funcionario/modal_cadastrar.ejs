@@ -219,6 +219,22 @@
       const usuario = document.getElementById("usuario").value;
       const senha = document.getElementById("senha").value;
 
+      // Validações
+      if (cpf.length !== 14) {
+        alert("O CPF deve ter 11 dígitos.");
+        return;
+      }
+
+      if (telefone.length < 15) {
+        alert("O telefone deve ter 11 dígitos.");
+        return;
+      }
+
+      if (cep.length !== 9) {
+        alert("O CEP deve ter 8 dígitos.");
+        return;
+      }
+
       // Montando o objeto com os dados
       const dadosFuncionario = {
         cpf,

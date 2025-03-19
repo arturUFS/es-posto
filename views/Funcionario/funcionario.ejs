@@ -9,6 +9,10 @@
       rel="stylesheet"
       href="assets/css/modais-funcionario/modal_cadastrar.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-funcionario/modal_consultar.css"
+    />
     <style>
       .menu li:nth-child(5) a {
         background-color: #b91a1a;
@@ -42,15 +46,16 @@
     </div>
     <div class="content">
       <button id="cadastrar-funcionario">Cadastrar Funcionário</button>
-      <button>Consultar Funcionário</button>
+      <button id="consultar-funcionario">Consultar Funcionário</button>
       <button>Listar Funcionários</button>
     </div>
-    <%- include('modal_cadastrar') %>
+    <%- include('modal_cadastrar') %> <%- include('modal_consultar') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
       window.location.href = "/logout"; // Redireciona para a rota de logout
     });
+
     // Função para abrir e fechar modais
     function abrirModal(id) {
       document.getElementById(id).style.display = "block";
@@ -63,6 +68,10 @@
     document
       .getElementById("cadastrar-funcionario")
       .addEventListener("click", () => abrirModal("modalCadastrar"));
+
+    document
+      .getElementById("consultar-funcionario")
+      .addEventListener("click", () => abrirModal("modalConsultar"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {
