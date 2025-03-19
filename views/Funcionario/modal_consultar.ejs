@@ -1,0 +1,297 @@
+<div id="modalConsultar" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharOuVoltar('modalConsultar')">
+        <i class="arrow-left">←</i>
+      </button>
+      <h2>Consultar Funcionário</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+    <div class="modal-body-cons">
+      <!-- Tela de Consulta -->
+      <div id="telaConsulta" class="center-content">
+        <form id="consultaForm">
+          <div class="form-group-cons">
+            <label for="cpfConsulta">CPF do Funcionário:</label>
+            <input
+              type="text"
+              id="cpfConsulta"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              required
+            />
+          </div>
+          <div class="form-btn-cons" style="margin-top: 20px">
+            <button
+              type="button"
+              class="consultar-btn"
+              onclick="consultarFuncionario()"
+            >
+              Consultar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tela de Resultado -->
+      <div id="resultadoConsulta">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cpf-res">CPF:</label>
+            <input
+              type="text"
+              id="cpf-res"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              readonly
+            />
+          </div>
+          <div class="action-buttons">
+            <button class="edit-btn" onclick="habilitarEdicao()">
+              <i class="edit-icon"
+                ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
+              /></i>
+            </button>
+            <button class="delete-btn" onclick="confirmarExclusao()">
+              <i class="delete-icon"
+                ><img src="/assets/Vector (4).png" alt="editar"
+              /></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" placeholder="Nome" readonly />
+          </div>
+          <div class="form-group">
+            <label for="dataNascimento">Data de Nascimento:</label>
+            <input
+              type="date"
+              id="dataNascimento"
+              placeholder="DD/MM/AAAA"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="telefone-res">Telefone:</label>
+            <input
+              type="text"
+              id="telefone-res"
+              placeholder="(XX) XXXXX-XXXX"
+              maxlength="15"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="email@email.com"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cep-res">CEP:</label>
+            <input
+              type="text"
+              id="cep-res"
+              placeholder="00000-000"
+              maxlength="9"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado:</label>
+            <input type="text" id="estado" placeholder="Estado" readonly />
+          </div>
+          <div class="form-group">
+            <label for="cidade">Cidade:</label>
+            <input type="text" id="cidade" placeholder="Cidade" readonly />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="bairro">Bairro:</label>
+            <input type="text" id="bairro" placeholder="Bairro" readonly />
+          </div>
+          <div class="form-group">
+            <label for="logradouro">Logradouro:</label>
+            <input
+              type="text"
+              id="logradouro"
+              placeholder="Logradouro"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="complemento">Complemento:</label>
+            <input
+              type="text"
+              id="complemento"
+              placeholder="Complemento"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div id="botoesEdicao" style="display: none">
+          <div class="form-btn-res">
+            <button type="button" class="save-btn" onclick="salvarAlteracoes()">
+              Salvar
+            </button>
+            <button type="button" class="cancel-btn" onclick="cancelarEdicao()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Máscara de CPF (XXX.XXX.XXX-XX)
+  function aplicarMascaraCPF(idElemento) {
+    document
+      .getElementById(idElemento)
+      .addEventListener("input", function (event) {
+        let cpf = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+        if (cpf.length <= 11) {
+          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+          cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        }
+
+        event.target.value = cpf;
+      });
+  }
+
+  aplicarMascaraCPF("cpfConsulta");
+  aplicarMascaraCPF("cpf-res");
+
+  // Máscara de Telefone ((XX) XXXXX-XXXX)
+  document
+    .getElementById("telefone-res")
+    .addEventListener("input", function (event) {
+      let telefone = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (telefone.length > 2) {
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+      }
+      if (telefone.length > 7) {
+        telefone = telefone.replace(/^(\(\d{2}\) \d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = telefone;
+    });
+
+  // Máscara de CEP (00000-000)
+  document
+    .getElementById("cep-res")
+    .addEventListener("input", function (event) {
+      let cep = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (cep.length <= 8) {
+        cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = cep;
+    });
+
+  function consultarFuncionario() {
+    const cpf = document.getElementById("cpfConsulta").value;
+
+    if (cpf.length !== 14) {
+      alert("Por favor, insira um CPF válido.");
+      return;
+    }
+
+    document.getElementById("telaConsulta").style.display = "none";
+    document.getElementById("resultadoConsulta").style.display = "block";
+
+    // Chamada para a API para obter os dados do funcionário
+    /* fetch(`/funcionario/consultar/${cpf.replace(/\D/g, "")}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Funcionário não encontrado");
+        }
+        return response.json();
+      })
+      .then((funcionario) => {
+        preencherFormulario(funcionario);
+        document.getElementById("telaConsulta").style.display = "none";
+        document.getElementById("resultadoConsulta").style.display = "block";
+      })
+      .catch((error) => {
+        alert(error.message);
+      }); */
+  }
+
+  // Função para habilitar a edição dos campos
+  function habilitarEdicao() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input:not(#cpf)"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = false;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "block";
+    document.getElementById("lapis").style.display = "none";
+  }
+
+  // Função para cancelar edição
+  function cancelarEdicao() {
+    const campos = document.querySelectorAll("#resultadoConsulta input");
+    campos.forEach((campo) => {
+      campo.readOnly = true;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "none";
+    document.getElementById("lapis").style.display = "block";
+  }
+
+  // Função para fechar ou voltar para início do modal
+  function fecharOuVoltar() {
+    const resultado = document.getElementById("resultadoConsulta");
+    const telaConsulta = document.getElementById("telaConsulta");
+    const formConsulta = document.getElementById("consultaForm");
+
+    if (window.getComputedStyle(resultado).display !== "none") {
+      // Se a tela de resultado estiver visível, volta para telaConsulta
+      resultado.style.display = "none";
+      telaConsulta.style.display = "flex";
+
+      // Garante que o formulário seja resetado corretamente
+      setTimeout(() => {
+        formConsulta.reset();
+      }, 50); // Pequeno delay para evitar conflitos visuais
+    } else {
+      // Caso contrário, fecha o modal e reseta o formulário
+      fecharModal("modalConsultar");
+
+      setTimeout(() => {
+        formConsulta.reset();
+      }, 50);
+    }
+  }
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
