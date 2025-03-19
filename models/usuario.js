@@ -29,11 +29,5 @@ export const Usuario = database.define(
   }
 );
 
-// Definir a relação com Funcionario
-Usuario.associate = (models) => {
-  Usuario.belongsTo(models.Funcionario, {
-    foreignKey: "cpf",
-    as: "funcionario",
-  });
-};
+
 

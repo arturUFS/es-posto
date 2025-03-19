@@ -41,14 +41,4 @@ export const Funcionario = database.define(
   }
 );
 
-// Definir a relação com Endereco
-Funcionario.associate = (models) => {
-  Funcionario.belongsTo(models.Endereco, {
-    foreignKey: "idendereco",
-    as: "endereco",
-  });
-  Funcionario.hasOne(models.Usuario, {
-    foreignKey: "cpf",
-    as: "usuario",
-  });
-};
+

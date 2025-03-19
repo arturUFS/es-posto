@@ -1,13 +1,13 @@
-const express = require("express");
+import express from "express";
+import {exemploController} from "../controllers/exemploController.js";
+import {authController} from "../controllers/authController.js";
+import {homeController} from "../controllers/homeController.js";
+import {funcionarioController} from "../controllers/funcionarioController.js";
+import {combustivelController} from "../controllers/combustivelController.js";
+import {produtoController} from "../controllers/produtoController.js";
+import {servicoController} from "../controllers/servicoController.js";
+import {fornecedorController} from "../controllers/fornecedorController.js";
 const router = express.Router();
-const exemploController = require("../controllers/exemploController");
-const authController = require("../controllers/authController");
-const homeController = require("../controllers/homeController");
-const funcionarioController = require("../controllers/funcionarioController");
-const combustivelController = require("../controllers/combustivelController");
-const produtoController = require("../controllers/produtoController");
-const servicoController =  require("../controllers/servicoController");
-const fornecedorController = require("../controllers/fornecedorController");
 
 router.get("/", exemploController.index);
 
@@ -35,4 +35,5 @@ router.get("/funcionario", funcionarioController.index);
 
 router.get("/fornecedores", fornecedorController.index);
 
-module.exports = router;
+
+export default router;

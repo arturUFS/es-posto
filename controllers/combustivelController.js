@@ -1,6 +1,5 @@
-const pool = require('../models/db');
 
-const combustivelController = {
+export const combustivelController = {
   index: async (req, res) => {
     try {
         const nomeFuncionario = req.query.nome || "Usuário";
@@ -12,4 +11,3 @@ const combustivelController = {
   },
 };
 
-module.exports = combustivelController;

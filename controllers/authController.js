@@ -1,44 +1,48 @@
-const pool = require("../models/db");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+import jwt from "jsonwebtoken";
+import { config } from "dotenv";
+import { Usuario } from "../models/usuario.js";
+import { Funcionario } from "../models/funcionario.js";
 
-const authController = {
+config()
+
+export const authController = {
   login: async (req, res) => {
     const { usuario, senha } = req.body;
 
     try {
       // Buscar o usuário no banco de dados
-      const result = await pool.query(
-        "SELECT * FROM posto.usuario WHERE usuario = $1",
-        [usuario]
-      );
+    const result = await Usuario.findOne({
+      where: { usuario }
+    });
+      
 
-      if (result.rows.length === 0) {
+      if (result == null) {
         return res.status(401).json({ message: "Usuário não encontrado" });
       }
 
-      const user = result.rows[0];
+      
 
       // Verificar se a senha informada é igual à do banco
-      if (senha !== user.senha) {
+      if (senha !== result.senha) {
         return res.status(401).json({ message: "Senha incorreta" });
       }
 
       // Buscar o nome do funcionário usando o CPF encontrado
-      const funcResult = await pool.query(
-        "SELECT nome FROM posto.funcionario WHERE cpf = $1",
-        [user.cpf]
-      );
+      const cpf = result.cpf;
+      const funcResult = await Funcionario.findOne({
+        where: { cpf }
+      });
+        
 
       let nomeFuncionario = "Usuário"; // Nome padrão caso não seja encontrado
 
-      if (funcResult.rows.length > 0) {
-        nomeFuncionario = funcResult.rows[0].nome;
+      if (funcResult != null) {
+        nomeFuncionario = funcResult.nome;
       }
 
       // Gerar token JWT
       const token = jwt.sign(
-        { id: user.id, usuario: user.usuario },
+        { id: result.id, usuario: result.usuario },
         process.env.JWT_SECRET,
         {
           expiresIn: "1h",
@@ -57,4 +61,4 @@ const authController = {
   },
 };
 
-module.exports = authController;
+

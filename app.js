@@ -1,10 +1,13 @@
-const express = require("express");
-const session = require("express-session");
-const app = express();
-const routes = require("./routes/index");
-//const { Sequelize } = require("sequelize");
+import express from "express";
+import session from "express-session";
+import router from "./routes/index.js";
+import { database } from "./config/database.js";
 
-require("dotenv").config();
+const app = express();
+import "./models/associations.js"
+
+import {config} from "dotenv";
+config();
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -20,12 +23,11 @@ app.use(
     })
 );
 
-app.use("/", routes);
+app.use("/", router);
 app.use("/assets", express.static("assets"));
 
 const PORT = process.env.PORT || 3000;
 
-const {database} = require("./config/database");
 const authDB = async () => {
     try {
         await database.authenticate();

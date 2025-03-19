@@ -1,14 +1,14 @@
-const { Usuario } = require("../models/usuario");
-const { Funcionario } = require("../models/funcionario");
-const { Endereco } = require("../models/endereco");
+import { Usuario } from "../models/usuario.js";
+import { Funcionario } from "../models/funcionario.js";
+import { Endereco } from "../models/endereco.js";
 
-const exemploController = {
+export const exemploController = {
   index: async (req, res) => {
     try {
       // Buscar todos os usuários usando Sequelize
       const users = await Usuario.findAll();
-      //const funcs = await Funcionario.findAll({include: Endereco});
-      console.log(users);
+      const funcs = await Funcionario.findAll({include: [{model: Endereco, as :"endereco"}]});
+      console.log(funcs);
       res.render("exemplo", { users });
     } catch (err) {
       console.error(err);
@@ -16,5 +16,3 @@ const exemploController = {
     }
   },
 };
-
-module.exports = exemploController;

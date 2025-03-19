@@ -1,6 +1,4 @@
-const pool = require('../models/db');
-
-const funcionarioController = {
+export const funcionarioController = {
   index: async (req, res) => {
     try {
         const nomeFuncionario = req.query.nome || "Usuário";
@@ -12,4 +10,3 @@ const funcionarioController = {
   },
 };
 
-module.exports = funcionarioController;

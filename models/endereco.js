@@ -6,7 +6,7 @@ config()
 export const Endereco = database.define(
   "endereco",
   {
-    idEndereco: {
+    idendereco: {
       type: DataTypes.STRING(15),
       primaryKey: true,
     },
@@ -41,10 +41,4 @@ export const Endereco = database.define(
   }
 );
 
-// Definir a relação com Funcionario
-Endereco.associate = (models) => {
-  Endereco.hasMany(models.Funcionario, {
-    foreignKey: "idendereco",
-    as: "funcionarios",
-  });
-};
+
