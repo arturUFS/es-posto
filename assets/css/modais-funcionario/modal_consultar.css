@@ -116,6 +116,9 @@
 #resultadoConsulta #cpf-res {
   width: 35%;
 }
+#resultadoConsulta #email {
+  width: 45%;
+}
 
 #consultaForm .form-group-cons {
   width: 100%;

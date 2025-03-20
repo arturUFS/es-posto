@@ -66,14 +66,14 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" placeholder="Nome" readonly />
+            <label for="nome-res">Nome:</label>
+            <input type="text" id="nome-res" placeholder="Nome" readonly />
           </div>
           <div class="form-group">
-            <label for="dataNascimento">Data de Nascimento:</label>
+            <label for="dataNascimento-res">Data de Nascimento:</label>
             <input
               type="date"
-              id="dataNascimento"
+              id="dataNascimento-res"
               placeholder="DD/MM/AAAA"
               readonly
             />
@@ -92,10 +92,10 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="email">Email:</label>
+            <label for="email-res">Email:</label>
             <input
               type="email"
-              id="email"
+              id="email-res"
               placeholder="email@email.com"
               readonly
             />
@@ -114,34 +114,34 @@
             />
           </div>
           <div class="form-group">
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" placeholder="Estado" readonly />
+            <label for="estado-res">Estado:</label>
+            <input type="text" id="estado-res" placeholder="Estado" readonly />
           </div>
           <div class="form-group">
-            <label for="cidade">Cidade:</label>
-            <input type="text" id="cidade" placeholder="Cidade" readonly />
+            <label for="cidade-res">Cidade:</label>
+            <input type="text" id="cidade-res" placeholder="Cidade" readonly />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="bairro">Bairro:</label>
-            <input type="text" id="bairro" placeholder="Bairro" readonly />
+            <label for="bairro-res">Bairro:</label>
+            <input type="text" id="bairro-res" placeholder="Bairro" readonly />
           </div>
           <div class="form-group">
-            <label for="logradouro">Logradouro:</label>
+            <label for="logradouro-res">Logradouro:</label>
             <input
               type="text"
-              id="logradouro"
+              id="logradouro-res"
               placeholder="Logradouro"
               readonly
             />
           </div>
           <div class="form-group">
-            <label for="complemento">Complemento:</label>
+            <label for="complemento-res">Complemento:</label>
             <input
               type="text"
-              id="complemento"
+              id="complemento-res"
               placeholder="Complemento"
               readonly
             />
@@ -244,7 +244,7 @@
   // Função para habilitar a edição dos campos
   function habilitarEdicao() {
     const campos = document.querySelectorAll(
-      "#resultadoConsulta input:not(#cpf)"
+      "#resultadoConsulta input:not(#cpf-res)"
     );
     campos.forEach((campo) => {
       campo.readOnly = false;
@@ -272,22 +272,46 @@
     const formConsulta = document.getElementById("consultaForm");
 
     if (window.getComputedStyle(resultado).display !== "none") {
-      // Se a tela de resultado estiver visível, volta para telaConsulta
+      // Se a tela de resultado estiver visível, volta para a tela de consulta
       resultado.style.display = "none";
       telaConsulta.style.display = "flex";
+      cancelarEdicao();
 
-      // Garante que o formulário seja resetado corretamente
-      setTimeout(() => {
-        formConsulta.reset();
-      }, 50); // Pequeno delay para evitar conflitos visuais
+      // Resetando o formulário de consulta
+      formConsulta.reset();
+
+      // Limpar manualmente os campos dentro de #resultadoConsulta
+      limparCamposResultado();
     } else {
-      // Caso contrário, fecha o modal e reseta o formulário
+      cancelarEdicao();
+      // Fecha o modal e reseta tudo
+      formConsulta.reset();
+      limparCamposResultado();
       fecharModal("modalConsultar");
-
-      setTimeout(() => {
-        formConsulta.reset();
-      }, 50);
     }
+  }
+
+  /**
+   * Limpa manualmente os inputs da tela de resultado.
+   */
+  function limparCamposResultado() {
+    const idsCampos = [
+      "cpf-res",
+      "nome-res",
+      "dataNascimento-res",
+      "telefone-res",
+      "email-res",
+      "cep-res",
+      "estado-res",
+      "cidade-res",
+      "bairro-res",
+      "logradouro-res",
+      "complemento-res",
+    ];
+
+    idsCampos.forEach((id) => {
+      document.getElementById(id).value = "";
+    });
   }
 
   // Função para fechar o modal
