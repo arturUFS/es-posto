@@ -15,12 +15,12 @@ export const FornecedorCombustivel = database.define(
       },
       onDelete: "CASCADE",
     },
-    idCombustivel: {
+    idcombustivel: {
       type: DataTypes.STRING(15),
       primaryKey: true,
       references: {
         model: "combustivel", // Nome da tabela referenciada
-        key: "idCombustivel", // Chave primária da tabela referenciada
+        key: "idcombustivel", // Chave primária da tabela referenciada
       },
       onDelete: "CASCADE",
     },
