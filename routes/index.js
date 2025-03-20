@@ -41,4 +41,10 @@ router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
 // Rota para consultar funcionário pelo CPF
 router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
 
+// Rota para atualizar um funcionário pelo CPF
+router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
+
+// Rota para excluir um funcionário pelo CPF
+router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
+
 export default router;
