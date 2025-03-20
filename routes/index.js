@@ -47,4 +47,7 @@ router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
 // Rota para excluir um funcionário pelo CPF
 router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 
+// Rota para listar funcionários
+router.get("/funcionario/listar", funcionarioController.listar);
+
 export default router;

@@ -57,11 +57,18 @@ async function criarUsuario(username, senha, cpf) {
 export const funcionarioController = {
   index: async (req, res) => {
     try {
-      const nomeFuncionario = req.query.nome || "Usuário";
-      res.render("Funcionario/funcionario", { nomeFuncionario });
+      const nomeFuncionario = req.query.nome || "Usuário"; // Obtém o nome do usuário logado
+
+      // Busca todos os funcionários no banco de dados
+      const funcionarios = await Funcionario.findAll({
+        attributes: ["cpf", "nome", "email", "telefone"], // Campos necessários
+      });
+
+      // Renderiza a página funcionário.ejs e passa os dados
+      res.render("Funcionario/funcionario", { nomeFuncionario, funcionarios });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Erro ao buscar usuários");
+      console.error("Erro ao buscar funcionários:", err);
+      res.status(500).send("Erro no servidor");
     }
   },
 
@@ -102,28 +109,27 @@ export const funcionarioController = {
     }
   },
 
-  /**
-   * Lista todos os funcionários, realizando uma segunda consulta para buscar o endereço.
-   */
+  // Lista todos os funcionários
   async listar(req, res) {
     try {
-      // Buscar todos os funcionários cadastrados
-      const funcionarios = await Funcionario.findAll();
+      // Busca todos os funcionários no banco de dados
+      const funcionarios = await Funcionario.findAll({
+        attributes: ["cpf", "nome", "email", "telefone"], // Apenas os campos necessários
+      });
 
-      // Buscar os endereços associados a cada funcionário
-      const funcionariosComEndereco = await Promise.all(
-        funcionarios.map(async (funcionario) => {
-          const endereco = await Endereco.findByPk(funcionario.idendereco);
-          return { ...funcionario.toJSON(), endereco };
-        })
-      );
+      // Formata os CPFs antes de enviar para a view
+      const funcionariosFormatados = funcionarios.map((funcionario) => ({
+        ...funcionario.toJSON(),
+        cpf: formatarCPF(funcionario.cpf),
+      }));
 
-      res.json(funcionariosComEndereco);
+      // Renderiza a página funcionário.ejs e passa os funcionários
+      res.render("Funcionario/funcionario", {
+        funcionarios: funcionariosFormatados,
+      });
     } catch (error) {
       console.error("Erro ao listar funcionários:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao listar funcionários", error: error.message });
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 
