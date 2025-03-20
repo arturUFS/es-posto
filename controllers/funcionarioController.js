@@ -127,29 +127,111 @@ export const funcionarioController = {
     }
   },
 
-  /**
-   * Busca um funcionário pelo CPF, realizando uma segunda consulta para buscar o endereço.
-   */
-  async buscarPorCPF(req, res) {
+  async consultar(req, res) {
     try {
       const { cpf } = req.params;
 
-      // Buscar o funcionário pelo CPF informado
-      const funcionario = await Funcionario.findByPk(cpf);
+      // Buscar funcionário pelo CPF
+      const funcionario = await Funcionario.findOne({ where: { cpf } });
 
       if (!funcionario) {
         return res.status(404).json({ message: "Funcionário não encontrado" });
       }
 
-      // Buscar o endereço associado ao funcionário
-      const endereco = await Endereco.findByPk(funcionario.idendereco);
+      // Buscar endereço vinculado ao funcionário
+      const endereco = await Endereco.findOne({
+        where: { idendereco: funcionario.idendereco },
+      });
 
-      res.json({ ...funcionario.toJSON(), endereco });
+      res.json({
+        cpf: funcionario.cpf,
+        nome: funcionario.nome,
+        dataNascimento: funcionario.datanascimento,
+        telefone: funcionario.telefone,
+        email: funcionario.email,
+        endereco: {
+          cep: endereco?.cep || "",
+          estado: endereco?.estado || "",
+          cidade: endereco?.cidade || "",
+          bairro: endereco?.bairro || "",
+          logradouro: endereco?.logradouro || "",
+          complemento: endereco?.complemento || "",
+        },
+      });
     } catch (error) {
-      console.error("Erro ao buscar funcionário:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao buscar funcionário", error: error.message });
+      console.error("Erro ao consultar funcionário:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  // Atualiza os dados de um funcionário pelo CPF.
+  async atualizar(req, res) {
+    try {
+      const { cpf } = req.params; // Obtém o CPF da URL
+      const { nome, dataNascimento, telefone, email, endereco } = req.body; // Novos dados
+
+      // Verifica se o funcionário existe
+      const funcionario = await Funcionario.findOne({ where: { cpf } });
+      if (!funcionario) {
+        return res.status(404).json({ message: "Funcionário não encontrado" });
+      }
+
+      // Atualiza os dados do funcionário
+      await funcionario.update({
+        nome,
+        datanascimento: dataNascimento,
+        telefone,
+        email,
+      });
+
+      // Atualiza os dados do endereço, se existirem
+      const enderecoDB = await Endereco.findOne({
+        where: { idendereco: funcionario.idendereco },
+      });
+      if (enderecoDB) {
+        await enderecoDB.update({
+          cep: endereco.cep,
+          estado: endereco.estado,
+          cidade: endereco.cidade,
+          bairro: endereco.bairro,
+          logradouro: endereco.logradouro,
+          complemento: endereco.complemento,
+        });
+      }
+
+      res.json({ message: "Funcionário atualizado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao atualizar funcionário:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  // Exclui um funcionário pelo CPF e remove seu endereço vinculado.
+  async excluir(req, res) {
+    try {
+      const { cpf } = req.params; // Obtém o CPF da URL
+
+      // Busca o funcionário no banco de dados
+      const funcionario = await Funcionario.findOne({ where: { cpf } });
+
+      // Se não encontrar o funcionário, retorna erro 404
+      if (!funcionario) {
+        return res.status(404).json({ message: "Funcionário não encontrado" });
+      }
+
+      // Guarda o ID do endereço vinculado antes de excluir o funcionário
+      const idEndereco = funcionario.idendereco;
+
+      // Exclui o funcionário
+      await funcionario.destroy();
+
+      // Exclui o endereço vinculado ao funcionário
+      await Endereco.destroy({ where: { idendereco: idEndereco } });
+
+      res.json({ message: "Funcionário excluído com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao excluir funcionário:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 };

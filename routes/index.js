@@ -1,12 +1,12 @@
 import express from "express";
-import {exemploController} from "../controllers/exemploController.js";
-import {authController} from "../controllers/authController.js";
-import {homeController} from "../controllers/homeController.js";
-import {funcionarioController} from "../controllers/funcionarioController.js";
-import {combustivelController} from "../controllers/combustivelController.js";
-import {produtoController} from "../controllers/produtoController.js";
-import {servicoController} from "../controllers/servicoController.js";
-import {fornecedorController} from "../controllers/fornecedorController.js";
+import { exemploController } from "../controllers/exemploController.js";
+import { authController } from "../controllers/authController.js";
+import { homeController } from "../controllers/homeController.js";
+import { funcionarioController } from "../controllers/funcionarioController.js";
+import { combustivelController } from "../controllers/combustivelController.js";
+import { produtoController } from "../controllers/produtoController.js";
+import { servicoController } from "../controllers/servicoController.js";
+import { fornecedorController } from "../controllers/fornecedorController.js";
 const router = express.Router();
 
 router.get("/", exemploController.index);
@@ -35,6 +35,16 @@ router.get("/funcionario", funcionarioController.index);
 
 router.get("/fornecedores", fornecedorController.index);
 
+// Rota para cadastrar funcionário
 router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
+
+// Rota para consultar funcionário pelo CPF
+router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
+
+// Rota para atualizar um funcionário pelo CPF
+router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
+
+// Rota para excluir um funcionário pelo CPF
+router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 
 export default router;
