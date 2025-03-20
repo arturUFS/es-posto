@@ -127,29 +127,40 @@ export const funcionarioController = {
     }
   },
 
-  /**
-   * Busca um funcionário pelo CPF, realizando uma segunda consulta para buscar o endereço.
-   */
-  async buscarPorCPF(req, res) {
+  async consultar(req, res) {
     try {
       const { cpf } = req.params;
 
-      // Buscar o funcionário pelo CPF informado
-      const funcionario = await Funcionario.findByPk(cpf);
+      // Buscar funcionário pelo CPF
+      const funcionario = await Funcionario.findOne({ where: { cpf } });
 
       if (!funcionario) {
         return res.status(404).json({ message: "Funcionário não encontrado" });
       }
 
-      // Buscar o endereço associado ao funcionário
-      const endereco = await Endereco.findByPk(funcionario.idendereco);
+      // Buscar endereço vinculado ao funcionário
+      const endereco = await Endereco.findOne({
+        where: { idendereco: funcionario.idendereco },
+      });
 
-      res.json({ ...funcionario.toJSON(), endereco });
+      res.json({
+        cpf: funcionario.cpf,
+        nome: funcionario.nome,
+        dataNascimento: funcionario.datanascimento,
+        telefone: funcionario.telefone,
+        email: funcionario.email,
+        endereco: {
+          cep: endereco?.cep || "",
+          estado: endereco?.estado || "",
+          cidade: endereco?.cidade || "",
+          bairro: endereco?.bairro || "",
+          logradouro: endereco?.logradouro || "",
+          complemento: endereco?.complemento || "",
+        },
+      });
     } catch (error) {
-      console.error("Erro ao buscar funcionário:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao buscar funcionário", error: error.message });
+      console.error("Erro ao consultar funcionário:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 };
