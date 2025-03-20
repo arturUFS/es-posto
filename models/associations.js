@@ -5,6 +5,8 @@ import { Combustivel } from "./combustivel.js";
 import { Abastecimento } from "./abastecimento.js";
 import { Fornecedor } from "./fornecedor.js";
 import { FornecedorCombustivel } from "./fornecedor_combustivel.js";
+import { Produto } from "./produto.js";
+import { FornecedorProduto } from "./fornecedor_produto.js"
 
 // Funcionario - Endereco
 Funcionario.belongsTo(Endereco, {
@@ -41,12 +43,12 @@ Abastecimento.belongsTo(Combustivel, {
 
 // Associação entre Fornecedor e Endereco
 Fornecedor.belongsTo(Endereco, {
-    foreignKey: "idEndereco",
+    foreignKey: "idendereco",
     as: "endereco", // Alias para a associação
   });
   
 Endereco.hasMany(Fornecedor, {
-    foreignKey: "idEndereco",
+    foreignKey: "idendereco",
     as: "fornecedores", // Alias para a associação
 });
 
@@ -59,18 +61,18 @@ Fornecedor.belongsToMany(Combustivel, {
 
 Combustivel.belongsToMany(Fornecedor, {
     through: FornecedorCombustivel,
-    foreignKey: "idCombustivel",
+    foreignKey: "idcombustivel",
     as: "fornecedores", // Alias para a associação
 });
 
 // Produto - ItemVenda
 
 Produto.hasMany(ItemVenda, {
-    foreignKey: "idProduto", 
+    foreignKey: "idproduto", 
     as: "itensVenda"    
 });
-ItemVenda.belongsTo(Produto, {
-    foreignKey: "idProduto",
+ItemVenda.belongsTo(Produto, { 
+    foreignKey: "idproduto",
     as: "produto"
 })
 
@@ -83,6 +85,6 @@ Fornecedor.belongsTo(Produto, {
 });
 Produto.belongsToMany(Fornecedor, {
     through: FornecedorProduto,
-    foreignKey: "idProduto"
+    foreignKey: "idproduto",
     as: "fornecedores", 
 });
