@@ -15,12 +15,12 @@ export const FornecedorProduto = database.define(
       },
       onDelete: "CASCADE",
     },
-    idProduto: {
+    idproduto: {
       type: DataTypes.STRING(15),
       primaryKey: true,
       references: {
         model: "produto", // Nome da tabela referenciada
-        key: "idProduto", // Chave primária da tabela referenciada
+        key: "idproduto", // Chave primária da tabela referenciada
       },
       onDelete: "CASCADE",
     },

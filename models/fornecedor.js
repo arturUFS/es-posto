@@ -30,7 +30,7 @@ export const Fornecedor = database.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    idEndereco: {
+    idendereco: {
       type: DataTypes.STRING(15),
       references: {
         model: "endereco", // Nome da tabela referenciada

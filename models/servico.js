@@ -6,11 +6,11 @@ config();
 export const Servico = database.define(
   "servico",
   {
-    idServico: {
+    idservico: {
       type: DataTypes.STRING(15),
       primaryKey: true,
     },
-    tipoServico: {
+    tiposervico: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
