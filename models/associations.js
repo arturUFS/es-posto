@@ -46,19 +46,43 @@ Fornecedor.belongsTo(Endereco, {
   });
   
 Endereco.hasMany(Fornecedor, {
-foreignKey: "idEndereco",
-as: "fornecedores", // Alias para a associação
+    foreignKey: "idEndereco",
+    as: "fornecedores", // Alias para a associação
 });
 
 // Associação entre Fornecedor e Combustivel (tabela intermediária FornecedorCombustivel)
 Fornecedor.belongsToMany(Combustivel, {
-through: FornecedorCombustivel,
-foreignKey: "cnpj",
-as: "combustiveis", // Alias para a associação
+    through: FornecedorCombustivel,
+    foreignKey: "cnpj",
+    as: "combustiveis", // Alias para a associação
 });
 
 Combustivel.belongsToMany(Fornecedor, {
-through: FornecedorCombustivel,
-foreignKey: "idCombustivel",
-as: "fornecedores", // Alias para a associação
+    through: FornecedorCombustivel,
+    foreignKey: "idCombustivel",
+    as: "fornecedores", // Alias para a associação
+});
+
+// Produto - ItemVenda
+
+Produto.hasMany(ItemVenda, {
+    foreignKey: "idProduto", 
+    as: "itensVenda"    
+});
+ItemVenda.belongsTo(Produto, {
+    foreignKey: "idProduto",
+    as: "produto"
+})
+
+// Fornecedor - Produto
+
+Fornecedor.belongsTo(Produto, {
+    through: FornecedorProduto,
+    foreignKey: "cnpj",
+    as: "produtos",
+});
+Produto.belongsToMany(Fornecedor, {
+    through: FornecedorProduto,
+    foreignKey: "idProduto"
+    as: "fornecedores", 
 });
