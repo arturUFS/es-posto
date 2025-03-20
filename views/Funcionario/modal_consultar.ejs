@@ -323,6 +323,43 @@
       });
   }
 
+  // Exibe uma mensagem de confirmação antes de excluir um funcionário.
+  function confirmarExclusao() {
+    const cpf = document.getElementById("cpf-res").value; // Obtém o CPF do funcionário
+
+    if (!cpf) {
+      alert("Nenhum funcionário selecionado para exclusão.");
+      return;
+    }
+
+    const confirmacao = confirm(
+      "Tem certeza que deseja excluir este funcionário?"
+    );
+    if (confirmacao) {
+      excluirFuncionario(cpf);
+    }
+  }
+
+  // Exclui um funcionário enviando uma requisição DELETE para o backend.
+  function excluirFuncionario(cpf) {
+    fetch(`/funcionario/excluir/${cpf}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao excluir funcionário.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.message); // Exibe mensagem de sucesso
+        fecharOuVoltar(); // Retorna para a tela de consulta
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+
   // Função para fechar ou voltar para início do modal
   function fecharOuVoltar() {
     const resultado = document.getElementById("resultadoConsulta");
