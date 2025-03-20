@@ -212,6 +212,7 @@
       event.target.value = cep;
     });
 
+  // Envia o CPF do funcionário para o backend e exibe os dados retornados.
   function consultarFuncionario() {
     const cpf = document.getElementById("cpfConsulta").value;
 
@@ -220,14 +221,10 @@
       return;
     }
 
-    document.getElementById("telaConsulta").style.display = "none";
-    document.getElementById("resultadoConsulta").style.display = "block";
-
-    // Chamada para a API para obter os dados do funcionário
-    /* fetch(`/funcionario/consultar/${cpf.replace(/\D/g, "")}`)
+    fetch(`/funcionario/consultar/${cpf}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Funcionário não encontrado");
+          throw new Error("Funcionário não encontrado.");
         }
         return response.json();
       })
@@ -238,7 +235,25 @@
       })
       .catch((error) => {
         alert(error.message);
-      }); */
+      });
+  }
+
+  // Preenche os campos da tela de resultado com os dados do funcionário.
+  function preencherFormulario(funcionario) {
+    document.getElementById("cpf-res").value = funcionario.cpf;
+    document.getElementById("nome-res").value = funcionario.nome;
+    document.getElementById("dataNascimento-res").value =
+      funcionario.dataNascimento;
+    document.getElementById("telefone-res").value = funcionario.telefone;
+    document.getElementById("email-res").value = funcionario.email;
+    document.getElementById("cep-res").value = funcionario.endereco.cep;
+    document.getElementById("estado-res").value = funcionario.endereco.estado;
+    document.getElementById("cidade-res").value = funcionario.endereco.cidade;
+    document.getElementById("bairro-res").value = funcionario.endereco.bairro;
+    document.getElementById("logradouro-res").value =
+      funcionario.endereco.logradouro;
+    document.getElementById("complemento-res").value =
+      funcionario.endereco.complemento;
   }
 
   // Função para habilitar a edição dos campos
