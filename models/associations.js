@@ -1,6 +1,8 @@
 import { Usuario } from "../models/usuario.js";
 import { Funcionario } from "../models/funcionario.js";
 import { Endereco } from "../models/endereco.js";
+import { Combustivel } from "./combustivel.js";
+import { Abastecimento } from "./abastecimento.js";
 
 // Funcionario - Endereco
 Funcionario.belongsTo(Endereco, {
@@ -23,3 +25,13 @@ Usuario.belongsTo(Funcionario, {
     foreignKey: "cpf",
     as: "funcionario",
 });
+
+Combustivel.hasMany(Abastecimento, {
+    foreignKey: "idcombustivel",
+    as: "abastecimentos"
+});
+
+Abastecimento.belongsTo(Combustivel, {
+    foreignKey: "idcombustivel",
+    as: "combustivel"
+})
