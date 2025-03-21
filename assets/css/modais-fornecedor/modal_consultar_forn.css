@@ -1,4 +1,64 @@
-/* Modal Consultar Funcionário */
+/* Modal Consultar Fornecedor */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 94%;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header do Modal */
+.modal-header {
+  background-color: #c11b1b;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.back-button,
+.home-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.home-icon img {
+  width: 80%;
+  height: auto;
+}
+
 /* Corpo do Modal */
 .modal-body-cons {
   padding: 20px;
@@ -113,11 +173,46 @@
   display: none;
 }
 
-#resultadoConsulta #cpf-res {
-  width: 35%;
+.form-group-res {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 10px;
 }
-#resultadoConsulta #email {
-  width: 45%;
+
+#resultadoConsulta #cnpj-res,
+#resultadoConsulta #nome-res {
+  width: 70%;
+}
+
+#resultadoConsulta #nome-res,
+#resultadoConsulta label[for="nome-res"] {
+  margin-left: -100px;
+}
+
+#resultadoConsulta #email-res {
+  width: 75%;
+}
+
+#resultadoConsulta #email-res,
+#resultadoConsulta label[for="email-res"] {
+  margin-left: -155px;
+}
+
+#resultadoConsulta #logradouro-res {
+  width: 62%;
+}
+
+#resultadoConsulta #complemento-res {
+  width: 70%;
+}
+
+#resultadoConsulta #complemento-res,
+#resultadoConsulta label[for="complemento-res"] {
+  margin-left: -155px;
+}
+
+#resultadoConsulta #inicioVigencia-res {
+  width: 62%;
 }
 
 #consultaForm .form-group-cons {

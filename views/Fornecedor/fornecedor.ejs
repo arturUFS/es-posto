@@ -49,8 +49,7 @@
       <button id="consultar-fornecedor">Consultar Fornecedor</button>
       <button id="listar-fornecedores">Listar Fornecedores</button>
     </div>
-    <%- include('modal_cadastrar') %>
-    <%- include('modal_consultar_forn') %>
+    <%- include('modal_cadastrar') %> <%- include('modal_consultar_forn') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -69,7 +68,7 @@
     document
       .getElementById("cadastrar-fornecedor")
       .addEventListener("click", () => abrirModal("modalCadastrar"));
-      
+
     document
       .getElementById("consultar-fornecedor")
       .addEventListener("click", () => abrirModal("modalConsultarForn"));

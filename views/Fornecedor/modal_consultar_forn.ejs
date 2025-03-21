@@ -1,23 +1,196 @@
-<!-- <script>
-  // Máscara de CPF (XXX.XXX.XXX-XX)
-  function aplicarMascaraCPF(idElemento) {
+<div id="modalConsultarForn" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        class="back-button"
+        onclick="fecharOuVoltar('modalConsultarForn')"
+      >
+        <i class="arrow-left">←</i>
+      </button>
+      <h2>Consultar Fornecedor</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+    <div class="modal-body-cons">
+      <!-- Tela de Consulta -->
+      <div id="telaConsulta" class="center-content">
+        <form id="consultaForm">
+          <div class="form-group-cons">
+            <label for="cnpjConsulta">CNPJ do Fornecedor:</label>
+            <input
+              type="text"
+              id="cnpjConsulta"
+              placeholder="XX.XXX.XXX/XXXX-XX"
+              maxlength="18"
+              required
+            />
+          </div>
+          <div class="form-btn-cons" style="margin-top: 20px">
+            <button
+              type="button"
+              class="consultar-btn"
+              onclick="consultarFornecedor()"
+            >
+              Consultar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tela de Resultado -->
+      <div id="resultadoConsulta">
+        <div class="form-row">
+          <div class="form-group-res">
+            <label for="cnpj-res">CNPJ:</label>
+            <input
+              type="text"
+              id="cnpj-res"
+              placeholder="XX.XXX.XXX/XXXX-XX"
+              maxlength="18"
+              readonly
+            />
+          </div>
+          <div class="form-group-res">
+            <label for="nome-res">Nome:</label>
+            <input type="text" id="nome-res" placeholder="Nome" readonly />
+          </div>
+          <div class="action-buttons">
+            <button class="edit-btn" onclick="habilitarEdicao()">
+              <i class="edit-icon"
+                ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
+              /></i>
+            </button>
+            <button class="delete-btn" onclick="confirmarExclusao()">
+              <i class="delete-icon"
+                ><img src="/assets/Vector (4).png" alt="editar"
+              /></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group-res">
+            <label for="inicioVigencia-res">Data de Cadastro:</label>
+            <input
+              type="date"
+              id="inicioVigencia-res"
+              placeholder="DD/MM/AAAA"
+              readonly
+            />
+          </div>
+          <div class="form-group-res">
+            <label for="email-res">Email:</label>
+            <input
+              type="email"
+              id="email-res"
+              placeholder="email@email.com"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group-res">
+            <label for="telefone-res">Telefone:</label>
+            <input
+              type="text"
+              id="telefone-res"
+              placeholder="(XX) XXXXX-XXXX"
+              maxlength="15"
+              readonly
+            />
+          </div>
+          <div class="form-group-res">
+            <label for="area-res">Área:</label>
+            <input type="text" id="area-res" placeholder="Área" readonly />
+          </div>
+          <div class="form-group-res">
+            <label for="cep-res">CEP:</label>
+            <input
+              type="text"
+              id="cep-res"
+              placeholder="00000-000"
+              maxlength="9"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group-res">
+            <label for="estado-res">Estado:</label>
+            <input type="text" id="estado-res" placeholder="Estado" readonly />
+          </div>
+          <div class="form-group-res">
+            <label for="cidade-res">Cidade:</label>
+            <input type="text" id="cidade-res" placeholder="Cidade" readonly />
+          </div>
+          <div class="form-group-res">
+            <label for="bairro-res">Bairro:</label>
+            <input type="text" id="bairro-res" placeholder="Bairro" readonly />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group-res">
+            <label for="logradouro-res">Logradouro:</label>
+            <input
+              type="text"
+              id="logradouro-res"
+              placeholder="Logradouro"
+              readonly
+            />
+          </div>
+          <div class="form-group-res">
+            <label for="complemento-res">Complemento:</label>
+            <input
+              type="text"
+              id="complemento-res"
+              placeholder="Complemento"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div id="botoesEdicao" style="display: none">
+          <div class="form-btn-res">
+            <button type="button" class="save-btn" onclick="salvarAlteracoes()">
+              Salvar
+            </button>
+            <button type="button" class="cancel-btn" onclick="cancelarEdicao()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Máscara de CNPJ (XX.XXX.XXX/XXXX-XX)
+  function aplicarMascaraCNPJ(idElemento) {
     document
       .getElementById(idElemento)
       .addEventListener("input", function (event) {
-        let cpf = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+        let cnpj = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
 
-        if (cpf.length <= 11) {
-          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-          cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        if (cnpj.length <= 14) {
+          cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2");
+          cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+          cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1.$2");
+          cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2");
         }
 
-        event.target.value = cpf;
+        event.target.value = cnpj;
       });
   }
 
-  aplicarMascaraCPF("cpfConsulta");
-  aplicarMascaraCPF("cpf-res");
+  // Aplica a máscara aos campos necessários
+  aplicarMascaraCNPJ("cnpjConsulta");
+  aplicarMascaraCNPJ("cnpj-res");
 
   // Máscara de Telefone ((XX) XXXXX-XXXX)
   document
@@ -48,24 +221,26 @@
       event.target.value = cep;
     });
 
-  // Envia o CPF do funcionário para o backend e exibe os dados retornados.
-  function consultarFuncionario() {
-    const cpf = document.getElementById("cpfConsulta").value;
+  // Envia o CNPJ do fornecedor para o backend e exibe os dados retornados.
+  function consultarFornecedor() {
+    cnpj = document.getElementById("cnpjConsulta").value;
 
-    if (cpf.length !== 14) {
-      alert("Por favor, insira um CPF válido.");
+    if (cnpj.length !== 18) {
+      alert("Por favor, insira um CNPJ válido.");
       return;
     }
 
-    fetch(`/funcionario/consultar/${cpf}`)
+    cnpj = cnpj.replace(/\D/g, "");
+
+    fetch(`/fornecedores/consultar/${cnpj}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Funcionário não encontrado.");
+          throw new Error("Fornecedor não encontrado.");
         }
         return response.json();
       })
-      .then((funcionario) => {
-        preencherFormulario(funcionario);
+      .then((fornecedor) => {
+        preencherFormulario(fornecedor);
         document.getElementById("telaConsulta").style.display = "none";
         document.getElementById("resultadoConsulta").style.display = "block";
       })
@@ -74,28 +249,29 @@
       });
   }
 
-  // Preenche os campos da tela de resultado com os dados do funcionário.
-  function preencherFormulario(funcionario) {
-    document.getElementById("cpf-res").value = funcionario.cpf;
-    document.getElementById("nome-res").value = funcionario.nome;
-    document.getElementById("dataNascimento-res").value =
-      funcionario.dataNascimento;
-    document.getElementById("telefone-res").value = funcionario.telefone;
-    document.getElementById("email-res").value = funcionario.email;
-    document.getElementById("cep-res").value = funcionario.endereco.cep;
-    document.getElementById("estado-res").value = funcionario.endereco.estado;
-    document.getElementById("cidade-res").value = funcionario.endereco.cidade;
-    document.getElementById("bairro-res").value = funcionario.endereco.bairro;
+  // Preenche os campos da tela de resultado com os dados do fornecedor.
+  function preencherFormulario(fornecedor) {
+    document.getElementById("cnpj-res").value = fornecedor.cnpj;
+    document.getElementById("nome-res").value = fornecedor.nome;
+    document.getElementById("inicioVigencia-res").value =
+      fornecedor.iniciovigencia;
+    document.getElementById("telefone-res").value = fornecedor.telefone;
+    document.getElementById("email-res").value = fornecedor.email;
+    document.getElementById("area-res").value = fornecedor.area;
+    document.getElementById("cep-res").value = fornecedor.endereco.cep;
+    document.getElementById("estado-res").value = fornecedor.endereco.estado;
+    document.getElementById("cidade-res").value = fornecedor.endereco.cidade;
+    document.getElementById("bairro-res").value = fornecedor.endereco.bairro;
     document.getElementById("logradouro-res").value =
-      funcionario.endereco.logradouro;
+      fornecedor.endereco.logradouro;
     document.getElementById("complemento-res").value =
-      funcionario.endereco.complemento;
+      fornecedor.endereco.complemento;
   }
 
   // Função para habilitar a edição dos campos
   function habilitarEdicao() {
     const campos = document.querySelectorAll(
-      "#resultadoConsulta input:not(#cpf-res)"
+      "#resultadoConsulta input:not(#cnpj-res)"
     );
     campos.forEach((campo) => {
       campo.readOnly = false;
@@ -116,13 +292,14 @@
     document.getElementById("lapis").style.display = "block";
   }
 
-  // Envia os dados editados para o backend e atualiza o funcionário no banco de dados.
+  // Envia os dados editados para o backend e atualiza o fornecedor no banco de dados.
   function salvarAlteracoes() {
-    const cpf = document.getElementById("cpf-res").value; // CPF não pode ser editado
+    const cnpj = document.getElementById("cnpj-res").value; // CNPJ não pode ser editado
     const nome = document.getElementById("nome-res").value;
-    const dataNascimento = document.getElementById("dataNascimento-res").value;
+    const inicioVigencia = document.getElementById("inicioVigencia-res").value;
     const telefone = document.getElementById("telefone-res").value;
     const email = document.getElementById("email-res").value;
+    const area = document.getElementById("area-res").value;
     const endereco = {
       cep: document.getElementById("cep-res").value,
       estado: document.getElementById("estado-res").value,
@@ -133,20 +310,21 @@
     };
 
     // Enviar os dados editados para o backend via requisição PUT
-    fetch(`/funcionario/atualizar/${cpf}`, {
+    fetch(`/fornecedores/atualizar/${cnpj}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome,
-        dataNascimento,
+        inicioVigencia,
         telefone,
         email,
+        area,
         endereco,
       }),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Erro ao atualizar funcionário.");
+          throw new Error("Erro ao atualizar fornecedor.");
         }
         return response.json();
       })
@@ -159,31 +337,31 @@
       });
   }
 
-  // Exibe uma mensagem de confirmação antes de excluir um funcionário.
+  // Exibe uma mensagem de confirmação antes de excluir um fornecedor.
   function confirmarExclusao() {
-    const cpf = document.getElementById("cpf-res").value; // Obtém o CPF do funcionário
+    const cnpj = document.getElementById("cnpj-res").value; // Obtém o CNPJ do fornecedor
 
-    if (!cpf) {
-      alert("Nenhum funcionário selecionado para exclusão.");
+    if (!cnpj) {
+      alert("Nenhum fornecedor selecionado para exclusão.");
       return;
     }
 
     const confirmacao = confirm(
-      "Tem certeza que deseja excluir este funcionário?"
+      "Tem certeza que deseja excluir este fornecedor?"
     );
     if (confirmacao) {
-      excluirFuncionario(cpf);
+      excluirFornecedor(cnpj);
     }
   }
 
-  // Exclui um funcionário enviando uma requisição DELETE para o backend.
-  function excluirFuncionario(cpf) {
-    fetch(`/funcionario/excluir/${cpf}`, {
+  // Exclui um fornecedor enviando uma requisição DELETE para o backend.
+  function excluirFornecedor(cnpj) {
+    fetch(`/fornecedores/excluir/${cnpj}`, {
       method: "DELETE",
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Erro ao excluir funcionário.");
+          throw new Error("Erro ao excluir fornecedor.");
         }
         return response.json();
       })
@@ -218,18 +396,19 @@
       // Fecha o modal e reseta tudo
       formConsulta.reset();
       limparCamposResultado();
-      fecharModal("modalConsultar");
+      fecharModal("modalConsultarForn");
     }
   }
 
   // Limpa manualmente os inputs da tela de resultado.
   function limparCamposResultado() {
     const idsCampos = [
-      "cpf-res",
+      "cnpj-res",
       "nome-res",
-      "dataNascimento-res",
+      "inicioVigencia-res",
       "telefone-res",
       "email-res",
+      "area-res",
       "cep-res",
       "estado-res",
       "cidade-res",
@@ -247,4 +426,4 @@
   function fecharModal(idModal) {
     document.getElementById(idModal).style.display = "none";
   }
-</script> -->
+</script>

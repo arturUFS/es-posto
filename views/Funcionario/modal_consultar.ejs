@@ -224,7 +224,7 @@
     fetch(`/funcionario/consultar/${cpf}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Funcionário não encontrado.");
+          throw new Error(response);
         }
         return response.json();
       })

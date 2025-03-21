@@ -68,7 +68,6 @@ export const fornecedorController = {
     try {
       const { cnpj } = req.params;
 
-      // Buscar fornecedor pelo CNPJ
       const fornecedor = await Fornecedor.findOne({ where: { cnpj } });
 
       if (!fornecedor) {
