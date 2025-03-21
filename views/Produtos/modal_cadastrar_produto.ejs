@@ -1,0 +1,98 @@
+<div id="modalCadastrarProduto" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        class="back-button"
+        onclick="fecharModal('modalCadastrarProduto')"
+      >
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Cadastrar Produto</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formCadastrarProduto">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeProduto">Nome:</label>
+            <input
+              type="text"
+              id="nomeProduto"
+              placeholder="Digite o nome do produto"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="fornecedor">Fornecedor:</label>
+            <select id="fornecedor" required>
+              <option value="" disabled selected>Selecione o fornecedor</option>
+              <option value="fornecedor1">Fornecedor 1</option>
+              <option value="fornecedor2">Fornecedor 2</option>
+              <option value="fornecedor3">Fornecedor 3</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorProduto">Valor:</label>
+            <input
+              type="text"
+              id="valorProduto"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="quantidadeDisponivel">Quantidade Disponível:</label>
+            <input
+              type="number"
+              id="quantidadeDisponivel"
+              placeholder="0"
+              min="0"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex-basis: 100%">
+            <label for="descricaoProduto">Descrição:</label>
+            <textarea
+              id="descricaoProduto"
+              placeholder="Descreva o produto..."
+              rows="4"
+              style="resize: vertical"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  // Formatação para o campo de valor
+  document
+    .getElementById("valorProduto")
+    .addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+      e.target.value = "R$ " + value;
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
