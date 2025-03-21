@@ -10,12 +10,10 @@ import { FornecedorProduto } from "./fornecedor_produto.js"
 
 // Funcionario - Endereco
 Funcionario.belongsTo(Endereco, {
-    foreignKey: "idendereco",
-    as: "endereco",
+    foreignKey: "idendereco"
 });
 Endereco.hasMany(Funcionario, {
-    foreignKey: "idendereco",
-    as: "funcionarios",
+    foreignKey: "idendereco"
 });
 
 
