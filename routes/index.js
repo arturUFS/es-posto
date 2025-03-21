@@ -33,20 +33,33 @@ router.get("/servicos", servicoController.index);
 
 //Rotas Funcionário
 
+//Rotas Funcionário
+
+    router.get("/funcionario", funcionarioController.index);
     router.get("/funcionario", funcionarioController.index);
 
+    // Rota para cadastrar funcionário
+    router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
     // Rota para cadastrar funcionário
     router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
 
     // Rota para consultar funcionário pelo CPF
     router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
+    // Rota para consultar funcionário pelo CPF
+    router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
 
+    // Rota para atualizar um funcionário pelo CPF
+    router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
     // Rota para atualizar um funcionário pelo CPF
     router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
 
     // Rota para excluir um funcionário pelo CPF
     router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
+    // Rota para excluir um funcionário pelo CPF
+    router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 
+    // Rota para listar funcionários
+    router.get("/funcionario/listar", funcionarioController.listar);
     // Rota para listar funcionários
     router.get("/funcionario/listar", funcionarioController.listar);
 
