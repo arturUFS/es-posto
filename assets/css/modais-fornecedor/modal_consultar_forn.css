@@ -1,4 +1,64 @@
-/* Modal Consultar Funcionário */
+/* Modal Consultar Fornecedor */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 94%;
+  background-color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header do Modal */
+.modal-header {
+  background-color: #c11b1b;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.back-button,
+.home-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+}
+
+.home-icon img {
+  width: 80%;
+  height: auto;
+}
+
 /* Corpo do Modal */
 .modal-body-cons {
   padding: 20px;
@@ -8,27 +68,26 @@
 }
 
 #consultaForm input {
-  width: 130%;
-  transform: translateX(-12.3%);
+  width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 .form-group-cons {
-  width: 130%;
+  width: 100%;
 }
 
 .form-group-cons label {
-  transform: translateX(-15%);
   font-size: 16px;
 }
 
 .form-btn-cons {
   display: flex;
-  width: 130%;
+  width: 100%;
   flex-wrap: wrap;
   margin-bottom: 15px;
   gap: 15px;
@@ -43,7 +102,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
-  width: 130%;
+  width: 100%;
 }
 
 .consultar-btn:hover {
@@ -113,7 +172,7 @@
   display: none;
 }
 
-#resultadoConsulta #cpf-res {
+#resultadoConsulta #cnpj-res {
   width: 35%;
 }
 #resultadoConsulta #email {
