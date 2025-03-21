@@ -3,7 +3,7 @@ import { config } from "dotenv";
 import { Usuario } from "../models/usuario.js";
 import { Funcionario } from "../models/funcionario.js";
 
-config()
+config();
 
 export const authController = {
   login: async (req, res) => {
@@ -11,16 +11,13 @@ export const authController = {
 
     try {
       // Buscar o usuário no banco de dados
-    const result = await Usuario.findOne({
-      where: { usuario }
-    });
-      
+      const result = await Usuario.findOne({
+        where: { usuario },
+      });
 
       if (result == null) {
         return res.status(401).json({ message: "Usuário não encontrado" });
       }
-
-      
 
       // Verificar se a senha informada é igual à do banco
       if (senha !== result.senha) {
@@ -30,9 +27,8 @@ export const authController = {
       // Buscar o nome do funcionário usando o CPF encontrado
       const cpf = result.cpf;
       const funcResult = await Funcionario.findOne({
-        where: { cpf }
+        where: { cpf },
       });
-        
 
       let nomeFuncionario = "Usuário"; // Nome padrão caso não seja encontrado
 
@@ -60,5 +56,3 @@ export const authController = {
     }
   },
 };
-
-
