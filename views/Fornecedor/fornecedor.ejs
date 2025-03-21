@@ -13,6 +13,10 @@
       rel="stylesheet"
       href="assets/css/modais-fornecedor/modal_consultar_forn.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-fornecedor/modal_listar_forn.css"
+    />
     <style>
       .menu li:nth-child(6) a {
         background-color: #c31010;
@@ -49,7 +53,8 @@
       <button id="consultar-fornecedor">Consultar Fornecedor</button>
       <button id="listar-fornecedores">Listar Fornecedores</button>
     </div>
-    <%- include('modal_cadastrar') %> <%- include('modal_consultar_forn') %>
+    <%- include('modal_cadastrar') %> <%- include('modal_consultar_forn') %> <%-
+    include('modal_listar_forn') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {

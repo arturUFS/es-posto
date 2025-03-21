@@ -2,7 +2,9 @@
   <div class="modal-content">
     <div class="modal-header">
       <button class="back-button" onclick="fecharModal('modalCadastrar')">
-        <i class="arrow-left">←</i>
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
       </button>
       <h2>Cadastrar Fornecedor</h2>
       <button class="home-button" onclick="window.location.href='/home'">
@@ -153,12 +155,11 @@
 
     // Aplica a máscara (00.000.000/0000-00)
     if (cnpj.length <= 18) {
-        cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
-        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
-        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
-        cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+      cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+      cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+      cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+      cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
     }
-    
 
     event.target.value = cnpj;
   });

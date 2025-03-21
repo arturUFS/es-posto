@@ -5,7 +5,9 @@
         class="back-button"
         onclick="fecharOuVoltar('modalConsultarForn')"
       >
-        <i class="arrow-left">←</i>
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
       </button>
       <h2>Consultar Fornecedor</h2>
       <button class="home-button" onclick="window.location.href='/home'">
@@ -178,19 +180,18 @@
         let cnpj = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
 
         if (cnpj.length <= 18) {
-            cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
-            cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
-            cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
-            cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+          cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+          cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+          cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+          cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
         }
         event.target.value = cnpj;
-    });
-}
+      });
+  }
 
-// Aplica a máscara aos campos necessários
-aplicarMascaraCNPJ("cnpjConsulta");
-aplicarMascaraCNPJ("cnpj-res");
-
+  // Aplica a máscara aos campos necessários
+  aplicarMascaraCNPJ("cnpjConsulta");
+  aplicarMascaraCNPJ("cnpj-res");
 
   // Máscara de Telefone ((XX) XXXXX-XXXX)
   document
@@ -230,9 +231,8 @@ aplicarMascaraCNPJ("cnpj-res");
       return;
     }
 
-     
     cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
-    
+
     fetch(`/fornecedores/consultar/${cnpj}`)
       .then((response) => {
         if (!response.ok) {
