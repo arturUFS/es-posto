@@ -65,15 +65,15 @@
         </div>
 
         <div class="form-row">
-            <div class="form-group">
-                <label for="area">Área:</label>
-                <input
-                  type="text"
-                  id="area"
-                  placeholder="Digite a Área/Categoria dos produtos"
-                  required
-                />
-              </div>
+          <div class="form-group">
+            <label for="area">Área:</label>
+            <input
+              type="text"
+              id="area"
+              placeholder="Digite a Área/Categoria dos produtos"
+              required
+            />
+          </div>
           <div class="form-group">
             <label for="cep">CEP:</label>
             <input
@@ -94,19 +94,18 @@
               required
             />
           </div>
-          
         </div>
 
         <div class="form-row">
-            <div class="form-group">
-                <label for="cidade">Cidade:</label>
-                <input
-                    type="text"
-                    id="cidade"
-                    placeholder="Digite a cidade"
-                    required
-                />
-            </div>
+          <div class="form-group">
+            <label for="cidade">Cidade:</label>
+            <input
+              type="text"
+              id="cidade"
+              placeholder="Digite a cidade"
+              required
+            />
+          </div>
           <div class="form-group">
             <label for="bairro">Bairro:</label>
             <input
@@ -125,18 +124,17 @@
               required
             />
           </div>
-          
         </div>
 
         <div class="form-row">
-            <div class="form-group">
-                <label for="complemento">Complemento:</label>
-                <input
-                  type="text"
-                  id="complemento"
-                  placeholder="Digite o complemento"
-                />
-            </div>
+          <div class="form-group">
+            <label for="complemento">Complemento:</label>
+            <input
+              type="text"
+              id="complemento"
+              placeholder="Digite o complemento"
+            />
+          </div>
         </div>
 
         <div class="form-row">
@@ -202,7 +200,6 @@
       const email = document.getElementById("email").value;
       const telefone = document.getElementById("telefone").value;
       const area = document.getElementById("area").value;
-      
 
       const cep = document.getElementById("cep").value;
       const estado = document.getElementById("estado").value;
@@ -210,7 +207,6 @@
       const bairro = document.getElementById("bairro").value;
       const logradouro = document.getElementById("logradouro").value;
       const complemento = document.getElementById("complemento").value;
-
 
       // Validações
       if (cpf.length !== 14) {
@@ -243,7 +239,6 @@
           logradouro,
           complemento,
         },
-        
       };
 
       try {

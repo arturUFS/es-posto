@@ -68,26 +68,27 @@
 }
 
 #consultaForm input {
-  width: 100%;
+  width: 130%;
+  transform: translateX(-12.3%);
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 16px;
-  margin-top: 10px;
 }
 
 .form-group-cons {
-  width: 100%;
+  width: 130%;
 }
 
 .form-group-cons label {
+  transform: translateX(-15%);
   font-size: 16px;
 }
 
 .form-btn-cons {
   display: flex;
-  width: 100%;
+  width: 130%;
   flex-wrap: wrap;
   margin-bottom: 15px;
   gap: 15px;
@@ -102,7 +103,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
-  width: 100%;
+  width: 130%;
 }
 
 .consultar-btn:hover {
@@ -172,11 +173,46 @@
   display: none;
 }
 
-#resultadoConsulta #cnpj-res {
-  width: 35%;
+.form-group-res {
+  flex: 1;
+  min-width: 200px;
+  margin-bottom: 10px;
 }
-#resultadoConsulta #email {
-  width: 45%;
+
+#resultadoConsulta #cnpj-res,
+#resultadoConsulta #nome-res {
+  width: 70%;
+}
+
+#resultadoConsulta #nome-res,
+#resultadoConsulta label[for="nome-res"] {
+  margin-left: -100px;
+}
+
+#resultadoConsulta #email-res {
+  width: 75%;
+}
+
+#resultadoConsulta #email-res,
+#resultadoConsulta label[for="email-res"] {
+  margin-left: -155px;
+}
+
+#resultadoConsulta #logradouro-res {
+  width: 62%;
+}
+
+#resultadoConsulta #complemento-res {
+  width: 70%;
+}
+
+#resultadoConsulta #complemento-res,
+#resultadoConsulta label[for="complemento-res"] {
+  margin-left: -155px;
+}
+
+#resultadoConsulta #inicioVigencia-res {
+  width: 62%;
 }
 
 #consultaForm .form-group-cons {
