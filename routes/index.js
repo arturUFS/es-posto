@@ -54,6 +54,9 @@ router.get("/funcionario/listar", funcionarioController.listar);
 
 router.get("/fornecedores", fornecedorController.index);
 
+// Rota para cadastrar Forneccedor
+router.post("/fornecedores/cadastrar", fornecedorController.cadastrar);
+
 // Rota para consultar fornecedor pelo CNPJ
 router.get("/fornecedores/consultar/:cnpj", fornecedorController.consultar);
 

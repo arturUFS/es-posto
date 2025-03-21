@@ -177,20 +177,20 @@
       .addEventListener("input", function (event) {
         let cnpj = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
 
-        if (cnpj.length <= 14) {
-          cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2");
-          cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-          cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1.$2");
-          cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2");
+        if (cnpj.length <= 18) {
+            cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+            cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+            cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+            cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
         }
-
         event.target.value = cnpj;
-      });
-  }
+    });
+}
 
-  // Aplica a máscara aos campos necessários
-  aplicarMascaraCNPJ("cnpjConsulta");
-  aplicarMascaraCNPJ("cnpj-res");
+// Aplica a máscara aos campos necessários
+aplicarMascaraCNPJ("cnpjConsulta");
+aplicarMascaraCNPJ("cnpj-res");
+
 
   // Máscara de Telefone ((XX) XXXXX-XXXX)
   document
@@ -230,8 +230,9 @@
       return;
     }
 
-    cnpj = cnpj.replace(/\D/g, "");
-
+     
+    cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
+    
     fetch(`/fornecedores/consultar/${cnpj}`)
       .then((response) => {
         if (!response.ok) {
