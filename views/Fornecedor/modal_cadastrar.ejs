@@ -1,0 +1,274 @@
+<div id="modalCadastrar" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalCadastrar')">
+        <i class="arrow-left">←</i>
+      </button>
+      <h2>Cadastrar Fornecedor</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formCadastrar">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input
+              type="text"
+              id="cpf"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              minlength="14"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" placeholder="Digite o nome" required />
+          </div>
+          <div class="form-group">
+            <label for="inicioVigencia">Data de Cadastro:</label>
+            <input
+              type="date"
+              id="inicioVigencia"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="email@email.com"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input
+              type="text"
+              id="telefone"
+              placeholder="(XX) XXXXX-XXXX"
+              maxlength="15"
+              minlength="15"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="area">Área:</label>
+                <input
+                  type="text"
+                  id="area"
+                  placeholder="Digite a Área/Categoria dos produtos"
+                  required
+                />
+              </div>
+          <div class="form-group">
+            <label for="cep">CEP:</label>
+            <input
+              type="text"
+              id="cep"
+              placeholder="00000-000"
+              maxlength="9"
+              minlength="9"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado:</label>
+            <input
+              type="text"
+              id="estado"
+              placeholder="Digite o estado"
+              required
+            />
+          </div>
+          
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cidade">Cidade:</label>
+                <input
+                    type="text"
+                    id="cidade"
+                    placeholder="Digite a cidade"
+                    required
+                />
+            </div>
+          <div class="form-group">
+            <label for="bairro">Bairro:</label>
+            <input
+              type="text"
+              id="bairro"
+              placeholder="Digite o bairro"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="logradouro">Logradouro:</label>
+            <input
+              type="text"
+              id="logradouro"
+              placeholder="Digite o logradouro"
+              required
+            />
+          </div>
+          
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="complemento">Complemento:</label>
+                <input
+                  type="text"
+                  id="complemento"
+                  placeholder="Digite o complemento"
+                />
+            </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("cpf").addEventListener("input", function (event) {
+    let cpf = event.target.value;
+
+    // Remove tudo que não for número
+    cpf = cpf.replace(/\D/g, "");
+
+    // Aplica a máscara (000.000.000-00)
+    if (cpf.length <= 11) {
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+      cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+    }
+
+    event.target.value = cpf;
+  });
+
+  // Máscara de Telefone ((XX) XXXXX-XXXX)
+  document
+    .getElementById("telefone")
+    .addEventListener("input", function (event) {
+      let telefone = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (telefone.length > 2) {
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+      }
+      if (telefone.length > 7) {
+        telefone = telefone.replace(/^(\(\d{2}\) \d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = telefone;
+    });
+
+  // Máscara de CEP (00000-000)
+  document.getElementById("cep").addEventListener("input", function (event) {
+    let cep = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+    if (cep.length <= 8) {
+      cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+    }
+
+    event.target.value = cep;
+  });
+
+  document
+    .getElementById("formCadastrar")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+
+      // Capturando os valores do formulário
+      const cpf = document.getElementById("cpf").value;
+      const nome = document.getElementById("nome").value;
+      const inicioVigencia = document.getElementById("inicioVigencia").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("telefone").value;
+      const area = document.getElementById("area").value;
+      
+
+      const cep = document.getElementById("cep").value;
+      const estado = document.getElementById("estado").value;
+      const cidade = document.getElementById("cidade").value;
+      const bairro = document.getElementById("bairro").value;
+      const logradouro = document.getElementById("logradouro").value;
+      const complemento = document.getElementById("complemento").value;
+
+
+      // Validações
+      if (cpf.length !== 14) {
+        alert("O CPF deve ter 11 dígitos.");
+        return;
+      }
+
+      if (telefone.length < 15) {
+        alert("O telefone deve ter 11 dígitos.");
+        return;
+      }
+
+      if (cep.length !== 9) {
+        alert("O CEP deve ter 8 dígitos.");
+        return;
+      }
+
+      // Montando o objeto com os dados
+      const dadosFornecedor = {
+        cpf,
+        nome,
+        email,
+        telefone,
+        iniciovigencia: inicioVigencia,
+        endereco: {
+          cep,
+          estado,
+          cidade,
+          bairro,
+          logradouro,
+          complemento,
+        },
+        
+      };
+
+      try {
+        // Enviando os dados para o backend via fetch API
+        const response = await fetch("/fornecedor/cadastrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosFornecedor),
+        });
+
+        const data = await response.json();
+        alert(data.message); // Exibir mensagem de sucesso ou erro
+
+        if (response.ok) {
+          fecharModal("modalCadastrar"); // Fecha o modal após cadastro bem-sucedido
+          document.getElementById("formCadastrar").reset(); // Limpa o formulário
+        }
+      } catch (error) {
+        console.error("Erro ao cadastrar fornecedor:", error);
+        alert("Erro ao cadastrar fornecedor. Tente novamente.");
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
