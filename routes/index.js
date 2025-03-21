@@ -31,23 +31,29 @@ router.get("/produtos", produtoController.index);
 
 router.get("/servicos", servicoController.index);
 
-router.get("/funcionario", funcionarioController.index);
+//Rotas Funcionário
 
-router.get("/fornecedores", fornecedorController.index);
+    router.get("/funcionario", funcionarioController.index);
 
-// Rota para cadastrar funcionário
-router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
+    // Rota para cadastrar funcionário
+    router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
 
-// Rota para consultar funcionário pelo CPF
-router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
+    // Rota para consultar funcionário pelo CPF
+    router.get("/funcionario/consultar/:cpf", funcionarioController.consultar);
 
-// Rota para atualizar um funcionário pelo CPF
-router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
+    // Rota para atualizar um funcionário pelo CPF
+    router.put("/funcionario/atualizar/:cpf", funcionarioController.atualizar);
 
-// Rota para excluir um funcionário pelo CPF
-router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
+    // Rota para excluir um funcionário pelo CPF
+    router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 
-// Rota para listar funcionários
-router.get("/funcionario/listar", funcionarioController.listar);
+    // Rota para listar funcionários
+    router.get("/funcionario/listar", funcionarioController.listar);
 
+// Rotas Fornecedor
+
+    router.get("/fornecedores", fornecedorController.index);
+
+    // Rota para cadastrar funcionário
+    router.post("/fornecedor/cadastrar", funcionarioController.cadastrar);
 export default router;
