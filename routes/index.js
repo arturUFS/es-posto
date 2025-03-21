@@ -50,4 +50,16 @@ router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 // Rota para listar funcionários
 router.get("/funcionario/listar", funcionarioController.listar);
 
+// Rota para consultar fornecedor pelo CNPJ
+router.get("/fornecedor/consultar/:cnpj", fornecedorController.consultar);
+
+// Rota para atualizar um fornecedor pelo CNPJ
+router.put("/fornecedor/atualizar/:cnpj", fornecedorController.atualizar);
+
+// Rota para excluir um fornecedor pelo CNPJ
+router.delete("/fornecedor/excluir/:cnpj", fornecedorController.excluir);
+
+// Rota para listar fornecedores
+router.get("/fornecedor/listar", fornecedorController.listar);
+
 export default router;
