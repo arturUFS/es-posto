@@ -9,6 +9,10 @@
       rel="stylesheet"
       href="assets/css/modais-produto/registrar_venda_prod.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-produto/cadastrar_produto.css"
+    />
     <style>
       .menu li:nth-child(3) a {
         background-color: #c31010;
@@ -42,12 +46,13 @@
     </div>
     <div class="content">
       <button id="registrar-venda-prod">Registrar venda de produto</button>
-      <button>Cadastrar Produto</button>
+      <button id="cadastrar-produto">Cadastrar Produto</button>
       <button>Consultar Produto</button>
       <button>Listar Produtos</button>
       <button>Gerar Relatório de Vendas</button>
     </div>
-    <%- include('modal_registrar_venda') %>
+    <%- include('modal_registrar_venda') %> <%-
+    include('modal_cadastrar_produto') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -66,5 +71,9 @@
     document
       .getElementById("registrar-venda-prod")
       .addEventListener("click", () => abrirModal("modalRegistrarVenda"));
+
+    document
+      .getElementById("cadastrar-produto")
+      .addEventListener("click", () => abrirModal("modalCadastrarProduto"));
   </script>
 </html>
