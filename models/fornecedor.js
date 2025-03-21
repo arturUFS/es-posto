@@ -26,7 +26,7 @@ export const Fornecedor = database.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    inicioVigencia: {
+    iniciovigencia: {
       type: DataTypes.DATE,
       allowNull: false,
     },
