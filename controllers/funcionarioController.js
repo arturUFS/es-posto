@@ -117,12 +117,6 @@ export const funcionarioController = {
         attributes: ["cpf", "nome", "email", "telefone"], // Apenas os campos necessários
       });
 
-      // Formata os CPFs antes de enviar para a view
-      const funcionariosFormatados = funcionarios.map((funcionario) => ({
-        ...funcionario.toJSON(),
-        cpf: formatarCPF(funcionario.cpf),
-      }));
-
       // Renderiza a página funcionário.ejs e passa os funcionários
       res.render("Funcionario/funcionario", {
         funcionarios: funcionariosFormatados,

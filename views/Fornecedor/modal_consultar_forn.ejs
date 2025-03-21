@@ -1,0 +1,250 @@
+<!-- <script>
+  // Máscara de CPF (XXX.XXX.XXX-XX)
+  function aplicarMascaraCPF(idElemento) {
+    document
+      .getElementById(idElemento)
+      .addEventListener("input", function (event) {
+        let cpf = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+        if (cpf.length <= 11) {
+          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+          cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+          cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        }
+
+        event.target.value = cpf;
+      });
+  }
+
+  aplicarMascaraCPF("cpfConsulta");
+  aplicarMascaraCPF("cpf-res");
+
+  // Máscara de Telefone ((XX) XXXXX-XXXX)
+  document
+    .getElementById("telefone-res")
+    .addEventListener("input", function (event) {
+      let telefone = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (telefone.length > 2) {
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+      }
+      if (telefone.length > 7) {
+        telefone = telefone.replace(/^(\(\d{2}\) \d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = telefone;
+    });
+
+  // Máscara de CEP (00000-000)
+  document
+    .getElementById("cep-res")
+    .addEventListener("input", function (event) {
+      let cep = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (cep.length <= 8) {
+        cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = cep;
+    });
+
+  // Envia o CPF do funcionário para o backend e exibe os dados retornados.
+  function consultarFuncionario() {
+    const cpf = document.getElementById("cpfConsulta").value;
+
+    if (cpf.length !== 14) {
+      alert("Por favor, insira um CPF válido.");
+      return;
+    }
+
+    fetch(`/funcionario/consultar/${cpf}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Funcionário não encontrado.");
+        }
+        return response.json();
+      })
+      .then((funcionario) => {
+        preencherFormulario(funcionario);
+        document.getElementById("telaConsulta").style.display = "none";
+        document.getElementById("resultadoConsulta").style.display = "block";
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+
+  // Preenche os campos da tela de resultado com os dados do funcionário.
+  function preencherFormulario(funcionario) {
+    document.getElementById("cpf-res").value = funcionario.cpf;
+    document.getElementById("nome-res").value = funcionario.nome;
+    document.getElementById("dataNascimento-res").value =
+      funcionario.dataNascimento;
+    document.getElementById("telefone-res").value = funcionario.telefone;
+    document.getElementById("email-res").value = funcionario.email;
+    document.getElementById("cep-res").value = funcionario.endereco.cep;
+    document.getElementById("estado-res").value = funcionario.endereco.estado;
+    document.getElementById("cidade-res").value = funcionario.endereco.cidade;
+    document.getElementById("bairro-res").value = funcionario.endereco.bairro;
+    document.getElementById("logradouro-res").value =
+      funcionario.endereco.logradouro;
+    document.getElementById("complemento-res").value =
+      funcionario.endereco.complemento;
+  }
+
+  // Função para habilitar a edição dos campos
+  function habilitarEdicao() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input:not(#cpf-res)"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = false;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "block";
+    document.getElementById("lapis").style.display = "none";
+  }
+
+  // Função para cancelar edição
+  function cancelarEdicao() {
+    const campos = document.querySelectorAll("#resultadoConsulta input");
+    campos.forEach((campo) => {
+      campo.readOnly = true;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "none";
+    document.getElementById("lapis").style.display = "block";
+  }
+
+  // Envia os dados editados para o backend e atualiza o funcionário no banco de dados.
+  function salvarAlteracoes() {
+    const cpf = document.getElementById("cpf-res").value; // CPF não pode ser editado
+    const nome = document.getElementById("nome-res").value;
+    const dataNascimento = document.getElementById("dataNascimento-res").value;
+    const telefone = document.getElementById("telefone-res").value;
+    const email = document.getElementById("email-res").value;
+    const endereco = {
+      cep: document.getElementById("cep-res").value,
+      estado: document.getElementById("estado-res").value,
+      cidade: document.getElementById("cidade-res").value,
+      bairro: document.getElementById("bairro-res").value,
+      logradouro: document.getElementById("logradouro-res").value,
+      complemento: document.getElementById("complemento-res").value,
+    };
+
+    // Enviar os dados editados para o backend via requisição PUT
+    fetch(`/funcionario/atualizar/${cpf}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome,
+        dataNascimento,
+        telefone,
+        email,
+        endereco,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao atualizar funcionário.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.message); // Exibe mensagem de sucesso
+        cancelarEdicao(); // Volta os campos para readonly
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+
+  // Exibe uma mensagem de confirmação antes de excluir um funcionário.
+  function confirmarExclusao() {
+    const cpf = document.getElementById("cpf-res").value; // Obtém o CPF do funcionário
+
+    if (!cpf) {
+      alert("Nenhum funcionário selecionado para exclusão.");
+      return;
+    }
+
+    const confirmacao = confirm(
+      "Tem certeza que deseja excluir este funcionário?"
+    );
+    if (confirmacao) {
+      excluirFuncionario(cpf);
+    }
+  }
+
+  // Exclui um funcionário enviando uma requisição DELETE para o backend.
+  function excluirFuncionario(cpf) {
+    fetch(`/funcionario/excluir/${cpf}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao excluir funcionário.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.message); // Exibe mensagem de sucesso
+        fecharOuVoltar(); // Retorna para a tela de consulta
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
+
+  // Função para fechar ou voltar para início do modal
+  function fecharOuVoltar() {
+    const resultado = document.getElementById("resultadoConsulta");
+    const telaConsulta = document.getElementById("telaConsulta");
+    const formConsulta = document.getElementById("consultaForm");
+
+    if (window.getComputedStyle(resultado).display !== "none") {
+      // Se a tela de resultado estiver visível, volta para a tela de consulta
+      resultado.style.display = "none";
+      telaConsulta.style.display = "flex";
+      cancelarEdicao();
+
+      // Resetando o formulário de consulta
+      formConsulta.reset();
+
+      // Limpar manualmente os campos dentro de #resultadoConsulta
+      limparCamposResultado();
+    } else {
+      cancelarEdicao();
+      // Fecha o modal e reseta tudo
+      formConsulta.reset();
+      limparCamposResultado();
+      fecharModal("modalConsultar");
+    }
+  }
+
+  // Limpa manualmente os inputs da tela de resultado.
+  function limparCamposResultado() {
+    const idsCampos = [
+      "cpf-res",
+      "nome-res",
+      "dataNascimento-res",
+      "telefone-res",
+      "email-res",
+      "cep-res",
+      "estado-res",
+      "cidade-res",
+      "bairro-res",
+      "logradouro-res",
+      "complemento-res",
+    ];
+
+    idsCampos.forEach((id) => {
+      document.getElementById(id).value = "";
+    });
+  }
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script> -->
