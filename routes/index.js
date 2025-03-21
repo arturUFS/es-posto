@@ -31,9 +31,9 @@ router.get("/produtos", produtoController.index);
 
 router.get("/servicos", servicoController.index);
 
-router.get("/funcionario", funcionarioController.index);
+//Rotas Funcionário
 
-router.get("/fornecedores", fornecedorController.index);
+router.get("/funcionario", funcionarioController.index);
 
 // Rota para cadastrar funcionário
 router.post("/funcionario/cadastrar", funcionarioController.cadastrar);
@@ -50,4 +50,21 @@ router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 // Rota para listar funcionários
 router.get("/funcionario/listar", funcionarioController.listar);
 
+// Rotas Fornecedor
+
+router.get("/fornecedores", fornecedorController.index);
+
+// Rota para consultar fornecedor pelo CNPJ
+router.get("/fornecedores/consultar/:cnpj", fornecedorController.consultar);
+
+// Rota para atualizar um fornecedor pelo CNPJ
+router.put("/fornecedores/atualizar/:cnpj", fornecedorController.atualizar);
+
+// Rota para excluir um fornecedor pelo CNPJ
+router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
+
+// Rota para listar fornecedores
+router.get("/fornecedores/listar", fornecedorController.listar);
+
 export default router;
+

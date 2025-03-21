@@ -21,7 +21,7 @@
               <th onclick="ordenarTabela(1)">Email</th>
               <th onclick="ordenarTabela(2)">Telefone</th>
               <th onclick="ordenarTabela(3)">CPF</th>
-              <th>Ações</th>
+              <!-- <th>Ações</th> -->
             </tr>
           </thead>
           <tbody id="funcionariosTbody">
@@ -38,7 +38,7 @@
               <td><%= funcionario.telefone %></td>
               <td><%= funcionario.cpf %></td>
               <!-- CPF já formatado no Controller -->
-              <td class="action-buttons">
+              <!-- <td class="action-buttons">
                 <button class="view-button">
                   <i class="eye-icon"
                     ><img src="/assets/Icon.png" alt="consultar" width="40%"
@@ -57,7 +57,7 @@
                       width="30%"
                   /></i>
                 </button>
-              </td>
+              </td> -->
             </tr>
             <% }); %> <% } %>
           </tbody>

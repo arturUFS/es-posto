@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Fornecedores</title>
     <link rel="stylesheet" href="assets/css/pages_initials.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-fornecedor/modal_cadastrar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-fornecedor/modal_consultar_forn.css"
+    />
     <style>
       .menu li:nth-child(6) a {
         background-color: #c31010;
@@ -37,14 +45,43 @@
       </button>
     </div>
     <div class="content">
-      <button>Cadastrar Fornecedor</button>
-      <button>Consultar Fornecedor</button>
-      <button>Listar Fornecedores</button>
+      <button id="cadastrar-fornecedor">Cadastrar Fornecedor</button>
+      <button id="consultar-fornecedor">Consultar Fornecedor</button>
+      <button id="listar-fornecedores">Listar Fornecedores</button>
     </div>
+    <%- include('modal_cadastrar') %> <%- include('modal_consultar_forn') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
       window.location.href = "/logout"; // Redireciona para a rota de logout
     });
+
+    // Função para abrir e fechar modais
+    function abrirModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+    function fecharModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    // Eventos de clique para abrir os modais
+    document
+      .getElementById("cadastrar-fornecedor")
+      .addEventListener("click", () => abrirModal("modalCadastrar"));
+
+    document
+      .getElementById("consultar-fornecedor")
+      .addEventListener("click", () => abrirModal("modalConsultarForn"));
+
+    document
+      .getElementById("listar-fornecedores")
+      .addEventListener("click", () => abrirModal("modalListarForn"));
+
+    // Fechar modal ao clicar fora
+    window.onclick = function (event) {
+      if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+      }
+    };
   </script>
 </html>
