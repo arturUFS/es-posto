@@ -67,14 +67,14 @@ Combustivel.belongsToMany(Fornecedor, {
 
 // Produto - ItemVenda
 
-Produto.hasMany(ItemVenda, {
-    foreignKey: "idproduto", 
-    as: "itensVenda"    
-});
-ItemVenda.belongsTo(Produto, { 
-    foreignKey: "idproduto",
-    as: "produto"
-})
+// Produto.hasMany(ItemVenda, {
+//     foreignKey: "idproduto", 
+//     as: "itensVenda"    
+// });
+// ItemVenda.belongsTo(Produto, { 
+//     foreignKey: "idproduto",
+//     as: "produto"
+// })
 
 // Fornecedor - Produto
 
