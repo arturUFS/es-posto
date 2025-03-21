@@ -46,41 +46,40 @@ export const fornecedorController = {
     }
   },
 
-    /**
-     * Cadastra um novo fornecedor, incluindo o endereço
-     */
-    async cadastrar(req, res) {
-      try {
-        const { cnpj, nome, email, telefone, iniciovigencia, area, endereco } =
-          req.body;
-  
-        // Cadastrar o endereço e obter o ID gerado
-        const idEndereco = await cadastrarEndereco(endereco);
-  
-        // Criar o fornecedor vinculado ao endereço cadastrado
-        const novoFornecedor = await Fornecedor.create({
-          cnpj,
-          nome,
-          email,
-          telefone,
-          iniciovigencia,
-          area,
-          idendereco: idEndereco,
-        });
-  
-  
-        res.json({
-          message: "Fornecedor cadastrado com sucesso!",
-          fornecedor: novoFornecedor,
-        });
-      } catch (error) {
-        console.error("Erro ao cadastrar fornecedor:", error);
-        res.status(500).json({
-          message: "Erro ao cadastrar fornecedor",
-          error: error.message,
-        });
-      }
-    },
+  /**
+   * Cadastra um novo fornecedor, incluindo o endereço
+   */
+  async cadastrar(req, res) {
+    try {
+      const { cnpj, nome, email, telefone, iniciovigencia, area, endereco } =
+        req.body;
+
+      // Cadastrar o endereço e obter o ID gerado
+      const idEndereco = await cadastrarEndereco(endereco);
+
+      // Criar o fornecedor vinculado ao endereço cadastrado
+      const novoFornecedor = await Fornecedor.create({
+        cnpj,
+        nome,
+        email,
+        telefone,
+        iniciovigencia,
+        area,
+        idendereco: idEndereco,
+      });
+
+      res.json({
+        message: "Fornecedor cadastrado com sucesso!",
+        fornecedor: novoFornecedor,
+      });
+    } catch (error) {
+      console.error("Erro ao cadastrar fornecedor:", error);
+      res.status(500).json({
+        message: "Erro ao cadastrar fornecedor",
+        error: error.message,
+      });
+    }
+  },
 
   // Lista todos os fornecedores
   async listar(req, res) {
@@ -105,14 +104,13 @@ export const fornecedorController = {
       var { cnpj } = req.params;
 
       // Aplica a máscara (00.000.000/0000-00)
-    if (cnpj.length <= 18) {
+      if (cnpj.length <= 18) {
         cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
         cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
         cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
         cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
-    }
+      }
 
-    
       const fornecedor = await Fornecedor.findOne({ where: { cnpj } });
 
       if (!fornecedor) {
