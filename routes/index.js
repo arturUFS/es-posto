@@ -29,7 +29,10 @@ router.get("/combustivel", combustivelController.index);
 
 router.get("/produtos", produtoController.index);
 
+//Rotas Servicos
 router.get("/servicos", servicoController.index);
+//Rota para cadastrar servico
+router.post("/servicos/cadastrar", servicoController.cadastrar);
 
 //Rotas Funcionário
 
