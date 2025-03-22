@@ -34,8 +34,6 @@ router.get("/produtos", produtoController.index);
 router.get("/servicos", servicoController.index);
 //Rota para cadastrar servico
 router.post("/servicos/cadastrar", servicoController.cadastrar);
-//Rota para cadastrar servico
-router.post("/servicos/cadastrar", servicoController.cadastrar);
 
 //Rotas Funcionário
 
