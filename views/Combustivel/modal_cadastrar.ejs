@@ -1,0 +1,167 @@
+<div id="modalCadastrar" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalCadastrar')">
+        <i class="arrow-left">←</i>
+      </button>
+      <h2>Cadastrar Combustível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+            ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formCadastrar">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipoCombustivel">Tipo Combustível:</label>
+            <input
+              type="text"
+              id="tipoCombustivel"
+              placeholder="Digite tipo do combustível"
+              maxlength="50"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="fornecedor">Fornecedor:</label>
+            <select id="fornecedor" required>
+              <option value="" selected disabled>Selecione o fornecedor</option>
+              <!-- Opções de fornecedores serão carregadas via JavaScript -->
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorLitro">Valor Litro:</label>
+            <input
+              type="text"
+              id="valorLitro"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="quantidadeDisponivel">Quantidade Disponível (L):</label>
+            <input
+              type="number"
+              id="quantidadeDisponivel"
+              placeholder="0"
+              min="0"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="descricao">Descrição:</label>
+            <textarea
+              id="descricao"
+              placeholder="Descreva o combustível"
+              rows="4"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+
+    //Máscara para o valor do litro
+    document.getElementById("valorLitro").addEventListener("input", function(event) {
+    let valor = event.target.value;
+    
+    // Remove tudo que não for número
+    valor = valor.replace(/\D/g, "");
+    
+    // Converte para número e divide por 100 para ter os centavos
+    valor = (parseInt(valor) / 100).toFixed(2);
+    
+    // Formata com R$ e vírgula no lugar do ponto
+    valor = "R$ " + valor.replace(".", ",");
+    
+    event.target.value = valor;
+  });
+
+  // Envio do formulário
+  document
+  .getElementById("formCadastrar")
+  .addEventListener("submit", async function(event) {
+    event.preventDefault(); // Evita o recarregamento da página
+    
+    // Capturando os valores do formulário
+    const tipoCombustivel = document.getElementById("tipoCombustivel").value;
+    const fornecedorId = document.getElementById("fornecedor").value;
+    let valorLitro = document.getElementById("valorLitro").value;
+    const quantidadeDisponivel = document.getElementById("quantidadeDisponivel").value;
+    const descricao = document.getElementById("descricao").value;
+    
+    // Formata o valor para envio (remove R$ e converte vírgula para ponto)
+    valorLitro = valorLitro.replace("R$ ", "").replace(",", ".");
+    
+    // Validações
+    if (!tipoCombustivel) {
+      alert("Informe o tipo de combustível.");
+      return;
+    }
+    
+    if (!fornecedorId) {
+      alert("Selecione um fornecedor.");
+      return;
+    }
+    
+    if (!valorLitro || isNaN(parseFloat(valorLitro))) {
+      alert("Informe um valor válido para o litro.");
+      return;
+    }
+    
+    if (!quantidadeDisponivel || isNaN(parseInt(quantidadeDisponivel))) {
+      alert("Informe uma quantidade disponível válida.");
+      return;
+    }
+    
+    // Montando o objeto com os dados
+    const dadosCombustivel = {
+      tipo: tipoCombustivel,
+      cnpj: cnpj,
+      valorLitro: parseFloat(valorLitro),
+      quantidadeDisponivel: quantidadeDisponivel,
+      descricao
+    };
+    
+    try {
+      // Enviando os dados para o backend via fetch API
+      const response = await fetch("/combustivel/cadastrar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosCombustivel),
+      });
+      
+      const data = await response.json();
+      alert(data.message); // Exibir mensagem de sucesso ou erro
+      
+      if (response.ok) {
+        fecharModal("modalCadastrarCombustivel"); // Fecha o modal após cadastro bem-sucedido
+        document.getElementById("formCadastrar").reset(); // Limpa o formulário
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar combustível:", error);
+      alert("Erro ao cadastrar combustível. Tente novamente.");
+    }
+  });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+
+</script>
