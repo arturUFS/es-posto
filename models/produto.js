@@ -6,7 +6,7 @@ config();
 export const Produto = database.define(
   "produto",
   {
-    idProduto: {
+    idproduto: {
       type: DataTypes.STRING(15),
       primaryKey: true,
     },
