@@ -160,6 +160,7 @@
 
         alert("✅ Produto cadastrado com sucesso!");
         fecharModal("modalCadastrarProduto");
+        document.getElementById("formCadastrarProduto").reset(); // Limpa o formulário
       } catch (error) {
         console.error("❌ Erro ao cadastrar produto:", error);
         alert("Erro ao cadastrar produto");
