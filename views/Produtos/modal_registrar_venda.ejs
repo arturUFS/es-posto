@@ -33,10 +33,7 @@
           <div class="form-group">
             <label for="produto">Produto:</label>
             <select id="produto" required>
-              <option value="" disabled selected>Selecione o produto</option>
-              <option value="produto1">Produto 1</option>
-              <option value="produto2">Produto 2</option>
-              <option value="produto3">Produto 3</option>
+              <option value="" disabled selected>Carregando produtos...</option>
             </select>
           </div>
           <div class="form-group">
@@ -136,6 +133,36 @@
         }
       });
     });
+
+  // Função para carregar os Produtos e preencher o select
+  async function carregarProdutos() {
+    try {
+      const response = await fetch("/produto/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar produtos.");
+      }
+
+      const produtos = await response.json();
+      const selectProduto = document.getElementById("produto");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectProduto.innerHTML =
+        '<option value="" disabled selected>Selecione o produto</option>';
+
+      // Adiciona os produtos ao select
+      produtos.forEach((produto) => {
+        const option = document.createElement("option");
+        option.value = produto.idproduto; // O valor será o idproduto
+        option.textContent = produto.nome; // O texto será o nome do produto
+        selectProduto.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar a função ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarProdutos);
 
   // Função para fechar o modal
   function fecharModal(idModal) {
