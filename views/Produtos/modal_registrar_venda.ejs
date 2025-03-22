@@ -53,22 +53,49 @@
             <div class="checkbox-container">
               <label for="formaPagamento">Forma de Pagamento:</label>
               <div class="checkbox-item">
-                <input type="checkbox" id="dinheiro" />
+                <input
+                  type="checkbox"
+                  name="formaPagamento"
+                  id="dinheiro"
+                  value="Dinheiro"
+                />
                 <label for="dinheiro">Dinheiro</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="pix" />
+                <input
+                  type="checkbox"
+                  name="formaPagamento"
+                  id="pix"
+                  value="Pix"
+                />
                 <label for="pix">PIX</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="credito" />
+                <input
+                  type="checkbox"
+                  name="formaPagamento"
+                  id="credito"
+                  value="Crédito"
+                />
                 <label for="credito">Crédito</label>
               </div>
               <div class="checkbox-item">
-                <input type="checkbox" id="debito" />
+                <input
+                  type="checkbox"
+                  name="formaPagamento"
+                  id="debito"
+                  value="Débito"
+                />
                 <label for="debito">Débito</label>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" placeholder="0" required />
           </div>
         </div>
 
@@ -85,7 +112,7 @@
         </div>
 
         <div class="form-row">
-          <button type="submit" class="cadastrar-btn">Registrar</button>
+          <button type="submit" class="cadastrar-btn-reg">Registrar</button>
         </div>
       </form>
     </div>
@@ -163,6 +190,81 @@
 
   // Chamar a função ao abrir o modal
   document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+  // Captura o evento de envio do formulário
+  document
+    .getElementById("formRegistroVenda")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Impede o recarregamento da página
+
+      // Captura os valores dos campos do formulário
+      const data = document.getElementById("data").value;
+      const idProduto = document.getElementById("produto").value;
+      const cpfFuncionario = document.getElementById("funcionario").value;
+      const quantidade = parseInt(document.getElementById("quantidade").value);
+      const formaPagamento = document.querySelector(
+        'input[name="formaPagamento"]:checked'
+      )?.value;
+      const valorTotal = parseFloat(
+        document
+          .getElementById("valorTotal")
+          .value.replace("R$ ", "")
+          .replace(",", ".")
+      );
+
+      console.log({
+        data,
+        produto,
+        funcionario,
+        quantidade,
+        formaPagamento,
+        valorTotal,
+      }); // 🔍 Verifica os valores no console
+
+      // Verificação de preenchimento
+      if (
+        !data ||
+        !idProduto ||
+        !cpfFuncionario ||
+        !quantidade ||
+        !formaPagamento ||
+        !valorTotal
+      ) {
+        alert("Preencha todos os campos!");
+        return;
+      }
+
+      // Enviar os dados para o backend
+      try {
+        const response = await fetch("/produto/registrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data,
+            idProduto,
+            cpfFuncionario,
+            quantidade,
+            formaPagamento,
+            valorTotal,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("Venda registrada com sucesso!");
+          document.getElementById("formRegistroVenda").reset();
+          fecharModal("modalRegistrarVenda");
+        } else {
+          alert(`Erro ao registrar venda: ${result.message}`);
+        }
+      } catch (error) {
+        console.error("Erro ao registrar venda:", error);
+        alert("Erro no servidor. Tente novamente.");
+      }
+    });
 
   // Função para fechar o modal
   function fecharModal(idModal) {
