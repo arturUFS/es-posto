@@ -7,7 +7,7 @@
       <h2>Cadastrar Combustível</h2>
       <button class="home-button" onclick="window.location.href='/home'">
         <i class="home-icon"
-            ><img src="/assets/home-lg-alt 1.png" alt="home"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
         /></i>
       </button>
     </div>
@@ -75,93 +75,121 @@
   </div>
 </div>
 <script>
+  //Máscara para o valor do litro
+  document
+    .getElementById("valorLitro")
+    .addEventListener("input", function (event) {
+      let valor = event.target.value;
+      valor = valor.replace(/\D/g, "");
+      valor = (parseInt(valor || "0") / 100).toFixed(2);
+      valor = "R$ " + valor.replace(".", ",");
 
-    //Máscara para o valor do litro
-    document.getElementById("valorLitro").addEventListener("input", function(event) {
-    let valor = event.target.value;
-    
-    // Remove tudo que não for número
-    valor = valor.replace(/\D/g, "");
-    
-    // Converte para número e divide por 100 para ter os centavos
-    valor = (parseInt(valor) / 100).toFixed(2);
-    
-    // Formata com R$ e vírgula no lugar do ponto
-    valor = "R$ " + valor.replace(".", ",");
-    
-    event.target.value = valor;
-  });
+      event.target.value = valor;
+    });
+
+  // Carregar lista de fornecedores (exemplo)
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores:", error);
+      }
+      const fornecedores = await response.json();
+
+      const selectFornecedor = document.getElementById("fornecedor");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectFornecedor.innerHTML =
+        '<option value="" disabled selected>Selecione o fornecedor</option>';
+
+      fornecedores.forEach((fornecedor) => {
+        const option = document.createElement("option");
+        option.value = fornecedor.cnpj;
+        option.textContent = fornecedor.nome;
+        selectFornecedor.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar função ao carregar a página
+  document.addEventListener("DOMContentLoaded", carregarFornecedores);
 
   // Envio do formulário
   document
-  .getElementById("formCadastrar")
-  .addEventListener("submit", async function(event) {
-    event.preventDefault(); // Evita o recarregamento da página
-    
-    // Capturando os valores do formulário
-    const tipoCombustivel = document.getElementById("tipoCombustivel").value;
-    const fornecedorId = document.getElementById("fornecedor").value;
-    let valorLitro = document.getElementById("valorLitro").value;
-    const quantidadeDisponivel = document.getElementById("quantidadeDisponivel").value;
-    const descricao = document.getElementById("descricao").value;
-    
-    // Formata o valor para envio (remove R$ e converte vírgula para ponto)
-    valorLitro = valorLitro.replace("R$ ", "").replace(",", ".");
-    
-    // Validações
-    if (!tipoCombustivel) {
-      alert("Informe o tipo de combustível.");
-      return;
-    }
-    
-    if (!fornecedorId) {
-      alert("Selecione um fornecedor.");
-      return;
-    }
-    
-    if (!valorLitro || isNaN(parseFloat(valorLitro))) {
-      alert("Informe um valor válido para o litro.");
-      return;
-    }
-    
-    if (!quantidadeDisponivel || isNaN(parseInt(quantidadeDisponivel))) {
-      alert("Informe uma quantidade disponível válida.");
-      return;
-    }
-    
-    // Montando o objeto com os dados
-    const dadosCombustivel = {
-      tipo: tipoCombustivel,
-      cnpj: cnpj,
-      valorLitro: parseFloat(valorLitro),
-      quantidadeDisponivel: quantidadeDisponivel,
-      descricao
-    };
-    
-    try {
-      // Enviando os dados para o backend via fetch API
-      const response = await fetch("/combustivel/cadastrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dadosCombustivel),
-      });
-      
-      const data = await response.json();
-      alert(data.message); // Exibir mensagem de sucesso ou erro
-      
-      if (response.ok) {
+    .getElementById("formCadastrar")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+
+      // Capturando os valores do formulário
+      const tipoCombustivel = document.getElementById("tipoCombustivel").value;
+      const fornecedorId = document.getElementById("fornecedor").value;
+      const valorLitro = document
+        .getElementById("valorLitro")
+        .value.replace("R$ ", "")
+        .replace(",", ".");
+      const quantidadeDisponivel = document.getElementById(
+        "quantidadeDisponivel"
+      ).value;
+      const descricao = document.getElementById("descricao").value;
+
+      // Formata o valor para envio (remove R$ e converte vírgula para ponto)
+      valorLitro = valorLitro.replace("R$ ", "").replace(",", ".");
+
+      // Validações
+      if (!tipoCombustivel) {
+        alert("Informe o tipo de combustível.");
+        return;
+      }
+
+      if (!fornecedorId) {
+        alert("Selecione um fornecedor.");
+        return;
+      }
+
+      if (!valorLitro || isNaN(parseFloat(valorLitro))) {
+        alert("Informe um valor válido para o litro.");
+        return;
+      }
+
+      if (!quantidadeDisponivel || isNaN(parseInt(quantidadeDisponivel))) {
+        alert("Informe uma quantidade disponível válida.");
+        return;
+      }
+
+      // Montando o objeto com os dados
+      const dadosCombustivel = {
+        tipo: tipoCombustivel,
+        cnpj: cnpj,
+        valorLitro: parseFloat(valorLitro),
+        quantidadeDisponivel: quantidadeDisponivel,
+        descricao,
+      };
+
+      try {
+        // Enviando os dados para o backend via fetch API
+        const response = await fetch("/combustivel/cadastrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosCombustivel),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao cadastrar combustível"); // Exibir mensagem de sucesso ou erro
+        }
+        alert("✅ Combustível cadastrado com sucesso!");
         fecharModal("modalCadastrarCombustivel"); // Fecha o modal após cadastro bem-sucedido
         document.getElementById("formCadastrar").reset(); // Limpa o formulário
+      } catch (error) {
+        console.error("❌ Erro ao cadastrar combustível:", error);
+        alert("Erro ao cadastrar combustível. Tente novamente.");
       }
-    } catch (error) {
-      console.error("Erro ao cadastrar combustível:", error);
-      alert("Erro ao cadastrar combustível. Tente novamente.");
-    }
-  });
+    });
 
   // Função para fechar o modal
   function fecharModal(idModal) {
     document.getElementById(idModal).style.display = "none";
   }
-
 </script>
