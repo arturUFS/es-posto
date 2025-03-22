@@ -1,11 +1,44 @@
+import { Servico } from "../models/servico.js";
+
+function gerarIdServico() {
+  return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
+}
+
 export const servicoController = {
-  index: async (req, res) => {
+  async index(req, res) {
     try {
-        const nomeFuncionario = req.query.nome || "Usuário";
-        res.render("Servico/servico", { nomeFuncionario});
+      const nomeFuncionario = req.query.nome || "Usuário";
+      res.render("Servico/servico", { nomeFuncionario });
     } catch (err) {
       console.error(err);
-      res.status(500).send('Erro ao buscar usuários');
+      res.status(500).send("Erro ao buscar usuários");
+    }
+  },
+
+  async cadastrar(req, res) {
+    try {
+      const { tiposervico, valor, duracao, local, descricao } = req.body;
+      const idServico = gerarIdServico();
+
+      const novoServico = await Servico.create({
+        idservico: idServico,
+        tiposervico,
+        valor,
+        duracao,
+        local,
+        descricao,
+      });
+
+      res.json({
+        message: "Serviço cadastrado com sucesso!",
+        servico: novoServico,
+      });
+    } catch (error) {
+      console.error("Erro ao cadastrar serviço:", error);
+      res.status(500).json({
+        message: "Erro ao cadastrar serviço",
+        error: error.message,
+      });
     }
   },
 };

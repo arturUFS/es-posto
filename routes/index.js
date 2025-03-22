@@ -29,7 +29,10 @@ router.get("/combustivel", combustivelController.index);
 
 router.get("/produtos", produtoController.index);
 
+//Rotas Servicos
 router.get("/servicos", servicoController.index);
+//Rota para cadastrar servico
+router.post("/servicos/cadastrar", servicoController.cadastrar);
 
 //Rotas Funcionário
 
@@ -70,4 +73,3 @@ router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
 router.get("/fornecedores/listar", fornecedorController.listar);
 
 export default router;
-
