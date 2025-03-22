@@ -27,8 +27,6 @@ router.get("/home", homeController.index);
 
 router.get("/combustivel", combustivelController.index);
 
-router.get("/produtos", produtoController.index);
-
 router.get("/servicos", servicoController.index);
 
 //Rotas Funcionário
@@ -71,10 +69,15 @@ router.get("/fornecedores/listar", fornecedorController.listar);
 
 // Rotas Produto
 
+router.get("/produtos", produtoController.index);
+
 // Rota para cadastrar um produto
 router.post("/produto/cadastrar", produtoController.cadastrar);
 
 // Rota para listar produtos
 router.get("/produto/listar", produtoController.listar);
+
+// Rota para registrar venda de um produto
+router.post("/produto/registrar", produtoController.registrarVenda);
 
 export default router;

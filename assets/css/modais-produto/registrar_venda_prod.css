@@ -127,7 +127,7 @@ input[type="checkbox"] {
 }
 
 /* Botão Registrar/Cadastrar */
-.cadastrar-btn {
+.cadastrar-btn-reg {
   background-color: #292929;
   color: white;
   border: none;
@@ -136,10 +136,9 @@ input[type="checkbox"] {
   cursor: pointer;
   font-size: 14px;
   width: 25%;
-  margin-top: 50px;
 }
 
-.cadastrar-btn:hover {
+.cadastrar-btn-reg:hover {
   background-color: #1a1a1a;
 }
 
@@ -169,7 +168,8 @@ input[type="checkbox"] {
 }
 
 #data,
-#valorTotal {
+#valorTotal,
+#quantidade {
   width: 30%;
 }
 
