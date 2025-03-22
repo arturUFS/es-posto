@@ -69,5 +69,12 @@ router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
 // Rota para listar fornecedores
 router.get("/fornecedores/listar", fornecedorController.listar);
 
-export default router;
+// Rotas Produto
 
+// Rota para cadastrar um produto
+router.post("/produto/cadastrar", produtoController.cadastrar);
+
+// Rota para listar produtos
+router.get("/produto/listar", produtoController.listar);
+
+export default router;

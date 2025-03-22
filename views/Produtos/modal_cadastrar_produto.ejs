@@ -32,10 +32,9 @@
           <div class="form-group">
             <label for="fornecedor">Fornecedor:</label>
             <select id="fornecedor" required>
-              <option value="" disabled selected>Selecione o fornecedor</option>
-              <option value="fornecedor1">Fornecedor 1</option>
-              <option value="fornecedor2">Fornecedor 2</option>
-              <option value="fornecedor3">Fornecedor 3</option>
+              <option value="" disabled selected>
+                Carregando fornecedores...
+              </option>
             </select>
           </div>
         </div>
@@ -89,6 +88,83 @@
       let value = e.target.value.replace(/\D/g, "");
       value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
       e.target.value = "R$ " + value;
+    });
+
+  // Função para carregar os fornecedores e preencher o select
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores.");
+      }
+
+      const fornecedores = await response.json();
+      const selectFornecedor = document.getElementById("fornecedor");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectFornecedor.innerHTML =
+        '<option value="" disabled selected>Selecione o fornecedor</option>';
+
+      // Adiciona os fornecedores ao select
+      fornecedores.forEach((fornecedor) => {
+        const option = document.createElement("option");
+        option.value = fornecedor.cnpj; // O valor será o CNPJ
+        option.textContent = fornecedor.nome; // O texto será o nome do fornecedor
+        selectFornecedor.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar a função ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarFornecedores);
+
+  // Captura o evento de envio do formulário e cadastra o produto
+  document
+    .getElementById("formCadastrarProduto")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+
+      const nome = document.getElementById("nomeProduto").value;
+      const fornecedor = document.getElementById("fornecedor").value;
+      const valor = document
+        .getElementById("valorProduto")
+        .value.replace("R$ ", "")
+        .replace(",", ".");
+      const quantidade = document.getElementById("quantidadeDisponivel").value;
+      const descricao = document.getElementById("descricaoProduto").value;
+
+      const produto = {
+        nome,
+        fornecedor,
+        valor: parseFloat(valor),
+        quantidade: parseInt(quantidade),
+        descricao,
+      };
+
+      try {
+        const response = await fetch("/produto/cadastrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(produto),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao cadastrar produto");
+        }
+
+        alert("✅ Produto cadastrado com sucesso!");
+        fecharModal("modalCadastrarProduto");
+        document.getElementById("formCadastrarProduto").reset(); // Limpa o formulário
+      } catch (error) {
+        console.error("❌ Erro ao cadastrar produto:", error);
+        alert("Erro ao cadastrar produto");
+      }
     });
 
   // Função para fechar o modal
