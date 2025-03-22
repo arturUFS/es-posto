@@ -1,5 +1,7 @@
 import { Produto } from "../models/produto.js";
 import { FornecedorProduto } from "../models/fornecedor_produto.js";
+import { ItemVenda } from "../models/itemvenda.js";
+import { Venda } from "../models/venda.js";
 
 /**
  * Gera um ID único para o produto.
@@ -61,6 +63,21 @@ export const produtoController = {
         message: "Erro ao cadastrar produto",
         error: error.message,
       });
+    }
+  },
+
+  async listar(req, res) {
+    try {
+      // Busca todos os produtos no banco de dados
+      const produtos = await Produto.findAll({
+        attributes: ["idproduto", "quantidade", "nome", "descricao", "valor"], // Apenas os campos necessários
+      });
+
+      // Retorna os produtos como JSON (para consumo no front-end)
+      res.json(produtos);
+    } catch (error) {
+      console.error("❌ Erro ao listar produtos:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 };

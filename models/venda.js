@@ -7,31 +7,28 @@ config();
 export const Venda = database.define(
   "venda",
   {
-    idvenda: {
+    codigo: {
       type: DataTypes.STRING(15),
       primaryKey: true,
     },
-    datavenda: {
+    data: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    valortotal: {
+    valor: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
-    idfuncionario: {
+    cpf: {
       type: DataTypes.STRING(14),
       references: {
         model: "funcionario", // Nome da tabela referenciada
         key: "cpf", // Chave primária da tabela referenciada
       },
     },
-    idcliente: {
-      type: DataTypes.STRING(15),
-      references: {
-        model: "cliente", // Nome da tabela referenciada
-        key: "idcliente", // Chave primária da tabela referenciada
-      },
+    formapagamento: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
     },
   },
   {
