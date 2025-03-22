@@ -13,6 +13,10 @@
       rel="stylesheet"
       href="assets/css/modais-produto/cadastrar_produto.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-produto/consultar_produto.css"
+    />
     <style>
       .menu li:nth-child(3) a {
         background-color: #c31010;
@@ -47,12 +51,13 @@
     <div class="content">
       <button id="registrar-venda-prod">Registrar venda de produto</button>
       <button id="cadastrar-produto">Cadastrar Produto</button>
-      <button>Consultar Produto</button>
+      <button id="consultar-produto">Consultar Produto</button>
       <button>Listar Produtos</button>
       <button>Gerar Relatório de Vendas</button>
     </div>
     <%- include('modal_registrar_venda') %> <%-
-    include('modal_cadastrar_produto') %>
+    include('modal_cadastrar_produto') %> <%- include('modal_consultar_produto')
+    %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -75,5 +80,9 @@
     document
       .getElementById("cadastrar-produto")
       .addEventListener("click", () => abrirModal("modalCadastrarProduto"));
+
+    document
+      .getElementById("consultar-produto")
+      .addEventListener("click", () => abrirModal("modalConsultarProduto"));
   </script>
 </html>
