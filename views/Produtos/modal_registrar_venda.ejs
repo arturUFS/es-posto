@@ -1,0 +1,144 @@
+<div id="modalRegistrarVenda" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalRegistrarVenda')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Registrar Venda de Produto</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formRegistroVenda">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data">Data:</label>
+            <input
+              type="date"
+              id="data"
+              placeholder="DD/MM/AAAA"
+              maxlength="10"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="produto">Produto:</label>
+            <select id="produto" required>
+              <option value="" disabled selected>Selecione o produto</option>
+              <option value="produto1">Produto 1</option>
+              <option value="produto2">Produto 2</option>
+              <option value="produto3">Produto 3</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="funcionario">Funcionário Responsável (CPF):</label>
+            <input
+              type="text"
+              id="funcionario"
+              placeholder="000.000.000-00"
+              maxlength="14"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <div class="checkbox-container">
+              <label for="formaPagamento">Forma de Pagamento:</label>
+              <div class="checkbox-item">
+                <input type="checkbox" id="dinheiro" />
+                <label for="dinheiro">Dinheiro</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="pix" />
+                <label for="pix">PIX</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="credito" />
+                <label for="credito">Crédito</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="debito" />
+                <label for="debito">Débito</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorTotal">Valor Total:</label>
+            <input
+              type="text"
+              id="valorTotal"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document
+    .getElementById("funcionario")
+    .addEventListener("input", function (event) {
+      let cpf = event.target.value;
+
+      // Remove tudo que não for número
+      cpf = cpf.replace(/\D/g, "");
+
+      // Aplica a máscara (000.000.000-00)
+      if (cpf.length <= 11) {
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      }
+
+      event.target.value = cpf;
+    });
+
+  // Formatação para o campo de valor
+  document.getElementById("valorTotal").addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+    value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+    e.target.value = "R$ " + value;
+  });
+
+  document
+    .querySelectorAll('.checkbox-item input[type="checkbox"]')
+    .forEach((checkbox) => {
+      checkbox.addEventListener("change", function () {
+        // Se este checkbox foi marcado, desmarcar os outros
+        if (this.checked) {
+          document
+            .querySelectorAll('.checkbox-item input[type="checkbox"]')
+            .forEach((otherCheckbox) => {
+              if (otherCheckbox !== this) {
+                otherCheckbox.checked = false;
+              }
+            });
+        }
+      });
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

@@ -5,7 +5,9 @@
         class="back-button"
         onclick="fecharOuVoltar('modalConsultarForn')"
       >
-        <i class="arrow-left">←</i>
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
       </button>
       <h2>Consultar Fornecedor</h2>
       <button class="home-button" onclick="window.location.href='/home'">
@@ -177,13 +179,12 @@
       .addEventListener("input", function (event) {
         let cnpj = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
 
-        if (cnpj.length <= 14) {
-          cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2");
-          cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-          cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1.$2");
-          cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2");
+        if (cnpj.length <= 18) {
+          cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+          cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+          cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+          cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
         }
-
         event.target.value = cnpj;
       });
   }
@@ -230,7 +231,7 @@
       return;
     }
 
-    cnpj = cnpj.replace(/\D/g, "");
+    cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
 
     fetch(`/fornecedores/consultar/${cnpj}`)
       .then((response) => {
@@ -294,7 +295,7 @@
 
   // Envia os dados editados para o backend e atualiza o fornecedor no banco de dados.
   function salvarAlteracoes() {
-    const cnpj = document.getElementById("cnpj-res").value; // CNPJ não pode ser editado
+    cnpj = document.getElementById("cnpj-res").value; // CNPJ não pode ser editado
     const nome = document.getElementById("nome-res").value;
     const inicioVigencia = document.getElementById("inicioVigencia-res").value;
     const telefone = document.getElementById("telefone-res").value;
@@ -308,6 +309,8 @@
       logradouro: document.getElementById("logradouro-res").value,
       complemento: document.getElementById("complemento-res").value,
     };
+
+    cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
 
     // Enviar os dados editados para o backend via requisição PUT
     fetch(`/fornecedores/atualizar/${cnpj}`, {
@@ -356,6 +359,8 @@
 
   // Exclui um fornecedor enviando uma requisição DELETE para o backend.
   function excluirFornecedor(cnpj) {
+    cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
+
     fetch(`/fornecedores/excluir/${cnpj}`, {
       method: "DELETE",
     })

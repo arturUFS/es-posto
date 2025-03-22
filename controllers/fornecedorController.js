@@ -46,6 +46,41 @@ export const fornecedorController = {
     }
   },
 
+  /**
+   * Cadastra um novo fornecedor, incluindo o endereço
+   */
+  async cadastrar(req, res) {
+    try {
+      const { cnpj, nome, email, telefone, iniciovigencia, area, endereco } =
+        req.body;
+
+      // Cadastrar o endereço e obter o ID gerado
+      const idEndereco = await cadastrarEndereco(endereco);
+
+      // Criar o fornecedor vinculado ao endereço cadastrado
+      const novoFornecedor = await Fornecedor.create({
+        cnpj,
+        nome,
+        email,
+        telefone,
+        iniciovigencia,
+        area,
+        idendereco: idEndereco,
+      });
+
+      res.json({
+        message: "Fornecedor cadastrado com sucesso!",
+        fornecedor: novoFornecedor,
+      });
+    } catch (error) {
+      console.error("Erro ao cadastrar fornecedor:", error);
+      res.status(500).json({
+        message: "Erro ao cadastrar fornecedor",
+        error: error.message,
+      });
+    }
+  },
+
   // Lista todos os fornecedores
   async listar(req, res) {
     try {
@@ -66,7 +101,15 @@ export const fornecedorController = {
 
   async consultar(req, res) {
     try {
-      const { cnpj } = req.params;
+      var { cnpj } = req.params;
+
+      // Aplica a máscara (00.000.000/0000-00)
+      if (cnpj.length <= 18) {
+        cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+        cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+      }
 
       const fornecedor = await Fornecedor.findOne({ where: { cnpj } });
 
@@ -104,9 +147,17 @@ export const fornecedorController = {
   // Atualiza os dados de um fornecedor pelo CNPJ.
   async atualizar(req, res) {
     try {
-      const { cnpj } = req.params; // Obtém o CNPJ da URL
+      var { cnpj } = req.params; // Obtém o CNPJ da URL
       const { nome, iniciovigencia, telefone, email, area, endereco } =
         req.body; // Novos dados
+
+      // Aplica a máscara (00.000.000/0000-00)
+      if (cnpj.length <= 18) {
+        cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+        cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+      }
 
       // Verifica se o fornecedor existe
       const fornecedor = await Fornecedor.findOne({ where: { cnpj } });
@@ -148,7 +199,15 @@ export const fornecedorController = {
   // Exclui um fornecedor pelo CNPJ e remove seu endereço vinculado.
   async excluir(req, res) {
     try {
-      const { cnpj } = req.params; // Obtém o CNPJ da URL
+      var { cnpj } = req.params; // Obtém o CNPJ da URL
+
+      // Aplica a máscara (00.000.000/0000-00)
+      if (cnpj.length <= 18) {
+        cnpj = cnpj.replace(/(\d{2})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1.$2");
+        cnpj = cnpj.replace(/(\d{3})(\d)/, "$1/$2");
+        cnpj = cnpj.replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+      }
 
       // Busca o fornecedor no banco de dados
       const fornecedor = await Fornecedor.findOne({ where: { cnpj } });
