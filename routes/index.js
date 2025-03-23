@@ -25,8 +25,6 @@ router.get("/logout", (req, res) => {
 
 router.get("/home", homeController.index);
 
-router.get("/combustivel", combustivelController.index);
-
 router.get("/servicos", servicoController.index);
 
 //Rotas Funcionário
@@ -66,6 +64,17 @@ router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
 
 // Rota para listar fornecedores
 router.get("/fornecedores/listar", fornecedorController.listar);
+
+//Rotas Combustível
+
+router.get("/combustivel", combustivelController.index);
+
+//Rota para cadastrar combustível
+router.post("/combustivel/cadastrar", combustivelController.cadastrar);
+
+//Rota para registrar venda de combustível
+//router.post("/combustivel/registrarvenda", combustivelController.registrarVenda);
+
 
 // Rotas Produto
 
