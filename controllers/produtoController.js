@@ -3,6 +3,7 @@ import { FornecedorProduto } from "../models/fornecedor_produto.js";
 import { ItemVenda } from "../models/itemvenda.js";
 import { Venda } from "../models/venda.js";
 import { Funcionario } from "../models/funcionario.js";
+import { Fornecedor } from "../models/fornecedor.js";
 
 /**
  * Gera um ID único para o produto.
@@ -154,6 +155,48 @@ export const produtoController = {
       res
         .status(500)
         .json({ message: "Erro ao registrar venda.", error: error.message });
+    }
+  },
+
+  /**
+   * Consulta um produto pelo ID
+   */
+  async consultar(req, res) {
+    try {
+      const { idproduto } = req.params;
+
+      // Buscar o produto pelo ID e incluir os fornecedores associados
+      const produto = await Produto.findOne({
+        where: { idproduto },
+        include: [
+          {
+            model: Fornecedor,
+            as: "fornecedores", // O alias definido na associação
+            attributes: ["cnpj", "nome", "email", "telefone"], // Evita carregar dados desnecessários
+            through: { attributes: [] }, // Remove a tabela intermediária da resposta
+          },
+        ],
+      });
+
+      if (!produto) {
+        return res.status(404).json({ message: "Produto não encontrado" });
+      }
+
+      // Se houver fornecedores associados, pega o primeiro
+      const fornecedor =
+        produto.fornecedores.length > 0 ? produto.fornecedores[0] : null;
+
+      res.json({
+        idproduto: produto.idproduto,
+        nome: produto.nome,
+        descricao: produto.descricao,
+        valor: produto.valor,
+        quantidade: produto.quantidade,
+        fornecedor: fornecedor ? fornecedor.nome : "Não informado",
+      });
+    } catch (error) {
+      console.error("Erro ao consultar produto:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 };

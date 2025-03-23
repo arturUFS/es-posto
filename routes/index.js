@@ -80,4 +80,7 @@ router.get("/produto/listar", produtoController.listar);
 // Rota para registrar venda de um produto
 router.post("/produto/registrar", produtoController.registrarVenda);
 
+// Rota para consultar um produto
+router.get("/produto/consultar/:idproduto", produtoController.consultar);
+
 export default router;
