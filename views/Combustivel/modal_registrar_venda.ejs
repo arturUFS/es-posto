@@ -1,0 +1,298 @@
+<div id="modalRegistroVenda" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalRegistroVenda')">
+        <i class="arrow-left">←</i>
+      </button>
+      <h2>Registro de Venda de Combustível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"><img src="/assets/home-lg-alt 1.png" alt="home" /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formRegistroVenda">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data">Data:</label>
+            <input
+              type="text"
+              id="data"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="funcionario">Funcionário Responsável (CPF):</label>
+            <input
+              type="text"
+              id="funcionario"
+              placeholder="000.000.000-00"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="litros">Litros (L):</label>
+            <input
+              type="number"
+              id="litros"
+              placeholder="0"
+              min="0"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo:</label>
+            <input
+              type="text"
+              id="tipo"
+              placeholder="Digite o tipo"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="bomba">Bomba:</label>
+            <input
+              type="text"
+              id="bomba"
+              placeholder="Digite a bomba"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Forma de Pagamento:</label>
+            <div class="payment-options">
+              <div class="payment-option">
+                <input type="radio" id="dinheiro" name="formaPagamento" value="dinheiro">
+                <label for="dinheiro">Dinheiro</label>
+              </div>
+              <div class="payment-option">
+                <input type="radio" id="pix" name="formaPagamento" value="pix">
+                <label for="pix">PIX</label>
+              </div>
+              <div class="payment-option">
+                <input type="radio" id="credito" name="formaPagamento" value="credito" checked>
+                <label for="credito">Crédito</label>
+              </div>
+              <div class="payment-option">
+                <input type="radio" id="debito" name="formaPagamento" value="debito">
+                <label for="debito">Débito</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorTotal">Valor Total:</label>
+            <input
+              type="text"
+              id="valorTotal"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="registrar-btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Máscara para o valor total
+  document
+    .getElementById("valorTotal")
+    .addEventListener("input", function (event) {
+      let valor = event.target.value;
+      valor = valor.replace(/\D/g, "");
+      valor = (parseInt(valor || "0") / 100).toFixed(2);
+      valor = "R$ " + valor.replace(".", ",");
+
+      event.target.value = valor;
+    });
+
+  // Máscara para CPF
+  document
+    .getElementById("funcionario")
+    .addEventListener("input", async function (event) {
+      let cpf = event.target.value;
+      cpf = cpf.replace(/\D/g, "");
+      
+      if (cpf.length > 11) {
+        cpf = cpf.substring(0, 11);
+      }
+      
+      if (cpf.length > 9) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      } else if (cpf.length > 6) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})/, "$1.$2.$3");
+      } else if (cpf.length > 3) {
+        cpf = cpf.replace(/(\d{3})(\d{3})/, "$1.$2");
+      }
+      
+      event.target.value = cpf;
+    });
+
+  // Máscara para data
+  document
+    .getElementById("data")
+    .addEventListener("input", function (event) {
+      let data = event.target.value;
+      data = data.replace(/\D/g, "");
+      
+      if (data.length > 8) {
+        data = data.substring(0, 8);
+      }
+      
+      if (data.length > 4) {
+        data = data.replace(/(\d{2})(\d{2})(\d{4})/, "$1/$2/$3");
+      } else if (data.length > 2) {
+        data = data.replace(/(\d{2})(\d{2})/, "$1/$2");
+      }
+      
+      event.target.value = data;
+    });
+
+  // Calcular valor total com base nos litros
+  document
+    .getElementById("litros")
+    .addEventListener("change", async function () {
+      const litros = parseFloat(this.value) || 0;
+      const tipo = document.getElementById("tipo").value;
+      
+      if (litros > 0 && tipo) {
+        try {
+          // Simulação - em um caso real, buscaria o preço do combustível no servidor
+          const response = await fetch(`/combustivel/preco?tipo=${encodeURIComponent(tipo)}`);
+          
+          if (!response.ok) {
+            throw new Error("Falha ao buscar preço do combustível");
+          }
+          
+          const data = await response.json();
+          const precoLitro = data.preco || 5.79; // Valor padrão caso não consiga buscar
+          
+          const valorTotal = (litros * precoLitro).toFixed(2);
+          document.getElementById("valorTotal").value = `R$ ${valorTotal.replace(".", ",")}`;
+        } catch (error) {
+          console.error("Erro ao calcular valor:", error);
+          // Valor aproximado para continuar o fluxo mesmo com erro
+          const valorAproximado = (litros * 5.79).toFixed(2);
+          document.getElementById("valorTotal").value = `R$ ${valorAproximado.replace(".", ",")}`;
+        }
+      }
+    });
+
+  // Envio do formulário
+  document
+    .getElementById("formRegistroVenda")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+      
+      // Capturando os valores do formulário
+      const data = document.getElementById("data").value;
+      const cpf = document.getElementById("funcionario").value;
+      const litros = document.getElementById("litros").value;
+      const tipo = document.getElementById("tipo").value;
+      const bomba = document.getElementById("bomba").value;
+      
+      // Obtendo a forma de pagamento selecionada
+      let formaPagamento = "";
+      const opcoesPagamento = document.getElementsByName("formaPagamento");
+      for (const opcao of opcoesPagamento) {
+        if (opcao.checked) {
+          formaPagamento = opcao.value;
+          break;
+        }
+      }
+      
+      const valorTotal = document
+        .getElementById("valorTotal")
+        .value.replace("R$ ", "")
+        .replace(",", ".");
+
+      // Validações
+      if (!data) {
+        alert("Informe a data da venda.");
+        return;
+      }
+
+      if (!cpf) {
+        alert("Informe o CPF do funcionário responsável.");
+        return;
+      }
+
+      if (!litros || isNaN(parseFloat(litros)) || parseFloat(litros) <= 0) {
+        alert("Informe uma quantidade válida de litros.");
+        return;
+      }
+
+      if (!tipo) {
+        alert("Informe o tipo de combustível.");
+        return;
+      }
+
+      if (!bomba) {
+        alert("Informe a bomba utilizada.");
+        return;
+      }
+
+      if (!formaPagamento) {
+        alert("Selecione uma forma de pagamento.");
+        return;
+      }
+
+      if (!valorTotal || isNaN(parseFloat(valorTotal)) || parseFloat(valorTotal) <= 0) {
+        alert("Informe um valor total válido.");
+        return;
+      }
+
+      // Montando o objeto com os dados
+      const dadosVenda = {
+        data,
+        cpfFuncionario: cpf.replace(/\D/g, ""),
+        litros: parseFloat(litros),
+        tipoCombustivel: tipo,
+        bomba,
+        formaPagamento,
+        valorTotal: parseFloat(valorTotal)
+      };
+
+      try {
+        // Enviando os dados para o backend via fetch API
+        const response = await fetch("/combustivel/registrarvenda", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosVenda),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao registrar venda");
+        }
+
+        alert("✅ Venda registrada com sucesso!");
+        fecharModal("modalRegistroVenda"); // Fecha o modal após registro bem-sucedido
+        document.getElementById("formRegistroVenda").reset(); // Limpa o formulário
+      } catch (error) {
+        console.error("❌ Erro ao registrar venda:", error);
+        alert("Erro ao registrar venda. Tente novamente.");
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

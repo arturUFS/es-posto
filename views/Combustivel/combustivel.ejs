@@ -9,6 +9,10 @@
       rel="stylesheet"
       href="assets/css/modais-combustivel/modal_cadastrar.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_registrar_venda.css"
+    />
     <style>
       .menu li:nth-child(2) a {
         background-color: #c31010;
@@ -41,13 +45,14 @@
       </button>
     </div>
     <div class="content">
-      <button id="venda-combustivel">Registro de Venda de Combustível</button>
+      <button id="registrar-venda">Registro de Venda de Combustível</button>
       <button id="atualizar-combustivel">Atualizar Preço do Combustível</button>
       <button id="cadastrar-combustivel">Cadastrar Combustível</button>
       <button id="relatorio-combustivel">Relatório de Vendas</button>
       <button id="verificar-quantidade-combustivel">Verificar Quantidade de Combustível Disponível</button>
     </div>
     <%- include('modal_cadastrar') %>
+    <%- include('modal_registrar_venda') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -66,6 +71,10 @@
     document
       .getElementById("cadastrar-combustivel")
       .addEventListener("click", () => abrirModal("modalCadastrar"));
+
+    document
+      .getElementById("registrar-venda")
+      .addEventListener("click", () => abrirModal("modalRegistroVenda"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {

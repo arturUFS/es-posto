@@ -89,7 +89,7 @@ export const fornecedorController = {
         attributes: ["cnpj", "nome", "email", "telefone"], // Apenas os campos necessários
       });
 
-      // Retorna os fornecedores como JSON (para consumo no front-end)
+      // Retorna os fornecedores como JSON
       res.json(fornecedores);
     } catch (error) {
       console.error("❌ Erro ao listar fornecedores:", error);
