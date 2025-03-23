@@ -22,11 +22,43 @@ function gerarCodigoVenda() {
 export const produtoController = {
   index: async (req, res) => {
     try {
-      const nomeFuncionario = req.query.nome || "Usuário";
-      res.render("Produtos/produtos", { nomeFuncionario });
+      const nomeFuncionario = req.query.nome || "Usuário"; // Obtém o nome do usuário logado
+
+      // Busca todos os produtos e inclui os fornecedores relacionados
+      const produtos = await Produto.findAll({
+        attributes: ["idproduto", "nome", "quantidade", "valor"],
+        include: [
+          {
+            model: Fornecedor,
+            through: { model: FornecedorProduto }, // Especifica a tabela intermediária
+            as: "fornecedores", // Alias definido nas associações
+            attributes: ["nome"], // Obtém apenas o nome do fornecedor
+          },
+        ],
+      });
+
+      // Formata os dados para exibição no EJS
+      const produtosFormatados = produtos.map((produto) => ({
+        idproduto: produto.idproduto,
+        nome: produto.nome,
+        quantidade: produto.quantidade,
+        valor: produto.valor
+          ? `R$ ${parseFloat(produto.valor).toFixed(2).replace(".", ",")}`
+          : "R$ 0,00", // Formata valor
+        fornecedor:
+          produto.fornecedores.length > 0
+            ? produto.fornecedores.map((f) => f.nome).join(", ") // Junta os nomes dos fornecedores
+            : "Não informado", // Caso não tenha fornecedor
+      }));
+
+      // Renderiza a página produtos.ejs e passa os dados formatados
+      res.render("Produtos/produtos", {
+        nomeFuncionario,
+        produtos: produtosFormatados,
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Erro ao buscar usuários");
+      console.error("Erro ao buscar produtos:", err);
+      res.status(500).send("Erro no servidor");
     }
   },
 
@@ -200,6 +232,9 @@ export const produtoController = {
     }
   },
 
+  /**
+   * Atualiza um produto pelo ID
+   */
   async atualizar(req, res) {
     try {
       const { idproduto } = req.params;
@@ -222,6 +257,35 @@ export const produtoController = {
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
       res.status(500).json({ message: "Erro ao atualizar produto" });
+    }
+  },
+
+  /**
+   * Exclui um produto pelo ID
+   */
+  async excluir(req, res) {
+    try {
+      const { idproduto } = req.params;
+
+      // Verifica se o produto existe
+      const produto = await Produto.findOne({
+        where: { idproduto: idproduto },
+      });
+      if (!produto) {
+        return res.status(404).json({ message: "Produto não encontrado." });
+      }
+
+      // Remove as relações do produto na tabela fornecedor_produto
+      await FornecedorProduto.destroy({ where: { idproduto: idproduto } });
+
+      // Exclui o produto
+      await produto.destroy();
+      console.log("✅ Produto excluído com sucesso!");
+
+      return res.json({ message: "Produto excluído com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+      res.status(500).json({ message: "Erro ao excluir produto." });
     }
   },
 };

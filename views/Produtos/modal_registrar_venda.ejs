@@ -164,7 +164,7 @@
   // Função para carregar os Produtos e preencher o select
   async function carregarProdutos() {
     try {
-      const response = await fetch("/produto/listar");
+      const response = await fetch("/produtos/listar");
       if (!response.ok) {
         throw new Error("Erro ao carregar produtos.");
       }
@@ -236,7 +236,7 @@
 
       // Enviar os dados para o backend
       try {
-        const response = await fetch("/produto/registrar", {
+        const response = await fetch("/produtos/registrar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -72,18 +72,24 @@ router.get("/fornecedores/listar", fornecedorController.listar);
 router.get("/produtos", produtoController.index);
 
 // Rota para cadastrar um produto
-router.post("/produto/cadastrar", produtoController.cadastrar);
+router.post("/produtos/cadastrar", produtoController.cadastrar);
 
 // Rota para listar produtos
-router.get("/produto/listar", produtoController.listar);
+router.get("/produtos/listar", produtoController.listar);
 
 // Rota para registrar venda de um produto
-router.post("/produto/registrar", produtoController.registrarVenda);
+router.post("/produtos/registrar", produtoController.registrarVenda);
 
 // Rota para consultar um produto
-router.get("/produto/consultar/:idproduto", produtoController.consultar);
+router.get("/produtos/consultar/:idproduto", produtoController.consultar);
 
 //Rota para atualizar um produto
-router.put("/produto/atualizar/:idproduto", produtoController.atualizar);
+router.put("/produtos/atualizar/:idproduto", produtoController.atualizar);
+
+//Rota para excluir um produto
+router.delete("/produtos/excluir/:idproduto", produtoController.excluir);
+
+// Rota para gerar relatório de venda de produtos
+router.get("/produtos/relatorio", produtoController.listar);
 
 export default router;
