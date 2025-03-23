@@ -204,4 +204,42 @@ export const combustivelController = {
       });
     }
   },
+
+  /**
+   * Atualiza o preço de um combustível no banco de dados.
+   */
+  async atualizarPreco(req, res) {
+    try {
+      const { idcombustivel } = req.params; // ID do combustível vindo da URL
+      const { valorlitro } = req.body; // Novo preço vindo do frontend
+
+      // Verifica se o ID e o novo valor foram informados
+      if (!idcombustivel || !valorlitro) {
+        return res
+          .status(400)
+          .json({
+            message: "ID do combustível e novo valor são obrigatórios.",
+          });
+      }
+
+      // Busca o combustível no banco
+      const combustivel = await Combustivel.findByPk(idcombustivel);
+      if (!combustivel) {
+        return res.status(404).json({ message: "Combustível não encontrado." });
+      }
+
+      // Atualiza o preço do combustível
+      await combustivel.update({ valorlitro });
+
+      res.json({ message: "✅ Preço do combustível atualizado com sucesso!" });
+    } catch (error) {
+      console.error("❌ Erro ao atualizar preço do combustível:", error);
+      res
+        .status(500)
+        .json({
+          message: "Erro ao atualizar preço do combustível.",
+          error: error.message,
+        });
+    }
+  },
 };
