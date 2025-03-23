@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Combustível</title>
     <link rel="stylesheet" href="assets/css/pages_initials.css" />
-     <link
+    <link
       rel="stylesheet"
       href="assets/css/modais-combustivel/modal_cadastrar.css"
     />
     <link
       rel="stylesheet"
       href="assets/css/modais-combustivel/modal_registrar_venda.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_atualizar_preco.css"
     />
     <style>
       .menu li:nth-child(2) a {
@@ -49,10 +53,12 @@
       <button id="atualizar-combustivel">Atualizar Preço do Combustível</button>
       <button id="cadastrar-combustivel">Cadastrar Combustível</button>
       <button id="relatorio-combustivel">Relatório de Vendas</button>
-      <button id="verificar-quantidade-combustivel">Verificar Quantidade de Combustível Disponível</button>
+      <button id="verificar-quantidade-combustivel">
+        Verificar Quantidade de Combustível Disponível
+      </button>
     </div>
-    <%- include('modal_cadastrar') %>
-    <%- include('modal_registrar_venda') %>
+    <%- include('modal_cadastrar') %> <%- include('modal_registrar_venda') %>
+    <%- include('modal_atualizar_preco') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -75,6 +81,10 @@
     document
       .getElementById("registrar-venda")
       .addEventListener("click", () => abrirModal("modalRegistroVenda"));
+
+    document
+      .getElementById("atualizar-combustivel")
+      .addEventListener("click", () => abrirModal("modalAtualizarPreco"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {

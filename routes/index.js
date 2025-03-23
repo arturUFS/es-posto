@@ -83,6 +83,13 @@ router.post(
 
 router.get("/combustivel/listar", combustivelController.listar);
 
+// Rota para atualizar preço de um combustível
+
+router.put(
+  "/combustivel/atualizarPreco/:idcombustivel",
+  combustivelController.atualizarPreco
+);
+
 // Rotas Produto
 
 router.get("/produtos", produtoController.index);
