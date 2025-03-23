@@ -2,11 +2,20 @@ import { Produto } from "../models/produto.js";
 import { FornecedorProduto } from "../models/fornecedor_produto.js";
 import { ItemVenda } from "../models/itemvenda.js";
 import { Venda } from "../models/venda.js";
+import { Funcionario } from "../models/funcionario.js";
+import { Fornecedor } from "../models/fornecedor.js";
 
 /**
  * Gera um ID único para o produto.
  */
 function gerarIdProduto() {
+  return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
+}
+
+/**
+ * Gera um código único para a venda.
+ */
+function gerarCodigoVenda() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
 }
 
@@ -78,6 +87,141 @@ export const produtoController = {
     } catch (error) {
       console.error("❌ Erro ao listar produtos:", error);
       res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  /**
+   * Registra uma nova venda de produto.
+   */
+  async registrarVenda(req, res) {
+    try {
+      const {
+        data,
+        idProduto,
+        cpfFuncionario,
+        quantidade,
+        formaPagamento,
+        valorTotal,
+      } = req.body;
+
+      // Verificar se o funcionário existe
+      const funcionario = await Funcionario.findOne({
+        where: { cpf: cpfFuncionario },
+      });
+      if (!funcionario) {
+        return res.status(404).json({ message: "Funcionário não encontrado." });
+      }
+
+      // Verificar se o produto existe e se há estoque suficiente
+      const produto = await Produto.findOne({
+        where: { idproduto: idProduto },
+      });
+      if (!produto) {
+        return res.status(404).json({ message: "Produto não encontrado." });
+      }
+
+      if (produto.quantidade < quantidade) {
+        return res.status(400).json({ message: "Estoque insuficiente." });
+      }
+
+      // Gerar um código único para a venda
+      const codigoVenda = gerarCodigoVenda();
+
+      // Criar a venda na tabela "venda"
+      await Venda.create({
+        codigo: codigoVenda,
+        data,
+        valor: valorTotal,
+        cpf: cpfFuncionario,
+        formapagamento: formaPagamento,
+      });
+
+      // Criar o item de venda na tabela "itemvenda"
+      await ItemVenda.create({
+        iditemvenda: gerarCodigoVenda(),
+        idproduto: idProduto,
+        quantidade,
+        valor: valorTotal,
+      });
+
+      // Atualizar a quantidade do produto
+      await produto.update({
+        quantidade: produto.quantidade - quantidade,
+      });
+
+      res.json({ message: "Venda registrada com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao registrar venda:", error);
+      res
+        .status(500)
+        .json({ message: "Erro ao registrar venda.", error: error.message });
+    }
+  },
+
+  /**
+   * Consulta um produto pelo ID
+   */
+  async consultar(req, res) {
+    try {
+      const { idproduto } = req.params;
+
+      // Buscar o produto pelo ID e incluir os fornecedores associados
+      const produto = await Produto.findOne({
+        where: { idproduto },
+        include: [
+          {
+            model: Fornecedor,
+            as: "fornecedores", // O alias definido na associação
+            attributes: ["cnpj", "nome", "email", "telefone"], // Evita carregar dados desnecessários
+            through: { attributes: [] }, // Remove a tabela intermediária da resposta
+          },
+        ],
+      });
+
+      if (!produto) {
+        return res.status(404).json({ message: "Produto não encontrado" });
+      }
+
+      // Se houver fornecedores associados, pega o primeiro
+      const fornecedor =
+        produto.fornecedores.length > 0 ? produto.fornecedores[0] : null;
+
+      res.json({
+        idproduto: produto.idproduto,
+        nome: produto.nome,
+        descricao: produto.descricao,
+        valor: produto.valor,
+        quantidade: produto.quantidade,
+        fornecedor: fornecedor ? fornecedor.nome : "Não informado",
+      });
+    } catch (error) {
+      console.error("Erro ao consultar produto:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  async atualizar(req, res) {
+    try {
+      const { idproduto } = req.params;
+      const { nome, valor, quantidade, descricao, fornecedorCNPJ } = req.body;
+
+      const produto = await Produto.findByPk(idproduto);
+      if (!produto)
+        return res.status(404).json({ message: "Produto não encontrado!" });
+
+      // Atualizar os dados do produto
+      await produto.update({ nome, valor, quantidade, descricao });
+
+      // Atualizar a relação fornecedor-produto
+      await FornecedorProduto.update(
+        { cnpj: fornecedorCNPJ },
+        { where: { idproduto } }
+      );
+
+      res.json({ message: "Produto atualizado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
+      res.status(500).json({ message: "Erro ao atualizar produto" });
     }
   },
 };

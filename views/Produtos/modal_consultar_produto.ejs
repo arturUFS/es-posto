@@ -1,0 +1,338 @@
+<div id="modalConsultarProduto" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        class="back-button"
+        onclick="fecharOuVoltar('modalConsultarProduto')"
+      >
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Consultar Produto</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Tela de Consulta -->
+      <div id="telaConsulta" class="center-content">
+        <form id="consultaForm">
+          <div class="form-group">
+            <label for="produto2">Produto:</label>
+            <select id="produto2" required>
+              <option value="" disabled selected>Carregando produtos...</option>
+            </select>
+          </div>
+          <div class="form-btn-cons" style="margin-top: 20px">
+            <button
+              type="button"
+              class="consultar-btn"
+              onclick="consultarProduto()"
+            >
+              Consultar
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- Tela de Resultado -->
+      <div id="resultadoConsulta">
+        <form id="formConsultarProduto">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nomeProduto2">Nome:</label>
+              <input type="text" id="nomeProduto2" readonly />
+            </div>
+            <div class="form-group">
+              <label for="fornecedor2">Fornecedor:</label>
+              <input type="text" id="fornecedor2" readonly />
+              <select id="selectFornecedor" style="display: none"></select>
+            </div>
+            <div class="action-buttons">
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="habilitarEdicao()"
+              >
+                <i class="edit-icon"
+                  ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
+                /></i>
+              </button>
+              <button class="delete-btn" onclick="confirmarExclusao()">
+                <i class="delete-icon"
+                  ><img src="/assets/Vector (4).png" alt="editar"
+                /></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="valorProduto2">Valor:</label>
+              <input type="text" id="valorProduto2" readonly />
+            </div>
+            <div class="form-group">
+              <label for="quantidadeDisponivel2">Quantidade Disponível:</label>
+              <input type="text" id="quantidadeDisponivel2" readonly />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex-basis: 100%">
+              <label for="descricaoProduto2">Descrição:</label>
+              <textarea
+                id="descricaoProduto2"
+                rows="4"
+                readonly
+                style="resize: none"
+              ></textarea>
+            </div>
+          </div>
+          <div id="botoesEdicao" style="display: none">
+            <div class="form-btn-res">
+              <button
+                type="button"
+                class="save-btn"
+                onclick="salvarAlteracoes()"
+              >
+                Salvar
+              </button>
+              <button
+                type="button"
+                class="cancel-btn"
+                onclick="cancelarEdicao()"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Formatação para o campo de valor
+  document
+    .getElementById("valorProduto2")
+    .addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+      e.target.value = "R$ " + value;
+    });
+
+  // Função para carregar os Produtos e preencher o select
+  async function carregarProdutos() {
+    try {
+      const response = await fetch("/produto/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar produtos.");
+      }
+
+      const produtos = await response.json();
+      const selectProduto = document.getElementById("produto2");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectProduto.innerHTML =
+        '<option value="" disabled selected>Selecione o produto</option>';
+
+      // Adiciona os produtos ao select
+      produtos.forEach((produto) => {
+        const option = document.createElement("option");
+        option.value = produto.idproduto; // O valor será o idproduto
+        option.textContent = produto.nome; // O texto será o nome do produto
+        selectProduto.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar a função ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+  // Função para consultar produto
+  async function consultarProduto() {
+    const idProduto = document.getElementById("produto2").value;
+
+    if (!idProduto) {
+      alert("Por favor, selecione um produto.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/produto/consultar/${idProduto}`);
+      if (!response.ok) {
+        throw new Error("Produto não encontrado.");
+      }
+
+      const produto = await response.json();
+
+      document.getElementById("nomeProduto2").value = produto.nome;
+      document.getElementById("fornecedor2").value = produto.fornecedor;
+      const valor = produto.valor ? parseFloat(produto.valor) : 0;
+      document.getElementById("valorProduto2").value = `R$ ${valor
+        .toFixed(2)
+        .replace(".", ",")}`;
+      document.getElementById("quantidadeDisponivel2").value =
+        produto.quantidade;
+      document.getElementById("descricaoProduto2").textContent =
+        produto.descricao || "";
+
+      document.getElementById("telaConsulta").style.display = "none";
+      document.getElementById("resultadoConsulta").style.display = "block";
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function salvarAlteracoes() {
+    const idProduto = document.getElementById("produto2").value;
+    const nome = document.getElementById("nomeProduto2").value;
+    const valor = document
+      .getElementById("valorProduto2")
+      .value.replace("R$ ", "")
+      .replace(",", ".");
+    const quantidade = document.getElementById("quantidadeDisponivel2").value;
+    const descricao = document.getElementById("descricaoProduto2").value;
+    const fornecedorCNPJ = document.getElementById("selectFornecedor").value;
+
+    if (!idProduto || !nome || !valor || !quantidade || !fornecedorCNPJ) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const dadosAtualizados = {
+      nome,
+      valor: parseFloat(valor),
+      quantidade: parseInt(quantidade),
+      descricao,
+      fornecedorCNPJ,
+    };
+
+    try {
+      const response = await fetch(`/produto/atualizar/${idProduto}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosAtualizados),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar o produto.");
+
+      alert("Produto atualizado com sucesso!");
+
+      // Voltar para a tela de consulta após salvar
+      fecharOuVoltar();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  // Função para habilitar a edição dos campos
+  async function habilitarEdicao() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input, #resultadoConsulta textarea, #selectFornecedor"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = false;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "block";
+    document.getElementById("lapis").style.visibility = "hidden";
+
+    // Esconder o input do fornecedor e mostrar o select
+    document.getElementById("fornecedor2").style.display = "none";
+    document.getElementById("selectFornecedor").style.display = "block";
+
+    await carregarFornecedores();
+  }
+
+  // Função para cancelar edição
+  function cancelarEdicao() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input, #resultadoConsulta textarea, #selectFornecedor"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = true;
+    });
+
+    document.getElementById("botoesEdicao").style.display = "none";
+    document.getElementById("lapis").style.visibility = "visible";
+
+    // Restaurar input do fornecedor e esconder o select
+    document.getElementById("fornecedor2").style.display = "block";
+    document.getElementById("selectFornecedor").style.display = "none";
+  }
+
+  // Função para carregar os fornecedores e preencher o select
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores.");
+      }
+
+      const fornecedores = await response.json();
+      const selectFornecedor = document.getElementById("selectFornecedor");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectFornecedor.innerHTML =
+        '<option value="" disabled selected>Selecione o fornecedor</option>';
+
+      // Adiciona os fornecedores ao select
+      fornecedores.forEach((fornecedor) => {
+        const option = document.createElement("option");
+        option.value = fornecedor.cnpj; // O valor será o CNPJ
+        option.textContent = fornecedor.nome; // O texto será o nome do fornecedor
+
+        // Se for o fornecedor atual, já seleciona ele
+        if (fornecedor.nome === document.getElementById("fornecedor2").value) {
+          option.selected = true;
+        }
+
+        selectFornecedor.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Função para fechar ou voltar para início do modal
+  function fecharOuVoltar() {
+    const resultado = document.getElementById("resultadoConsulta");
+    const telaConsulta = document.getElementById("telaConsulta");
+    const formConsulta = document.getElementById("consultaForm");
+    const formResultado = document.getElementById("formConsultarProduto");
+
+    if (window.getComputedStyle(resultado).display !== "none") {
+      // Se a tela de resultado estiver visível, volta para a tela de consulta
+      resultado.style.display = "none";
+      telaConsulta.style.display = "flex";
+      cancelarEdicao();
+
+      // Resetando os formulários
+      formConsulta.reset();
+      formResultado.reset();
+
+      // Resetando o select manualmente
+      document.getElementById("produto2").value = "";
+    } else {
+      cancelarEdicao();
+      // Fecha o modal e reseta tudo
+      formConsulta.reset();
+      formResultado.reset();
+
+      // Resetando o select manualmente
+      document.getElementById("produto2").value = "";
+      fecharModal("modalConsultarProduto");
+    }
+  }
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

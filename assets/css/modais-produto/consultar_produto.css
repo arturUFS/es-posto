@@ -1,0 +1,144 @@
+/* Modal Consultar Produto */
+
+/* Corpo do Modal */
+
+#resultadoConsulta {
+  display: none;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+#consultaForm #produto2 {
+  width: 130%;
+  transform: translateX(-12.3%);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+#consultaForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#consultaForm label {
+  transform: translateX(-15%);
+  font-size: 16px;
+}
+
+#consultaForm .form-group-cons {
+  width: 100%;
+}
+
+.form-btn-res {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  margin-top: 130px;
+  gap: 15px;
+  justify-content: flex-end;
+}
+
+.save-btn {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 20%;
+}
+
+.cancel-btn {
+  background-color: #999;
+  color: black;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 20%;
+}
+
+.form-btn-cons {
+  display: flex;
+  width: 110%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 15px;
+  justify-content: center;
+}
+
+.consultar-btn {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 130%;
+}
+
+.consultar-btn:hover {
+  background-color: #1a1a1a;
+}
+
+/* Formulário */
+
+/* Botões de ação (editar e excluir) */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  color: #d70000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.edit-btn img,
+.delete-btn img {
+  width: 50%;
+}
+#nomeProduto2,
+#fornecedor2 {
+  width: 70%;
+}
+
+#valorProduto2,
+#quantidadeDisponivel2 {
+  width: 61%;
+}
+
+#quantidadeDisponivel2,
+label[for="quantidadeDisponivel2"] {
+  margin-left: -55px;
+}
+
+#formConsultarProduto .form-actions {
+  gap: 20px;
+}
+
+#selectFornecedor {
+  width: 70%;
+}
