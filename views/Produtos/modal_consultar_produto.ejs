@@ -49,16 +49,21 @@
             <div class="form-group">
               <label for="fornecedor2">Fornecedor:</label>
               <input type="text" id="fornecedor2" readonly />
+              <select id="selectFornecedor" style="display: none"></select>
             </div>
-            <div class="form-actions">
-              <button type="button" class="icon-button edit-button">
+            <div class="action-buttons">
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="habilitarEdicao()"
+              >
                 <i class="edit-icon"
-                  ><img src="/assets/Vector (3).png" alt="editar"
+                  ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
                 /></i>
               </button>
-              <button type="button" class="icon-button delete-button">
+              <button class="delete-btn" onclick="confirmarExclusao()">
                 <i class="delete-icon"
-                  ><img src="/assets/Vector (4).png" alt="excluir"
+                  ><img src="/assets/Vector (4).png" alt="editar"
                 /></i>
               </button>
             </div>
@@ -184,26 +189,115 @@
     }
   }
 
+  async function salvarAlteracoes() {
+    const idProduto = document.getElementById("produto2").value;
+    const nome = document.getElementById("nomeProduto2").value;
+    const valor = document
+      .getElementById("valorProduto2")
+      .value.replace("R$ ", "")
+      .replace(",", ".");
+    const quantidade = document.getElementById("quantidadeDisponivel2").value;
+    const descricao = document.getElementById("descricaoProduto2").value;
+    const fornecedorCNPJ = document.getElementById("selectFornecedor").value;
+
+    if (!idProduto || !nome || !valor || !quantidade || !fornecedorCNPJ) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const dadosAtualizados = {
+      nome,
+      valor: parseFloat(valor),
+      quantidade: parseInt(quantidade),
+      descricao,
+      fornecedorCNPJ,
+    };
+
+    try {
+      const response = await fetch(`/produto/atualizar/${idProduto}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosAtualizados),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar o produto.");
+
+      alert("Produto atualizado com sucesso!");
+
+      // Voltar para a tela de consulta após salvar
+      fecharOuVoltar();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   // Função para habilitar a edição dos campos
-  function habilitarEdicao() {
-    const campos = document.querySelectorAll("#resultadoConsulta input");
+  async function habilitarEdicao() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input, #resultadoConsulta textarea, #selectFornecedor"
+    );
     campos.forEach((campo) => {
       campo.readOnly = false;
     });
 
     document.getElementById("botoesEdicao").style.display = "block";
-    document.getElementById("lapis").style.display = "none";
+    document.getElementById("lapis").style.visibility = "hidden";
+
+    // Esconder o input do fornecedor e mostrar o select
+    document.getElementById("fornecedor2").style.display = "none";
+    document.getElementById("selectFornecedor").style.display = "block";
+
+    await carregarFornecedores();
   }
 
   // Função para cancelar edição
   function cancelarEdicao() {
-    const campos = document.querySelectorAll("#resultadoConsulta input");
+    const campos = document.querySelectorAll(
+      "#resultadoConsulta input, #resultadoConsulta textarea, #selectFornecedor"
+    );
     campos.forEach((campo) => {
       campo.readOnly = true;
     });
 
     document.getElementById("botoesEdicao").style.display = "none";
-    document.getElementById("lapis").style.display = "block";
+    document.getElementById("lapis").style.visibility = "visible";
+
+    // Restaurar input do fornecedor e esconder o select
+    document.getElementById("fornecedor2").style.display = "block";
+    document.getElementById("selectFornecedor").style.display = "none";
+  }
+
+  // Função para carregar os fornecedores e preencher o select
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores.");
+      }
+
+      const fornecedores = await response.json();
+      const selectFornecedor = document.getElementById("selectFornecedor");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectFornecedor.innerHTML =
+        '<option value="" disabled selected>Selecione o fornecedor</option>';
+
+      // Adiciona os fornecedores ao select
+      fornecedores.forEach((fornecedor) => {
+        const option = document.createElement("option");
+        option.value = fornecedor.cnpj; // O valor será o CNPJ
+        option.textContent = fornecedor.nome; // O texto será o nome do fornecedor
+
+        // Se for o fornecedor atual, já seleciona ele
+        if (fornecedor.nome === document.getElementById("fornecedor2").value) {
+          option.selected = true;
+        }
+
+        selectFornecedor.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // Função para fechar ou voltar para início do modal
