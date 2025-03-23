@@ -1,0 +1,165 @@
+<div id="modalAtualizarPreco" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal3('modalAtualizarPreco')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Atualizar Preço do Combustível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formAtualizarPreco">
+        <div class="form-group">
+          <label for="combustivel">Selecione o Combustível:</label>
+          <select id="combustivel" required>
+            <option value="" disabled selected>
+              Carregando combustíveis...
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="novoPreco">Novo Preço (R$):</label>
+          <input
+            type="text"
+            id="novoPreco"
+            placeholder="R$ 00,00"
+            disabled
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <button
+            type="submit"
+            id="btnAtualizar"
+            class="atualizar-btn"
+            disabled
+          >
+            Atualizar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ✅ Função para carregar os combustíveis no seletor
+  async function carregarCombustiveis() {
+    try {
+      const response = await fetch("/combustivel/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar combustíveis.");
+      }
+
+      const combustiveis = await response.json();
+      const selectCombustivel = document.getElementById("combustivel");
+
+      selectCombustivel.innerHTML =
+        '<option value="" disabled selected>Selecione o combustível</option>';
+
+      combustiveis.forEach((combustivel) => {
+        const option = document.createElement("option");
+        option.value = combustivel.idcombustivel;
+        option.dataset.preco = combustivel.valorlitro;
+        option.textContent = `${combustivel.tipocombustivel} | ${combustivel.fornecedor}`;
+        selectCombustivel.appendChild(option);
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar combustíveis:", error);
+    }
+  }
+
+  // ✅ Atualiza o campo de preço ao selecionar um combustível
+  document
+    .getElementById("combustivel")
+    .addEventListener("change", function () {
+      const combustivelSelecionado = this.options[this.selectedIndex];
+      const novoPreco = document.getElementById("novoPreco");
+      const btnAtualizar = document.getElementById("btnAtualizar");
+
+      if (combustivelSelecionado.value) {
+        novoPreco.value = `R$ ${parseFloat(combustivelSelecionado.dataset.preco)
+          .toFixed(2)
+          .replace(".", ",")}`;
+        novoPreco.disabled = false; // Habilita a edição do preço
+        btnAtualizar.disabled = false; // Habilita o botão de atualização
+      }
+    });
+
+  // ✅ Máscara para o campo de preço
+  document.getElementById("novoPreco").addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+    value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+    e.target.value = "R$ " + value;
+  });
+
+  // ✅ Função para atualizar o preço no banco
+  document
+    .getElementById("formAtualizarPreco")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const idCombustivel = document.getElementById("combustivel").value;
+      const novoPreco = parseFloat(
+        document
+          .getElementById("novoPreco")
+          .value.replace("R$ ", "")
+          .replace(",", ".")
+      );
+
+      if (!idCombustivel || isNaN(novoPreco) || novoPreco <= 0) {
+        alert("Informe um preço válido para atualizar!");
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/combustivel/atualizarPreco/${idCombustivel}`,
+          {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ valorlitro: novoPreco }),
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Erro ao atualizar preço.");
+        }
+
+        alert("✅ Preço atualizado com sucesso!");
+        fecharModal("modalAtualizarPreco");
+        document.getElementById("formAtualizarPreco").reset();
+      } catch (error) {
+        console.error("❌ Erro ao atualizar preço:", error);
+        alert("Erro ao atualizar preço. Tente novamente.");
+      }
+    });
+
+  // Fechar modal
+  function fecharModal3(idModal) {
+    const formResultado = document.getElementById("formAtualizarPreco");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    const btnAtualizar = document.getElementById("btnAtualizar");
+    btnAtualizar.disabled = true;
+
+    // Resetando o select manualmente
+    document.getElementById("combustivel").value = "";
+    document.getElementById(idModal).style.display = "none";
+  }
+
+  // ✅ Carregar combustíveis ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarCombustiveis);
+</script>
