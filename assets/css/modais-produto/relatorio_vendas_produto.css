@@ -102,18 +102,3 @@
 .consultar-btn:hover {
   background-color: #1a1a1a;
 }
-
-.cancel-btn {
-  background-color: #999;
-  color: black;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  width: 40%;
-}
-
-.cancel-btn:hover {
-  background-color: #888;
-}

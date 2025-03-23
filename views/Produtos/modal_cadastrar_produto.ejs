@@ -3,7 +3,7 @@
     <div class="modal-header">
       <button
         class="back-button"
-        onclick="fecharModal('modalCadastrarProduto')"
+        onclick="fecharModal3('modalCadastrarProduto')"
       >
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
@@ -168,7 +168,13 @@
     });
 
   // Função para fechar o modal
-  function fecharModal(idModal) {
+  function fecharModal3(idModal) {
+    const formResultado = document.getElementById("formCadastrarProduto");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("fornecedor").value = "";
     document.getElementById(idModal).style.display = "none";
   }
 </script>

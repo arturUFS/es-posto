@@ -1,7 +1,7 @@
 <div id="modalCadastrar" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button class="back-button" onclick="fecharModal('modalCadastrar')">
+      <button class="back-button" onclick="fecharModal1('modalCadastrar')">
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
         /></i>
@@ -267,7 +267,10 @@
     });
 
   // Função para fechar o modal
-  function fecharModal(idModal) {
+  function fecharModal1(idModal) {
+    const formResultado = document.getElementById("formCadastrar");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
     document.getElementById(idModal).style.display = "none";
   }
 </script>
