@@ -21,6 +21,7 @@ export const Combustivel = database.define(
     },
     descricao: {
       type: DataTypes.TEXT,
+      allowNull: true,
     },
     qtddisponivel: {
       type: DataTypes.INTEGER,
