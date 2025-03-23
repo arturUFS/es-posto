@@ -72,7 +72,10 @@ router.get("/fornecedores/listar", fornecedorController.listar);
 router.get("/combustivel", combustivelController.index);
 
 //Rota para cadastrar combustível
-router.get("/combustivel/cadastrar", combustivelController.cadastrar);
+router.post("/combustivel/cadastrar", combustivelController.cadastrar);
+
+//Rota para registrar venda de combustível
+router.post("/combustivel/registrarvenda", combustivelController.registrarVenda);
 
 
 export default router;

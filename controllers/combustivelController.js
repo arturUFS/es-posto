@@ -29,23 +29,24 @@ export const combustivelController = {
       const {
         tipocombustivel,
         valorlitro,
-        descricao,
         qtddisponivel,
-        fornecedor,
+        descricao,
+        cnpj,
       } = req.body;
+      
 
       // Verifica se o CNPJ do fornecedor foi enviado corretamente
-      if (!fornecedor) {
+      if (!cnpj) {
         return res
           .status(400)
           .json({ message: "Selecione um fornecedor válido!" });
       }
-
-      const idCombustivel = gerarIdCombustivel(); // Gerando um ID único para o combustivel
+      
+      const idcombustivel = gerarIdCombustivel(); // Gerando um ID único para o combustivel
 
       //Cadastrar o combustível
       const novoCombustivel = await Combustivel.create({
-        idcombustivel: idCombustivel,
+        idcombustivel,
         tipocombustivel,
         valorlitro,
         descricao: descricao || null, //Permite que seja opcional
@@ -54,8 +55,8 @@ export const combustivelController = {
 
       // cria a associação na tabela Fornecedor_combustivel
       await FornecedorCombustivel.create({
-        cnpj: fornecedor,
-        idCombustivel,
+        cnpj: cnpj,
+        idcombustivel,
       });
 
       res.json({

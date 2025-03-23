@@ -89,10 +89,8 @@ export const fornecedorController = {
         attributes: ["cnpj", "nome", "email", "telefone"], // Apenas os campos necessários
       });
 
-      // Renderiza a página fornecedor.ejs e passa os fornecedores
-      res.render("Fornecedor/fornecedor", {
-        fornecedores: fornecedoresFormatados,
-      });
+      // Retorna os fornecedores como JSON
+      res.json(fornecedores);
     } catch (error) {
       console.error("Erro ao listar fornecedores:", error);
       res.status(500).json({ message: "Erro no servidor" });

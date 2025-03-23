@@ -27,9 +27,8 @@
           </div>
           <div class="form-group">
             <label for="fornecedor">Fornecedor:</label>
-            <select id="fornecedor" required>
+            <select id="fornecedor" nome="fornecedor" required>
               <option value="" selected disabled>Selecione o fornecedor</option>
-              <!-- Opções de fornecedores serão carregadas via JavaScript -->
             </select>
           </div>
         </div>
@@ -121,10 +120,9 @@
     .getElementById("formCadastrar")
     .addEventListener("submit", async function (event) {
       event.preventDefault(); // Evita o recarregamento da página
-
       // Capturando os valores do formulário
       const tipoCombustivel = document.getElementById("tipoCombustivel").value;
-      const fornecedorId = document.getElementById("fornecedor").value;
+      const cnpj = document.getElementById("fornecedor").value;
       const valorLitro = document
         .getElementById("valorLitro")
         .value.replace("R$ ", "")
@@ -134,16 +132,13 @@
       ).value;
       const descricao = document.getElementById("descricao").value;
 
-      // Formata o valor para envio (remove R$ e converte vírgula para ponto)
-      valorLitro = valorLitro.replace("R$ ", "").replace(",", ".");
-
       // Validações
       if (!tipoCombustivel) {
         alert("Informe o tipo de combustível.");
         return;
       }
 
-      if (!fornecedorId) {
+      if (!cnpj) {
         alert("Selecione um fornecedor.");
         return;
       }
@@ -161,11 +156,12 @@
       // Montando o objeto com os dados
       const dadosCombustivel = {
         tipo: tipoCombustivel,
-        cnpj: cnpj,
         valorLitro: parseFloat(valorLitro),
-        quantidadeDisponivel: quantidadeDisponivel,
+        quantidadeDisponivel: parseInt(quantidadeDisponivel),
         descricao,
+        cnpj: cnpj,
       };
+    
 
       try {
         // Enviando os dados para o backend via fetch API
@@ -176,11 +172,13 @@
         });
 
         const data = await response.json();
+
         if (!response.ok) {
           throw new Error(data.message || "Erro ao cadastrar combustível"); // Exibir mensagem de sucesso ou erro
         }
+
         alert("✅ Combustível cadastrado com sucesso!");
-        fecharModal("modalCadastrarCombustivel"); // Fecha o modal após cadastro bem-sucedido
+        fecharModal("modalCadastrar"); // Fecha o modal após cadastro bem-sucedido
         document.getElementById("formCadastrar").reset(); // Limpa o formulário
       } catch (error) {
         console.error("❌ Erro ao cadastrar combustível:", error);
