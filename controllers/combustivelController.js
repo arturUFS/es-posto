@@ -1,5 +1,4 @@
 import { Combustivel } from "../models/combustivel.js";
-import { Fornecedor } from "../models/fornecedor.js";
 import { FornecedorCombustivel } from "../models/fornecedor_combustivel.js";
 import { Abastecimento } from "../models/abastecimento.js";
 
@@ -21,19 +20,19 @@ export const combustivelController = {
       res.status(500).send("Erro ao buscar usuários");
     }
   },
+
   /**
    * Cadastra um novo combustivel no banco de dados
    */
   async cadastrar(req, res) {
     try {
       const {
-        tipocombustivel,
-        valorlitro,
-        qtddisponivel,
+        tipo: tipocombustivel,
+        valorLitro: valorlitro,
+        quantidadeDisponivel: qtddisponivel,
         descricao,
         cnpj,
       } = req.body;
-      
 
       // Verifica se o CNPJ do fornecedor foi enviado corretamente
       if (!cnpj) {
@@ -41,7 +40,7 @@ export const combustivelController = {
           .status(400)
           .json({ message: "Selecione um fornecedor válido!" });
       }
-      
+
       const idcombustivel = gerarIdCombustivel(); // Gerando um ID único para o combustivel
 
       //Cadastrar o combustível
@@ -52,6 +51,7 @@ export const combustivelController = {
         descricao: descricao || null, //Permite que seja opcional
         qtddisponivel,
       });
+      console.log("Novo combustível cadastrado:", novoCombustivel);
 
       // cria a associação na tabela Fornecedor_combustivel
       await FornecedorCombustivel.create({
@@ -65,6 +65,7 @@ export const combustivelController = {
       });
     } catch (error) {
       console.error(" ❌ Erro ao cadastrar combustível:", error);
+
       res.status(500).json({
         message: "Erro ao cadastrar combustível",
         error: error.message,
