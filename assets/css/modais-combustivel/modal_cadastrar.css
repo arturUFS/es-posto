@@ -39,7 +39,8 @@
   flex-grow: 1;
 }
 
-.back-button, .home-button {
+.back-button,
+.home-button {
   background: none;
   border: none;
   color: white;
@@ -89,7 +90,9 @@ label {
   font-size: 14px;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -113,7 +116,7 @@ textarea {
   cursor: pointer;
   font-size: 14px;
   width: 30%;
-  margin-top: 10px;
+  margin-top: 100px;
 }
 
 .cadastrar-btn:hover {

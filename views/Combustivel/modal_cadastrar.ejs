@@ -1,7 +1,7 @@
 <div id="modalCadastrar" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button class="back-button" onclick="fecharModal('modalCadastrar')">
+      <button class="back-button" onclick="fecharModal2('modalCadastrar')">
         <i class="arrow-left">←</i>
       </button>
       <h2>Cadastrar Combustível</h2>
@@ -161,7 +161,6 @@
         descricao,
         cnpj: cnpj,
       };
-    
 
       try {
         // Enviando os dados para o backend via fetch API
@@ -187,7 +186,13 @@
     });
 
   // Função para fechar o modal
-  function fecharModal(idModal) {
+  function fecharModal2(idModal) {
+    const formResultado = document.getElementById("formCadastrar");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("fornecedor").value = "";
     document.getElementById(idModal).style.display = "none";
   }
 </script>
