@@ -3,7 +3,7 @@
     <div class="modal-header">
       <button
         class="back-button"
-        onclick="fecharModal('modalConsultarProduto')"
+        onclick="fecharOuVoltar('modalConsultarProduto')"
       >
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
@@ -31,7 +31,7 @@
             <button
               type="button"
               class="consultar-btn"
-              onclick="consultarFuncionario()"
+              onclick="consultarProduto()"
             >
               Consultar
             </button>
@@ -77,9 +77,9 @@
 
           <div class="form-row">
             <div class="form-group" style="flex-basis: 100%">
-              <label for="descricaoProduto">Descrição:</label>
+              <label for="descricaoProduto2">Descrição:</label>
               <textarea
-                id="descricaoProduto"
+                id="descricaoProduto2"
                 rows="4"
                 readonly
                 style="resize: none"
@@ -111,11 +111,13 @@
 </div>
 <script>
   // Formatação para o campo de valor
-  document.getElementById("valorTotal").addEventListener("input", function (e) {
-    let value = e.target.value.replace(/\D/g, "");
-    value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
-    e.target.value = "R$ " + value;
-  });
+  document
+    .getElementById("valorProduto2")
+    .addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+      e.target.value = "R$ " + value;
+    });
 
   // Função para carregar os Produtos e preencher o select
   async function carregarProdutos() {
@@ -147,11 +149,44 @@
   // Chamar a função ao abrir o modal
   document.addEventListener("DOMContentLoaded", carregarProdutos);
 
+  // Função para consultar produto
+  async function consultarProduto() {
+    const idProduto = document.getElementById("produto2").value;
+
+    if (!idProduto) {
+      alert("Por favor, selecione um produto.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/produto/consultar/${idProduto}`);
+      if (!response.ok) {
+        throw new Error("Produto não encontrado.");
+      }
+
+      const produto = await response.json();
+
+      document.getElementById("nomeProduto2").value = produto.nome;
+      document.getElementById("fornecedor2").value = produto.fornecedor;
+      const valor = produto.valor ? parseFloat(produto.valor) : 0;
+      document.getElementById("valorProduto2").value = `R$ ${valor
+        .toFixed(2)
+        .replace(".", ",")}`;
+      document.getElementById("quantidadeDisponivel2").value =
+        produto.quantidade;
+      document.getElementById("descricaoProduto2").textContent =
+        produto.descricao || "";
+
+      document.getElementById("telaConsulta").style.display = "none";
+      document.getElementById("resultadoConsulta").style.display = "block";
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
   // Função para habilitar a edição dos campos
   function habilitarEdicao() {
-    const campos = document.querySelectorAll(
-      "#resultadoConsulta input:not(#cpf-res)"
-    );
+    const campos = document.querySelectorAll("#resultadoConsulta input");
     campos.forEach((campo) => {
       campo.readOnly = false;
     });
@@ -169,6 +204,37 @@
 
     document.getElementById("botoesEdicao").style.display = "none";
     document.getElementById("lapis").style.display = "block";
+  }
+
+  // Função para fechar ou voltar para início do modal
+  function fecharOuVoltar() {
+    const resultado = document.getElementById("resultadoConsulta");
+    const telaConsulta = document.getElementById("telaConsulta");
+    const formConsulta = document.getElementById("consultaForm");
+    const formResultado = document.getElementById("formConsultarProduto");
+
+    if (window.getComputedStyle(resultado).display !== "none") {
+      // Se a tela de resultado estiver visível, volta para a tela de consulta
+      resultado.style.display = "none";
+      telaConsulta.style.display = "flex";
+      cancelarEdicao();
+
+      // Resetando os formulários
+      formConsulta.reset();
+      formResultado.reset();
+
+      // Resetando o select manualmente
+      document.getElementById("produto2").value = "";
+    } else {
+      cancelarEdicao();
+      // Fecha o modal e reseta tudo
+      formConsulta.reset();
+      formResultado.reset();
+
+      // Resetando o select manualmente
+      document.getElementById("produto2").value = "";
+      fecharModal("modalConsultarProduto");
+    }
   }
 
   // Função para fechar o modal
