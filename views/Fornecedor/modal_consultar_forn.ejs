@@ -279,7 +279,7 @@
     });
 
     document.getElementById("botoesEdicao").style.display = "block";
-    document.getElementById("lapis").style.display = "none";
+    document.getElementById("lapis").style.visibility = "hidden"; 
   }
 
   // Função para cancelar edição
@@ -290,7 +290,7 @@
     });
 
     document.getElementById("botoesEdicao").style.display = "none";
-    document.getElementById("lapis").style.display = "block";
+    document.getElementById("lapis").style.visibility = "visible"; 
   }
 
   // Envia os dados editados para o backend e atualiza o fornecedor no banco de dados.

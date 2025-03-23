@@ -199,4 +199,29 @@ export const produtoController = {
       res.status(500).json({ message: "Erro no servidor" });
     }
   },
+
+  async atualizar(req, res) {
+    try {
+      const { idproduto } = req.params;
+      const { nome, valor, quantidade, descricao, fornecedorCNPJ } = req.body;
+
+      const produto = await Produto.findByPk(idproduto);
+      if (!produto)
+        return res.status(404).json({ message: "Produto não encontrado!" });
+
+      // Atualizar os dados do produto
+      await produto.update({ nome, valor, quantidade, descricao });
+
+      // Atualizar a relação fornecedor-produto
+      await FornecedorProduto.update(
+        { cnpj: fornecedorCNPJ },
+        { where: { idproduto } }
+      );
+
+      res.json({ message: "Produto atualizado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao atualizar produto:", error);
+      res.status(500).json({ message: "Erro ao atualizar produto" });
+    }
+  },
 };

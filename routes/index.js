@@ -83,4 +83,7 @@ router.post("/produto/registrar", produtoController.registrarVenda);
 // Rota para consultar um produto
 router.get("/produto/consultar/:idproduto", produtoController.consultar);
 
+//Rota para atualizar um produto
+router.put("/produto/atualizar/:idproduto", produtoController.atualizar);
+
 export default router;
