@@ -1,0 +1,146 @@
+<div id="modalCadastrarServico" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button
+        class="back-button"
+        onclick="fecharModal('modalCadastrarServico')"
+      >
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Cadastrar Serviço</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formCadastrarServico">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipoServico">Tipo de Serviço:</label>
+            <input
+              type="text"
+              id="tipoServico"
+              placeholder="Digite o tipo de serviço"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="localServico">Local:</label>
+            <input
+              type="text"
+              id="localServico"
+              placeholder="Informe o local"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorServico">Valor:</label>
+            <input
+              type="text"
+              id="valorServico"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="duracaoServico">Duração (minutos):</label>
+            <input
+              type="number"
+              id="duracaoServico"
+              placeholder="Tempo estimado"
+              min="1"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="flex-basis: 100%">
+            <label for="descricaoServico">Descrição:</label>
+            <textarea
+              id="descricaoServico"
+              placeholder="Descreva o serviço..."
+              rows="4"
+              style="resize: vertical"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Formatação para o campo de valor
+  document
+    .getElementById("valorServico")
+    .addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+      e.target.value = "R$ " + value;
+    });
+
+  // Captura o evento de envio do formulário e cadastra o serviço
+  document
+    .getElementById("formCadastrarServico")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+
+      const tiposervico = document.getElementById("tipoServico").value;
+      const local = document.getElementById("localServico").value;
+      const valor = document
+        .getElementById("valorServico")
+        .value.replace("R$ ", "")
+        .replace(",", ".");
+      const duracao = document.getElementById("duracaoServico").value;
+      const descricao = document.getElementById("descricaoServico").value;
+
+      const servico = {
+        tiposervico,
+        local,
+        valor: parseFloat(valor),
+        duracao: parseInt(duracao),
+        descricao,
+      };
+
+      try {
+        const response = await fetch("/servico/cadastrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(servico),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao cadastrar serviço");
+        }
+
+        alert("✅ Serviço cadastrado com sucesso!");
+        fecharModal("modalCadastrarServico");
+        document.getElementById("formCadastrarServico").reset(); // Limpa o formulário
+      } catch (error) {
+        console.error("❌ Erro ao cadastrar serviço:", error);
+        alert("Erro ao cadastrar serviço");
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
