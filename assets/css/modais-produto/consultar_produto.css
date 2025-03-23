@@ -1,14 +1,10 @@
 /* Modal Consultar Produto */
 
 /* Corpo do Modal */
-/* 
-#resultadoConsulta {
-  display: block;
-}
 
-#telaConsulta {
+#resultadoConsulta {
   display: none;
-} */
+}
 
 .center-content {
   display: flex;
