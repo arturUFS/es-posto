@@ -21,6 +21,10 @@
       rel="stylesheet"
       href="assets/css/modais-combustivel/modal_relatorio_vendas.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_quantidade_combustivel.css"
+    />
     <style>
       .menu li:nth-child(2) a {
         background-color: #c31010;
@@ -63,7 +67,7 @@
     </div>
     <%- include('modal_cadastrar') %> <%- include('modal_registrar_venda') %>
     <%- include('modal_atualizar_preco') %> <%- include('modal_gerar_relatorio')
-    %>
+    %> <%- include('modal_quantidade_combustivel') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -96,6 +100,10 @@
       .addEventListener("click", () =>
         abrirModal("modalRelatorioVendasCombustivel")
       );
+
+    document
+      .getElementById("verificar-quantidade-combustivel")
+      .addEventListener("click", () => abrirModal("modalQtdCombustivel"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {
