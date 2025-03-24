@@ -3,6 +3,7 @@ import { FornecedorCombustivel } from "../models/fornecedor_combustivel.js";
 import { Abastecimento } from "../models/abastecimento.js";
 import { Funcionario } from "../models/funcionario.js";
 import { Venda } from "../models/venda.js";
+import { Fornecedor } from "../models/fornecedor.js";
 
 function gerarIdCombustivel() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
@@ -12,13 +13,41 @@ export const combustivelController = {
   index: async (req, res) => {
     try {
       const nomeFuncionario = req.query.nome || "Usuário";
-      res.render("Combustivel/combustivel", { nomeFuncionario });
+
+      // 🔎 Buscar combustíveis e seus fornecedores
+      const combustiveis = await Combustivel.findAll({
+        attributes: ["idcombustivel", "tipocombustivel", "qtddisponivel"], // Garante que está pegando os campos certos
+        include: [
+          {
+            model: Fornecedor,
+            as: "fornecedores", // 🔥 Deve ser exatamente igual ao alias definido na associação
+            attributes: ["nome"],
+            through: { attributes: [] }, // Oculta colunas da tabela intermediária
+          },
+        ],
+      });
+
+      // 🔄 Formatar os dados para exibição no frontend
+      const combustiveisFormatados = combustiveis.map((combustivel) => ({
+        idcombustivel: combustivel.idcombustivel,
+        tipocombustivel: combustivel.tipocombustivel, // Corrigido para garantir que o nome do combustível aparece
+        fornecedor:
+          combustivel.fornecedores.length > 0
+            ? combustivel.fornecedores[0].nome
+            : "Desconhecido",
+        qtddisponivel: combustivel.qtddisponivel, // Corrigido para garantir que aparece a quantidade
+      }));
+
+      // 🔥 Renderiza a página com os combustíveis
+      res.render("Combustivel/combustivel", {
+        nomeFuncionario,
+        combustiveis: combustiveisFormatados,
+      });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Erro ao buscar usuários");
+      console.error("❌ Erro ao buscar combustíveis:", err);
+      res.status(500).send("Erro ao buscar combustíveis");
     }
   },
-
   /**
    * Cadastra um novo combustivel no banco de dados
    */
@@ -215,11 +244,9 @@ export const combustivelController = {
 
       // Verifica se o ID e o novo valor foram informados
       if (!idcombustivel || !valorlitro) {
-        return res
-          .status(400)
-          .json({
-            message: "ID do combustível e novo valor são obrigatórios.",
-          });
+        return res.status(400).json({
+          message: "ID do combustível e novo valor são obrigatórios.",
+        });
       }
 
       // Busca o combustível no banco
@@ -234,12 +261,10 @@ export const combustivelController = {
       res.json({ message: "✅ Preço do combustível atualizado com sucesso!" });
     } catch (error) {
       console.error("❌ Erro ao atualizar preço do combustível:", error);
-      res
-        .status(500)
-        .json({
-          message: "Erro ao atualizar preço do combustível.",
-          error: error.message,
-        });
+      res.status(500).json({
+        message: "Erro ao atualizar preço do combustível.",
+        error: error.message,
+      });
     }
   },
 };
