@@ -13,41 +13,13 @@ export const combustivelController = {
   index: async (req, res) => {
     try {
       const nomeFuncionario = req.query.nome || "Usuário";
-
-      // 🔎 Buscar combustíveis e seus fornecedores
-      const combustiveis = await Combustivel.findAll({
-        attributes: ["idcombustivel", "tipocombustivel", "qtddisponivel"], // Garante que está pegando os campos certos
-        include: [
-          {
-            model: Fornecedor,
-            as: "fornecedores", // 🔥 Deve ser exatamente igual ao alias definido na associação
-            attributes: ["nome"],
-            through: { attributes: [] }, // Oculta colunas da tabela intermediária
-          },
-        ],
-      });
-
-      // 🔄 Formatar os dados para exibição no frontend
-      const combustiveisFormatados = combustiveis.map((combustivel) => ({
-        idcombustivel: combustivel.idcombustivel,
-        tipocombustivel: combustivel.tipocombustivel, // Corrigido para garantir que o nome do combustível aparece
-        fornecedor:
-          combustivel.fornecedores.length > 0
-            ? combustivel.fornecedores[0].nome
-            : "Desconhecido",
-        qtddisponivel: combustivel.qtddisponivel, // Corrigido para garantir que aparece a quantidade
-      }));
-
-      // 🔥 Renderiza a página com os combustíveis
-      res.render("Combustivel/combustivel", {
-        nomeFuncionario,
-        combustiveis: combustiveisFormatados,
-      });
+      res.render("Combustivel/combustivel", { nomeFuncionario });
     } catch (err) {
-      console.error("❌ Erro ao buscar combustíveis:", err);
-      res.status(500).send("Erro ao buscar combustíveis");
+      console.error("❌ Erro ao carregar a página de combustíveis:", err);
+      res.status(500).send("Erro ao carregar a página");
     }
   },
+
   /**
    * Cadastra um novo combustivel no banco de dados
    */
@@ -265,6 +237,41 @@ export const combustivelController = {
         message: "Erro ao atualizar preço do combustível.",
         error: error.message,
       });
+    }
+  },
+
+  /**
+   * Busca os combustíveis e seus fornecedores para serem usados no frontend.
+   */
+  listarCombustiveis: async (req, res) => {
+    try {
+      const combustiveis = await Combustivel.findAll({
+        attributes: ["idcombustivel", "tipocombustivel", "qtddisponivel"],
+        include: [
+          {
+            model: Fornecedor,
+            as: "fornecedores",
+            attributes: ["nome"],
+            through: { attributes: [] }, // Oculta colunas da tabela intermediária
+          },
+        ],
+      });
+
+      // 🔄 Formatar os dados para o frontend
+      const combustiveisFormatados = combustiveis.map((combustivel) => ({
+        idcombustivel: combustivel.idcombustivel,
+        tipocombustivel: combustivel.tipocombustivel,
+        fornecedor:
+          combustivel.fornecedores.length > 0
+            ? combustivel.fornecedores[0].nome
+            : "Desconhecido",
+        qtddisponivel: combustivel.qtddisponivel,
+      }));
+
+      res.json(combustiveisFormatados);
+    } catch (error) {
+      console.error("❌ Erro ao listar combustíveis:", error);
+      res.status(500).json({ message: "Erro ao listar combustíveis" });
     }
   },
 };
