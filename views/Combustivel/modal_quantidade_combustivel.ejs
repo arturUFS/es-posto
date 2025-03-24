@@ -1,0 +1,68 @@
+<div id="modalQtdCombustivel" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalQtdCombustivel')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Quantidade de Combustível Disponível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="table-container">
+        <table class="combustiveis-table">
+          <thead>
+            <tr>
+              <th onclick="ordenarTabela(0)">Nome</th>
+              <th onclick="ordenarTabela(1)">Fornecedor</th>
+              <th onclick="ordenarTabela(2)">Quantidade</th>
+              <!-- <th>Ações</th> -->
+            </tr>
+          </thead>
+          <tbody id="combustiveisTbody">
+            <% if (!combustiveis || combustiveis.length === 0) { %>
+            <tr>
+              <td colspan="5" class="loading-message">
+                Nenhum funcionário encontrado.
+              </td>
+            </tr>
+            <% } else { %> <% combustiveis.forEach(combustivel => { %>
+            <tr>
+              <td><%= combustivel.tipocombustivel %></td>
+              <td><%= combustivel.fornecedor %></td>
+              <td><%= combustivel.qtddisponivel %></td>
+              <!-- CPF já formatado no Controller -->
+              <!-- <td class="action-buttons">
+                    <button class="view-button">
+                      <i class="eye-icon"
+                        ><img src="/assets/Icon.png" alt="consultar" width="40%"
+                      /></i>
+                    </button>
+                    <button class="edit-button">
+                      <i class="edit-icon"
+                        ><img src="/assets/Vector (3).png" alt="editar" width="30%"
+                      /></i>
+                    </button>
+                    <button class="delete-button">
+                      <i class="delete-icon"
+                        ><img
+                          src="/assets/Vector (4).png"
+                          alt="excluir"
+                          width="30%"
+                      /></i>
+                    </button>
+                  </td> -->
+            </tr>
+            <% }); %> <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
