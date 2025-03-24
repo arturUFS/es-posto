@@ -1,0 +1,103 @@
+<div id="modalQtdCombustivel" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalQtdCombustivel')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Quantidade de Combustível Disponível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="table-container">
+        <table class="combustiveis-table">
+          <thead>
+            <tr>
+              <th onclick="ordenarTabela(0)">Nome</th>
+              <th onclick="ordenarTabela(1)">Fornecedor</th>
+              <th onclick="ordenarTabela(2)">Quantidade</th>
+            </tr>
+          </thead>
+          <tbody id="combustiveisTbody">
+            <tr>
+              <td colspan="3" class="loading-message">Carregando...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let direcaoOrdenacao = {}; // Guarda a direção de ordenação para cada coluna
+
+  function ordenarTabela(colunaIndex) {
+    const tabela = document.querySelector(".combustiveis-table tbody");
+    const linhas = Array.from(tabela.querySelectorAll("tr"));
+
+    // Alterna entre crescente (asc) e decrescente (desc)
+    direcaoOrdenacao[colunaIndex] = !direcaoOrdenacao[colunaIndex]
+      ? "asc"
+      : direcaoOrdenacao[colunaIndex] === "asc"
+      ? "desc"
+      : "asc";
+    const direcao = direcaoOrdenacao[colunaIndex];
+
+    linhas.sort((a, b) => {
+      let valorA = a.cells[colunaIndex].textContent.trim();
+      let valorB = b.cells[colunaIndex].textContent.trim();
+
+      // Converte para número se for possível
+      let numeroA = parseFloat(valorA.replace(",", "."));
+      let numeroB = parseFloat(valorB.replace(",", "."));
+
+      if (!isNaN(numeroA) && !isNaN(numeroB)) {
+        return direcao === "asc" ? numeroA - numeroB : numeroB - numeroA;
+      }
+
+      return direcao === "asc"
+        ? valorA.localeCompare(valorB)
+        : valorB.localeCompare(valorA);
+    });
+
+    // Reanexando as linhas ordenadas na tabela
+    linhas.forEach((linha) => tabela.appendChild(linha));
+  }
+
+  async function carregarCombustiveis() {
+    try {
+      const response = await fetch("/combustivel/listagem");
+      if (!response.ok) throw new Error("Erro ao carregar combustíveis.");
+
+      const combustiveis = await response.json();
+      const tabela = document.getElementById("combustiveisTbody");
+      tabela.innerHTML = ""; // Limpa a tabela antes de preencher
+
+      if (combustiveis.length === 0) {
+        tabela.innerHTML =
+          '<tr><td colspan="3" class="loading-message">Nenhum combustível encontrado.</td></tr>';
+        return;
+      }
+
+      combustiveis.forEach((combustivel) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${combustivel.tipocombustivel}</td>
+          <td>${combustivel.fornecedor}</td>
+          <td>${combustivel.qtddisponivel}</td>
+        `;
+        tabela.appendChild(tr);
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar combustíveis:", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", carregarCombustiveis);
+</script>

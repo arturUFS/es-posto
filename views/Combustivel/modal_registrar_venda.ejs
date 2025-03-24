@@ -1,0 +1,277 @@
+<div id="modalRegistroVenda" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal1('modalRegistroVenda')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Registro de Venda de Combustível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formRegistroVenda">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="data">Data:</label>
+            <input type="date" id="data" placeholder="DD/MM/AAAA" required />
+          </div>
+          <div class="form-group">
+            <label for="funcionario">Funcionário Responsável (CPF):</label>
+            <input
+              type="text"
+              id="funcionario"
+              placeholder="000.000.000-00"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="litros">Litros (L):</label>
+            <input type="number" id="litros" placeholder="0" min="0" required />
+          </div>
+          <div class="form-group">
+            <label for="tipo">Tipo de Combustível:</label>
+            <select id="tipo" required>
+              <option value="" disabled selected>
+                Carregando combustíveis...
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bomba">Bomba:</label>
+            <input
+              type="text"
+              id="bomba"
+              placeholder="Digite a bomba"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label>Forma de Pagamento:</label>
+            <div class="payment-options">
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="dinheiro"
+                  name="formaPagamento"
+                  value="Dinheiro"
+                />
+                <label for="dinheiro">Dinheiro</label>
+              </div>
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="pix"
+                  name="formaPagamento"
+                  value="Pix"
+                />
+                <label for="pix">PIX</label>
+              </div>
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="credito"
+                  name="formaPagamento"
+                  value="Crédito"
+                  checked
+                />
+                <label for="credito">Crédito</label>
+              </div>
+              <div class="payment-option">
+                <input
+                  type="radio"
+                  id="debito"
+                  name="formaPagamento"
+                  value="Débito"
+                />
+                <label for="debito">Débito</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorTotal">Valor Total:</label>
+            <input
+              type="text"
+              id="valorTotal"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="registrar-btn">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Máscara para o valor total
+  document
+    .getElementById("valorTotal")
+    .addEventListener("input", function (event) {
+      let valor = event.target.value;
+      valor = valor.replace(/\D/g, "");
+      valor = (parseInt(valor || "0") / 100).toFixed(2);
+      valor = "R$ " + valor.replace(".", ",");
+
+      event.target.value = valor;
+    });
+
+  // Máscara para CPF
+  document
+    .getElementById("funcionario")
+    .addEventListener("input", async function (event) {
+      let cpf = event.target.value;
+      cpf = cpf.replace(/\D/g, "");
+
+      if (cpf.length > 11) {
+        cpf = cpf.substring(0, 11);
+      }
+
+      if (cpf.length > 9) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      } else if (cpf.length > 6) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})/, "$1.$2.$3");
+      } else if (cpf.length > 3) {
+        cpf = cpf.replace(/(\d{3})(\d{3})/, "$1.$2");
+      }
+
+      event.target.value = cpf;
+    });
+
+  async function carregarCombustiveis() {
+    try {
+      const response = await fetch("/combustivel/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar combustíveis.");
+      }
+
+      const combustiveis = await response.json();
+      const selectCombustivel = document.getElementById("tipo");
+
+      selectCombustivel.innerHTML =
+        '<option value="" disabled selected>Selecione o combustível</option>';
+
+      combustiveis.forEach((combustivel) => {
+        const option = document.createElement("option");
+        option.value = combustivel.idcombustivel;
+        option.dataset.preco = combustivel.valorlitro;
+        option.dataset.estoque = combustivel.qtddisponivel;
+        option.textContent = `${combustivel.tipocombustivel} | ${combustivel.fornecedor}`;
+        selectCombustivel.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Carregar combustíveis ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarCombustiveis);
+
+  document.getElementById("litros").addEventListener("input", function () {
+    const litros = parseFloat(this.value) || 0;
+    const selectCombustivel = document.getElementById("tipo");
+    const combustivelSelecionado =
+      selectCombustivel.options[selectCombustivel.selectedIndex];
+
+    if (!combustivelSelecionado || combustivelSelecionado.value === "") {
+      alert("Selecione um combustível primeiro.");
+      this.value = "";
+      return;
+    }
+
+    const precoLitro = parseFloat(combustivelSelecionado.dataset.preco) || 0;
+    const estoque = parseFloat(combustivelSelecionado.dataset.estoque) || 0;
+
+    // Verifica se há estoque suficiente
+    if (litros > estoque) {
+      alert(`Quantidade indisponível! Estoque atual: ${estoque} litros.`);
+      this.value = estoque; // Ajusta para o máximo disponível
+      return;
+    }
+
+    const valorTotal = (litros * precoLitro).toFixed(2).replace(".", ",");
+    document.getElementById("valorTotal").value = `R$ ${valorTotal}`;
+  });
+
+  // Envio do formulário
+  document
+    .getElementById("formRegistroVenda")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const dataReg = document.getElementById("data").value;
+      const cpf = document.getElementById("funcionario").value;
+      const litros = parseFloat(document.getElementById("litros").value);
+      const idCombustivel = document.getElementById("tipo").value;
+      const bomba = document.getElementById("bomba").value;
+
+      let formaPagamento = "";
+      document.getElementsByName("formaPagamento").forEach((opcao) => {
+        if (opcao.checked) formaPagamento = opcao.value;
+      });
+
+      const valorTotal = parseFloat(
+        document
+          .getElementById("valorTotal")
+          .value.replace("R$", "")
+          .replace(",", ".")
+      );
+
+      try {
+        const response = await fetch("/combustivel/registrarvenda", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            dataReg,
+            cpfFuncionario: cpf,
+            litros,
+            idCombustivel,
+            bomba,
+            formaPagamento,
+            valorTotal,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao registrar venda.");
+        }
+
+        alert("✅ Venda registrada com sucesso!");
+        fecharModal("modalRegistroVenda");
+        document.getElementById("formRegistroVenda").reset();
+      } catch (error) {
+        alert(`❌ ${error.message}`);
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal1(idModal) {
+    const formResultado = document.getElementById("formRegistroVenda");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("tipo").value = "";
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Combustível</title>
     <link rel="stylesheet" href="assets/css/pages_initials.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_cadastrar.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_registrar_venda.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_atualizar_preco.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_relatorio_vendas.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-combustivel/modal_quantidade_combustivel.css"
+    />
     <style>
       .menu li:nth-child(2) a {
         background-color: #c31010;
@@ -37,16 +57,59 @@
       </button>
     </div>
     <div class="content">
-      <button>Registro de Venda de Combustível</button>
-      <button>Atualizar Preço do Combustível</button>
-      <button>Cadastrar Combustível</button>
-      <button>Relatório de Vendas</button>
-      <button>Verificar Quantidade de Combustível Disponível</button>
+      <button id="registrar-venda">Registro de Venda de Combustível</button>
+      <button id="atualizar-combustivel">Atualizar Preço do Combustível</button>
+      <button id="cadastrar-combustivel">Cadastrar Combustível</button>
+      <button id="relatorio-combustivel">Relatório de Vendas</button>
+      <button id="verificar-quantidade-combustivel">
+        Verificar Quantidade de Combustível Disponível
+      </button>
     </div>
+    <%- include('modal_cadastrar') %> <%- include('modal_registrar_venda') %>
+    <%- include('modal_atualizar_preco') %> <%- include('modal_gerar_relatorio')
+    %> <%- include('modal_quantidade_combustivel') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
       window.location.href = "/logout"; // Redireciona para a rota de logout
     });
+
+    // Função para abrir e fechar modais
+    function abrirModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+    function fecharModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    // Eventos de clique para abrir os modais
+    document
+      .getElementById("cadastrar-combustivel")
+      .addEventListener("click", () => abrirModal("modalCadastrar"));
+
+    document
+      .getElementById("registrar-venda")
+      .addEventListener("click", () => abrirModal("modalRegistroVenda"));
+
+    document
+      .getElementById("atualizar-combustivel")
+      .addEventListener("click", () => abrirModal("modalAtualizarPreco"));
+
+    document
+      .getElementById("relatorio-combustivel")
+      .addEventListener("click", () =>
+        abrirModal("modalRelatorioVendasCombustivel")
+      );
+
+    document
+      .getElementById("verificar-quantidade-combustivel")
+      .addEventListener("click", () => abrirModal("modalQtdCombustivel"));
+
+    // Fechar modal ao clicar fora
+    window.onclick = function (event) {
+      if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+      }
+    };
   </script>
 </html>

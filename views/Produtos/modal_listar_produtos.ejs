@@ -1,12 +1,12 @@
-<div id="modalListarForn" class="modal">
+<div id="modalListarProdutos" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button class="back-button" onclick="fecharModal('modalListarForn')">
+      <button class="back-button" onclick="fecharModal('modalListarProdutos')">
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
         /></i>
       </button>
-      <h2>Listar Fornecedores</h2>
+      <h2>Listar Produtos</h2>
       <button class="home-button" onclick="window.location.href='/home'">
         <i class="home-icon"
           ><img src="/assets/home-lg-alt 1.png" alt="home"
@@ -16,23 +16,23 @@
 
     <div class="modal-body">
       <div class="table-container">
-        <table class="suppliers-table">
+        <table class="produtos-table">
           <thead>
             <tr>
-              <th onclick="ordenarTabela(0)">Nome Sobrenome</th>
-              <th onclick="ordenarTabela(1)">Email</th>
-              <th onclick="ordenarTabela(2)">Telefone</th>
-              <th onclick="ordenarTabela(3)">CNPJ</th>
+              <th onclick="ordenarTabela(0)">Nome</th>
+              <th onclick="ordenarTabela(1)">Fornecedor</th>
+              <th onclick="ordenarTabela(2)">Quantidade</th>
+              <th onclick="ordenarTabela(3)">Valor</th>
               <!-- <th>Ações</th> -->
             </tr>
           </thead>
-          <tbody id="fornecedoresTbody">
+          <tbody id="produtosTbody">
             <tr>
               <td colspan="5" class="loading-message">
-                Nenhum fornecedor encontrado.
+                Nenhum funcionário encontrado.
               </td>
             </tr>
-            <!-- CNPJ já formatado no Controller -->
+            <!-- CPF já formatado no Controller -->
             <!-- <td class="action-buttons">
                   <button class="view-button">
                     <i class="eye-icon"
@@ -60,10 +60,44 @@
   </div>
 </div>
 <script>
+  // ✅ Função para carregar os produtos
+  async function carregarProdutos() {
+    try {
+      const response = await fetch("/produtos/listagem");
+      if (!response.ok) throw new Error("Erro ao carregar produtos.");
+
+      const produtos = await response.json();
+      const tabela = document.getElementById("produtosTbody");
+      tabela.innerHTML = ""; // Limpa antes de preencher
+
+      if (produtos.length === 0) {
+        tabela.innerHTML =
+          '<tr><td colspan="4" class="loading-message">Nenhum produto encontrado.</td></tr>';
+        return;
+      }
+
+      produtos.forEach((produto) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${produto.nome}</td>
+          <td>${produto.fornecedor}</td>
+          <td>${produto.quantidade}</td>
+          <td>R$ ${produto.valor}</td>
+        `;
+        tabela.appendChild(tr);
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar produtos:", error);
+    }
+  }
+
+  // ✅ Carrega os produtos ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarProdutos);
+
   let direcaoOrdenacao = {}; // Guarda a direção de ordenação para cada coluna
 
   function ordenarTabela(colunaIndex) {
-    const tabela = document.querySelector(".suppliers-table tbody");
+    const tabela = document.querySelector(".produtos-table tbody");
     const linhas = Array.from(tabela.querySelectorAll("tr"));
 
     // Alterna entre crescente (asc) e decrescente (desc)
@@ -100,38 +134,4 @@
     // Reanexando as linhas ordenadas na tabela
     linhas.forEach((linha) => tabela.appendChild(linha));
   }
-
-  async function carregarFornecedores() {
-    try {
-      const response = await fetch("/fornecedores/listar");
-      if (!response.ok) {
-        throw new Error("Erro ao carregar fornecedores.");
-      }
-
-      const fornecedores = await response.json();
-      const tbody = document.getElementById("fornecedoresTbody");
-
-      tbody.innerHTML = ""; // Limpa a tabela antes de preencher
-
-      if (fornecedores.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="loading-message">Nenhum fornecedor encontrado.</td></tr>`;
-      } else {
-        fornecedores.forEach((fornecedor) => {
-          const row = `
-            <tr>
-              <td>${fornecedor.nome}</td>
-              <td>${fornecedor.email}</td>
-              <td>${fornecedor.telefone}</td>
-              <td>${fornecedor.cnpj}</td>
-            </tr>
-          `;
-          tbody.innerHTML += row;
-        });
-      }
-    } catch (error) {
-      console.error("Erro ao carregar fornecedores:", error);
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", carregarFornecedores);
 </script>

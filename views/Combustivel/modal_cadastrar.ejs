@@ -1,0 +1,200 @@
+<div id="modalCadastrar" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal2('modalCadastrar')">
+        <i class="arrow-left"
+          ><img src="/assets/Icon (1).png" alt="voltar"
+        /></i>
+      </button>
+      <h2>Cadastrar Combustível</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon"
+          ><img src="/assets/home-lg-alt 1.png" alt="home"
+        /></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="formCadastrar">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="tipoCombustivel">Tipo Combustível:</label>
+            <input
+              type="text"
+              id="tipoCombustivel"
+              placeholder="Digite tipo do combustível"
+              maxlength="50"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="fornecedor">Fornecedor:</label>
+            <select id="fornecedor" nome="fornecedor" required>
+              <option value="" selected disabled>Selecione o fornecedor</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorLitro">Valor Litro:</label>
+            <input
+              type="text"
+              id="valorLitro"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="quantidadeDisponivel">Quantidade Disponível (L):</label>
+            <input
+              type="number"
+              id="quantidadeDisponivel"
+              placeholder="0"
+              min="0"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="descricao">Descrição:</label>
+            <textarea
+              id="descricao"
+              placeholder="Descreva o combustível"
+              rows="4"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="cadastrar-btn">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  //Máscara para o valor do litro
+  document
+    .getElementById("valorLitro")
+    .addEventListener("input", function (event) {
+      let valor = event.target.value;
+      valor = valor.replace(/\D/g, "");
+      valor = (parseInt(valor || "0") / 100).toFixed(2);
+      valor = "R$ " + valor.replace(".", ",");
+
+      event.target.value = valor;
+    });
+
+  // Carregar lista de fornecedores (exemplo)
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores:", error);
+      }
+      const fornecedores = await response.json();
+
+      const selectFornecedor = document.getElementById("fornecedor");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectFornecedor.innerHTML =
+        '<option value="" disabled selected>Selecione o fornecedor</option>';
+
+      fornecedores.forEach((fornecedor) => {
+        const option = document.createElement("option");
+        option.value = fornecedor.cnpj;
+        option.textContent = fornecedor.nome;
+        selectFornecedor.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar função ao carregar a página
+  document.addEventListener("DOMContentLoaded", carregarFornecedores);
+
+  // Envio do formulário
+  document
+    .getElementById("formCadastrar")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault(); // Evita o recarregamento da página
+      // Capturando os valores do formulário
+      const tipoCombustivel = document.getElementById("tipoCombustivel").value;
+      const cnpj = document.getElementById("fornecedor").value;
+      const valorLitro = document
+        .getElementById("valorLitro")
+        .value.replace("R$ ", "")
+        .replace(",", ".");
+      const quantidadeDisponivel = document.getElementById(
+        "quantidadeDisponivel"
+      ).value;
+      const descricao = document.getElementById("descricao").value;
+
+      // Validações
+      if (!tipoCombustivel) {
+        alert("Informe o tipo de combustível.");
+        return;
+      }
+
+      if (!cnpj) {
+        alert("Selecione um fornecedor.");
+        return;
+      }
+
+      if (!valorLitro || isNaN(parseFloat(valorLitro))) {
+        alert("Informe um valor válido para o litro.");
+        return;
+      }
+
+      if (!quantidadeDisponivel || isNaN(parseInt(quantidadeDisponivel))) {
+        alert("Informe uma quantidade disponível válida.");
+        return;
+      }
+
+      // Montando o objeto com os dados
+      const dadosCombustivel = {
+        tipo: tipoCombustivel,
+        valorLitro: parseFloat(valorLitro),
+        quantidadeDisponivel: parseInt(quantidadeDisponivel),
+        descricao,
+        cnpj: cnpj,
+      };
+
+      try {
+        // Enviando os dados para o backend via fetch API
+        const response = await fetch("/combustivel/cadastrar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosCombustivel),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao cadastrar combustível"); // Exibir mensagem de sucesso ou erro
+        }
+
+        alert("✅ Combustível cadastrado com sucesso!");
+        fecharModal("modalCadastrar"); // Fecha o modal após cadastro bem-sucedido
+        document.getElementById("formCadastrar").reset(); // Limpa o formulário
+      } catch (error) {
+        console.error("❌ Erro ao cadastrar combustível:", error);
+        alert("Erro ao cadastrar combustível. Tente novamente.");
+      }
+    });
+
+  // Função para fechar o modal
+  function fecharModal2(idModal) {
+    const formResultado = document.getElementById("formCadastrar");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("fornecedor").value = "";
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>

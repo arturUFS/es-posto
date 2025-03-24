@@ -25,8 +25,8 @@ export const produtoController = {
       const nomeFuncionario = req.query.nome || "Usuário";
       res.render("Produtos/produtos", { nomeFuncionario });
     } catch (err) {
-      console.error(err);
-      res.status(500).send("Erro ao buscar usuários");
+      console.error("Erro ao carregar a página de produtos:", err);
+      res.status(500).send("Erro ao carregar a página");
     }
   },
 
@@ -200,6 +200,9 @@ export const produtoController = {
     }
   },
 
+  /**
+   * Atualiza um produto pelo ID
+   */
   async atualizar(req, res) {
     try {
       const { idproduto } = req.params;
@@ -222,6 +225,73 @@ export const produtoController = {
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
       res.status(500).json({ message: "Erro ao atualizar produto" });
+    }
+  },
+
+  /**
+   * Exclui um produto pelo ID
+   */
+  async excluir(req, res) {
+    try {
+      const { idproduto } = req.params;
+
+      // Verifica se o produto existe
+      const produto = await Produto.findOne({
+        where: { idproduto: idproduto },
+      });
+      if (!produto) {
+        return res.status(404).json({ message: "Produto não encontrado." });
+      }
+
+      // Remove as relações do produto na tabela fornecedor_produto
+      await FornecedorProduto.destroy({ where: { idproduto: idproduto } });
+
+      // Exclui o produto
+      await produto.destroy();
+      console.log("✅ Produto excluído com sucesso!");
+
+      return res.json({ message: "Produto excluído com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao excluir produto:", error);
+      res.status(500).json({ message: "Erro ao excluir produto." });
+    }
+  },
+
+  /**
+   * Lista os produtos e seus fornecedores para carregamento assíncrono
+   */
+  listarprodutos: async (req, res) => {
+    try {
+      const produtos = await Produto.findAll({
+        attributes: ["idproduto", "nome", "quantidade", "valor"],
+        include: [
+          {
+            model: Fornecedor,
+            through: { model: FornecedorProduto }, // Especifica a tabela intermediária
+            as: "fornecedores",
+            attributes: ["nome"],
+          },
+        ],
+      });
+
+      // Formata os dados para exibição
+      const produtosFormatados = produtos.map((produto) => ({
+        idproduto: produto.idproduto,
+        nome: produto.nome,
+        quantidade: produto.quantidade,
+        valor: produto.valor
+          ? parseFloat(produto.valor).toFixed(2).replace(".", ",")
+          : "0,00",
+        fornecedor:
+          produto.fornecedores.length > 0
+            ? produto.fornecedores.map((f) => f.nome).join(", ")
+            : "Não informado",
+      }));
+
+      res.json(produtosFormatados);
+    } catch (err) {
+      console.error("❌ Erro ao buscar produtos:", err);
+      res.status(500).json({ message: "Erro ao buscar produtos" });
     }
   },
 };

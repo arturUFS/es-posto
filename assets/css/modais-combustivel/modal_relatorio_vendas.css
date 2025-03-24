@@ -1,0 +1,104 @@
+/* Modal Gerar Relatório de Vendas */
+
+/* Corpo do Modal */
+#resultadoRelatorio {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+#telaPeriodo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+#periodoForm #dataInicio,
+#periodoForm #dataFim {
+  width: 130%;
+  transform: translateX(-12.3%);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+#periodoForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+#periodoForm label {
+  transform: translateX(-15%);
+  font-size: 16px;
+}
+
+#periodoForm .form-group {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.resultado-mensagem {
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+.resultado-mensagem p {
+  margin: 10px 0;
+}
+
+.form-btn-download {
+  margin-top: 150px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.download-btn {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 60%;
+}
+
+.download-btn:hover {
+  background-color: #1a1a1a;
+}
+
+.form-btn-cons {
+  display: flex;
+  width: 110%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 15px;
+  justify-content: center;
+}
+
+.consultar-btn {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 130%;
+}
+
+.consultar-btn:hover {
+  background-color: #1a1a1a;
+}

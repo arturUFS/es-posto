@@ -1,0 +1,70 @@
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background-color: #c51f1f;
+  color: white;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+}
+.back-arrow {
+  font-size: 24px;
+  margin-right: 15px;
+}
+.home-icon {
+  margin-left: auto;
+}
+.form-container {
+  padding: 20px;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.payment-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.payment-option {
+  display: flex;
+  align-items: center;
+}
+
+.payment-option label {
+  margin-left: 10px;
+}
+
+.payment-option input {
+  vertical-align: middle;
+}
+
+.registrar-btn {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 30%;
+  margin-top: 100px;
+}
+
+.registrar-btn:hover {
+  background-color: #1a1a1a;
+}

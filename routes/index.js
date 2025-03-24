@@ -25,8 +25,6 @@ router.get("/logout", (req, res) => {
 
 router.get("/home", homeController.index);
 
-router.get("/combustivel", combustivelController.index);
-
 router.get("/servicos", servicoController.index);
 
 //Rotas Funcionário
@@ -48,6 +46,9 @@ router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 // Rota para listar funcionários
 router.get("/funcionario/listar", funcionarioController.listar);
 
+// Rota para listar funcionários na tabela
+router.get("/funcionario/listagem", funcionarioController.listarFuncionarios);
+
 // Rotas Fornecedor
 
 router.get("/fornecedores", fornecedorController.index);
@@ -67,23 +68,63 @@ router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
 // Rota para listar fornecedores
 router.get("/fornecedores/listar", fornecedorController.listar);
 
+// Rota para listar fornecedores na tabela
+router.get("/fornecedores/listagem", fornecedorController.listarFornecedores);
+
+//Rotas Combustível
+
+router.get("/combustivel", combustivelController.index);
+
+//Rota para cadastrar combustível
+router.post("/combustivel/cadastrar", combustivelController.cadastrar);
+
+//Rota para registrar venda de combustível
+
+router.post(
+  "/combustivel/registrarvenda",
+  combustivelController.registrarVenda
+);
+
+// Rota para listar combustível
+
+router.get("/combustivel/listar", combustivelController.listar);
+
+// Rota para atualizar preço de um combustível
+
+router.put(
+  "/combustivel/atualizarPreco/:idcombustivel",
+  combustivelController.atualizarPreco
+);
+
+// Rota para listar os combustíveis e fornecedores
+router.get("/combustivel/listagem", combustivelController.listarCombustiveis);
+
 // Rotas Produto
 
 router.get("/produtos", produtoController.index);
 
 // Rota para cadastrar um produto
-router.post("/produto/cadastrar", produtoController.cadastrar);
+router.post("/produtos/cadastrar", produtoController.cadastrar);
 
 // Rota para listar produtos
-router.get("/produto/listar", produtoController.listar);
+router.get("/produtos/listar", produtoController.listar);
 
 // Rota para registrar venda de um produto
-router.post("/produto/registrar", produtoController.registrarVenda);
+router.post("/produtos/registrar", produtoController.registrarVenda);
 
 // Rota para consultar um produto
-router.get("/produto/consultar/:idproduto", produtoController.consultar);
+router.get("/produtos/consultar/:idproduto", produtoController.consultar);
 
 //Rota para atualizar um produto
-router.put("/produto/atualizar/:idproduto", produtoController.atualizar);
+router.put("/produtos/atualizar/:idproduto", produtoController.atualizar);
+
+//Rota para excluir um produto
+router.delete("/produtos/excluir/:idproduto", produtoController.excluir);
+
+// Rota para gerar relatório de venda de produtos
+//router.get("/produtos/relatorio", produtoController.listar);
+
+// Rota para listar os combustíveis e fornecedores
+router.get("/produtos/listagem", produtoController.listarprodutos);
 
 export default router;

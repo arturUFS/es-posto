@@ -1,7 +1,7 @@
 <div id="modalRegistrarVenda" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button class="back-button" onclick="fecharModal('modalRegistrarVenda')">
+      <button class="back-button" onclick="fecharModal2('modalRegistrarVenda')">
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
         /></i>
@@ -164,7 +164,7 @@
   // Função para carregar os Produtos e preencher o select
   async function carregarProdutos() {
     try {
-      const response = await fetch("/produto/listar");
+      const response = await fetch("/produtos/listar");
       if (!response.ok) {
         throw new Error("Erro ao carregar produtos.");
       }
@@ -179,8 +179,10 @@
       // Adiciona os produtos ao select
       produtos.forEach((produto) => {
         const option = document.createElement("option");
-        option.value = produto.idproduto; // O valor será o idproduto
-        option.textContent = produto.nome; // O texto será o nome do produto
+        option.value = produto.idproduto; // O value agora é o ID do produto
+        option.dataset.preco = produto.valor; // Armazena o preço do produto
+        option.dataset.estoque = produto.quantidade; // Armazena o estoque do produto
+        option.textContent = `${produto.nome}`;
         selectProduto.appendChild(option);
       });
     } catch (error) {
@@ -190,6 +192,36 @@
 
   // Chamar a função ao abrir o modal
   document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+  // Cálculo do valor total baseado na quantidade e no valor do produto
+  document.getElementById("quantidade").addEventListener("input", function () {
+    const quantidade = parseInt(this.value) || 0;
+    const selectProduto = document.getElementById("produto");
+    const produtoSelecionado =
+      selectProduto.options[selectProduto.selectedIndex];
+
+    if (!produtoSelecionado || produtoSelecionado.value === "") {
+      alert("Selecione um produto primeiro.");
+      this.value = "";
+      return;
+    }
+
+    const precoUnitario = parseFloat(produtoSelecionado.dataset.preco) || 0;
+    const estoque = parseInt(produtoSelecionado.dataset.estoque) || 0;
+
+    // Verifica se há estoque suficiente
+    if (quantidade > estoque) {
+      alert(`Quantidade indisponível! Estoque atual: ${estoque} unidades.`);
+      this.value = estoque; // Ajusta para o máximo disponível
+      return;
+    }
+
+    // Calcula o valor total
+    const valorTotal = (quantidade * precoUnitario)
+      .toFixed(2)
+      .replace(".", ",");
+    document.getElementById("valorTotal").value = `R$ ${valorTotal}`;
+  });
 
   // Captura o evento de envio do formulário
   document
@@ -236,7 +268,7 @@
 
       // Enviar os dados para o backend
       try {
-        const response = await fetch("/produto/registrar", {
+        const response = await fetch("/produtos/registrar", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -267,7 +299,13 @@
     });
 
   // Função para fechar o modal
-  function fecharModal(idModal) {
+  function fecharModal2(idModal) {
+    const formResultado = document.getElementById("formRegistroVenda");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("produto").value = "";
     document.getElementById(idModal).style.display = "none";
   }
 </script>

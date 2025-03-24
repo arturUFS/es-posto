@@ -17,6 +17,14 @@
       rel="stylesheet"
       href="assets/css/modais-produto/consultar_produto.css"
     />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-produto/listar_produto.css"
+    />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-produto/relatorio_vendas_produto.css"
+    />
     <style>
       .menu li:nth-child(3) a {
         background-color: #c31010;
@@ -52,12 +60,13 @@
       <button id="registrar-venda-prod">Registrar venda de produto</button>
       <button id="cadastrar-produto">Cadastrar Produto</button>
       <button id="consultar-produto">Consultar Produto</button>
-      <button>Listar Produtos</button>
-      <button>Gerar Relatório de Vendas</button>
+      <button id="listar-produtos">Listar Produtos</button>
+      <button id="relatorio-vendas-produto">Gerar Relatório de Vendas</button>
     </div>
     <%- include('modal_registrar_venda') %> <%-
     include('modal_cadastrar_produto') %> <%- include('modal_consultar_produto')
-    %>
+    %> <%- include('modal_listar_produtos') %> <%-
+    include('modal_relatorio_vendas') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -84,5 +93,15 @@
     document
       .getElementById("consultar-produto")
       .addEventListener("click", () => abrirModal("modalConsultarProduto"));
+
+    document
+      .getElementById("listar-produtos")
+      .addEventListener("click", () => abrirModal("modalListarProdutos"));
+
+    document
+      .getElementById("relatorio-vendas-produto")
+      .addEventListener("click", () =>
+        abrirModal("modalRelatorioVendasProduto")
+      );
   </script>
 </html>

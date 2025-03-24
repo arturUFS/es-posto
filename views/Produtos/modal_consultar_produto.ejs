@@ -1,10 +1,7 @@
 <div id="modalConsultarProduto" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button
-        class="back-button"
-        onclick="fecharOuVoltar('modalConsultarProduto')"
-      >
+      <button class="back-button" onclick="fecharOuVoltar()">
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
         /></i>
@@ -61,9 +58,9 @@
                   ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
                 /></i>
               </button>
-              <button class="delete-btn" onclick="confirmarExclusao()">
+              <button class="delete-btn" onclick="confirmarExclusao()" disabled>
                 <i class="delete-icon"
-                  ><img src="/assets/Vector (4).png" alt="editar"
+                  ><img src="/assets/Vector (4).png" alt="excluir"
                 /></i>
               </button>
             </div>
@@ -127,7 +124,7 @@
   // Função para carregar os Produtos e preencher o select
   async function carregarProdutos() {
     try {
-      const response = await fetch("/produto/listar");
+      const response = await fetch("/produtos/listar");
       if (!response.ok) {
         throw new Error("Erro ao carregar produtos.");
       }
@@ -164,7 +161,7 @@
     }
 
     try {
-      const response = await fetch(`/produto/consultar/${idProduto}`);
+      const response = await fetch(`/produtos/consultar/${idProduto}`);
       if (!response.ok) {
         throw new Error("Produto não encontrado.");
       }
@@ -214,7 +211,7 @@
     };
 
     try {
-      const response = await fetch(`/produto/atualizar/${idProduto}`, {
+      const response = await fetch(`/produtos/atualizar/${idProduto}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dadosAtualizados),
@@ -230,6 +227,41 @@
       alert(error.message);
     }
   }
+
+  // Exibe uma mensagem de confirmação antes de excluir um produto.
+  /*  function confirmarExclusao() {
+    const idproduto = document.getElementById("produto2").value; // Obtém o idproduto
+
+    if (!idproduto) {
+      alert("Nenhum produto selecionado para exclusão.");
+      return;
+    }
+
+    const confirmacao = confirm("Tem certeza que deseja excluir este produto?");
+    if (confirmacao) {
+      excluirProduto(idproduto);
+    }
+  } */
+
+  // Exclui um produto enviando uma requisição DELETE para o backend.
+  /* function excluirProduto(idproduto) {
+    fetch(`/produtos/excluir/${idproduto}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao excluir produto.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.message); // Exibe mensagem de sucesso
+        fecharOuVoltar(); // Retorna para a tela de consulta
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  } */
 
   // Função para habilitar a edição dos campos
   async function habilitarEdicao() {
