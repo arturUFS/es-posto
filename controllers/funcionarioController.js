@@ -57,17 +57,12 @@ async function criarUsuario(username, senha, cpf) {
 export const funcionarioController = {
   index: async (req, res) => {
     try {
-      const nomeFuncionario = req.query.nome || "Usuário"; // Obtém o nome do usuário logado
-
-      // Busca todos os funcionários no banco de dados
-      const funcionarios = await Funcionario.findAll({
-        attributes: ["cpf", "nome", "email", "telefone"], // Campos necessários
+      const nomeFuncionario = req.query.nome || "Usuário";
+      res.render("Funcionario/funcionario", {
+        nomeFuncionario,
       });
-
-      // Renderiza a página funcionário.ejs e passa os dados
-      res.render("Funcionario/funcionario", { nomeFuncionario, funcionarios });
     } catch (err) {
-      console.error("Erro ao buscar funcionários:", err);
+      console.error("Erro ao carregar página de funcionários:", err);
       res.status(500).send("Erro no servidor");
     }
   },
@@ -232,6 +227,20 @@ export const funcionarioController = {
     } catch (error) {
       console.error("Erro ao excluir funcionário:", error);
       res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  // listagem para modal de listar
+  listarFuncionarios: async (req, res) => {
+    try {
+      const funcionarios = await Funcionario.findAll({
+        attributes: ["cpf", "nome", "email", "telefone"], // Apenas os campos necessários
+      });
+
+      res.json(funcionarios); // Retorna os dados em JSON
+    } catch (err) {
+      console.error("Erro ao buscar funcionários:", err);
+      res.status(500).json({ message: "Erro ao buscar funcionários" });
     }
   },
 };

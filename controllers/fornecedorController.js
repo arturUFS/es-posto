@@ -31,17 +31,12 @@ async function cadastrarEndereco(endereco) {
 export const fornecedorController = {
   index: async (req, res) => {
     try {
-      const nomeFuncionario = req.query.nome || "Usuário"; // Obtém o nome do usuário logado
-
-      // Busca todos os fornecedores no banco de dados
-      const fornecedores = await Fornecedor.findAll({
-        attributes: ["cnpj", "nome", "email", "telefone"], // Campos necessários
-      });
-
-      // Renderiza a página fornecedor.ejs e passa os dados
-      res.render("Fornecedor/fornecedor", { nomeFuncionario, fornecedores });
+      const nomeFuncionario = req.query.nome || "Usuário";
+      res.render("Fornecedor/fornecedor", {
+        nomeFuncionario,
+      }); // Inicializa sem fornecedores
     } catch (err) {
-      console.error("Erro ao buscar fornecedores:", err);
+      console.error("Erro ao carregar página de fornecedores:", err);
       res.status(500).send("Erro no servidor");
     }
   },
@@ -228,6 +223,20 @@ export const fornecedorController = {
     } catch (error) {
       console.error("Erro ao excluir fornecedor:", error);
       res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  // Lista fornecedores para tabela
+  listarFornecedores: async (req, res) => {
+    try {
+      const fornecedores = await Fornecedor.findAll({
+        attributes: ["cnpj", "nome", "email", "telefone"], // Apenas os campos necessários
+      });
+
+      res.json(fornecedores); // Retorna os dados em JSON
+    } catch (err) {
+      console.error("Erro ao buscar fornecedores:", err);
+      res.status(500).json({ message: "Erro ao buscar fornecedores" });
     }
   },
 };

@@ -27,20 +27,13 @@
             </tr>
           </thead>
           <tbody id="fornecedoresTbody">
-            <% if (!fornecedores || fornecedores.length === 0) { %>
             <tr>
               <td colspan="5" class="loading-message">
                 Nenhum fornecedor encontrado.
               </td>
             </tr>
-            <% } else { %> <% fornecedores.forEach(fornecedor => { %>
-            <tr>
-              <td><%= fornecedor.nome %></td>
-              <td><%= fornecedor.email %></td>
-              <td><%= fornecedor.telefone %></td>
-              <td><%= fornecedor.cnpj %></td>
-              <!-- CNPJ já formatado no Controller -->
-              <!-- <td class="action-buttons">
+            <!-- CNPJ já formatado no Controller -->
+            <!-- <td class="action-buttons">
                   <button class="view-button">
                     <i class="eye-icon"
                       ><img src="/assets/Icon.png" alt="consultar" width="40%"
@@ -60,11 +53,85 @@
                     /></i>
                   </button>
                 </td> -->
-            </tr>
-            <% }); %> <% } %>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+<script>
+  let direcaoOrdenacao = {}; // Guarda a direção de ordenação para cada coluna
+
+  function ordenarTabela(colunaIndex) {
+    const tabela = document.querySelector(".suppliers-table tbody");
+    const linhas = Array.from(tabela.querySelectorAll("tr"));
+
+    // Alterna entre crescente (asc) e decrescente (desc)
+    direcaoOrdenacao[colunaIndex] = !direcaoOrdenacao[colunaIndex]
+      ? "asc"
+      : direcaoOrdenacao[colunaIndex] === "asc"
+      ? "desc"
+      : "asc";
+    const direcao = direcaoOrdenacao[colunaIndex];
+
+    linhas.sort((a, b) => {
+      let valorA = a.cells[colunaIndex].textContent.trim();
+      let valorB = b.cells[colunaIndex].textContent.trim();
+
+      // Se for a coluna do CNPJ, remove caracteres especiais
+      if (colunaIndex === 3) {
+        valorA = valorA.replace(/\D/g, ""); // Remove tudo que não for número
+        valorB = valorB.replace(/\D/g, "");
+      }
+
+      // Converte para número se for possível
+      let numeroA = parseFloat(valorA.replace(",", "."));
+      let numeroB = parseFloat(valorB.replace(",", "."));
+
+      if (!isNaN(numeroA) && !isNaN(numeroB)) {
+        return direcao === "asc" ? numeroA - numeroB : numeroB - numeroA;
+      }
+
+      return direcao === "asc"
+        ? valorA.localeCompare(valorB)
+        : valorB.localeCompare(valorA);
+    });
+
+    // Reanexando as linhas ordenadas na tabela
+    linhas.forEach((linha) => tabela.appendChild(linha));
+  }
+
+  async function carregarFornecedores() {
+    try {
+      const response = await fetch("/fornecedores/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar fornecedores.");
+      }
+
+      const fornecedores = await response.json();
+      const tbody = document.getElementById("fornecedoresTbody");
+
+      tbody.innerHTML = ""; // Limpa a tabela antes de preencher
+
+      if (fornecedores.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="loading-message">Nenhum fornecedor encontrado.</td></tr>`;
+      } else {
+        fornecedores.forEach((fornecedor) => {
+          const row = `
+            <tr>
+              <td>${fornecedor.nome}</td>
+              <td>${fornecedor.email}</td>
+              <td>${fornecedor.telefone}</td>
+              <td>${fornecedor.cnpj}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao carregar fornecedores:", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", carregarFornecedores);
+</script>

@@ -46,6 +46,9 @@ router.delete("/funcionario/excluir/:cpf", funcionarioController.excluir);
 // Rota para listar funcionários
 router.get("/funcionario/listar", funcionarioController.listar);
 
+// Rota para listar funcionários na tabela
+router.get("/funcionario/listagem", funcionarioController.listarFuncionarios);
+
 // Rotas Fornecedor
 
 router.get("/fornecedores", fornecedorController.index);
@@ -64,6 +67,9 @@ router.delete("/fornecedores/excluir/:cnpj", fornecedorController.excluir);
 
 // Rota para listar fornecedores
 router.get("/fornecedores/listar", fornecedorController.listar);
+
+// Rota para listar fornecedores na tabela
+router.get("/fornecedores/listagem", fornecedorController.listarFornecedores);
 
 //Rotas Combustível
 
@@ -90,6 +96,9 @@ router.put(
   combustivelController.atualizarPreco
 );
 
+// Rota para listar os combustíveis e fornecedores
+router.get("/combustivel/listagem", combustivelController.listarCombustiveis);
+
 // Rotas Produto
 
 router.get("/produtos", produtoController.index);
@@ -113,6 +122,9 @@ router.put("/produtos/atualizar/:idproduto", produtoController.atualizar);
 router.delete("/produtos/excluir/:idproduto", produtoController.excluir);
 
 // Rota para gerar relatório de venda de produtos
-router.get("/produtos/relatorio", produtoController.listar);
+//router.get("/produtos/relatorio", produtoController.listar);
+
+// Rota para listar os combustíveis e fornecedores
+router.get("/produtos/listagem", produtoController.listarprodutos);
 
 export default router;
