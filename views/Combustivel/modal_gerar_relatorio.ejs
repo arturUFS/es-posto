@@ -1,0 +1,102 @@
+<div id="modalRelatorioVendasCombustivel" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="back-button" onclick="fecharOuVoltar()">
+          <i class="arrow-left"
+            ><img src="/assets/Icon (1).png" alt="voltar"
+          /></i>
+        </button>
+        <h2>Gerar Relatório de Vendas</h2>
+        <button class="home-button" onclick="window.location.href='/home'">
+          <i class="home-icon"
+            ><img src="/assets/home-lg-alt 1.png" alt="home"
+          /></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <!-- Tela de Seleção de Período -->
+        <div id="telaPeriodo" class="center-content">
+          <form id="periodoForm">
+            <div class="form-group">
+              <label for="dataInicio">Data Início:</label>
+              <input
+                type="date"
+                id="dataInicio"
+                placeholder="DD/MM/AAAA"
+                required
+              />
+            </div>
+            <div class="form-group" style="margin-top: 20px">
+              <label for="dataFim">Data Fim:</label>
+              <input type="date" id="dataFim" placeholder="DD/MM/AAAA" required />
+            </div>
+            <div class="form-btn-cons" style="margin-top: 20px">
+              <button
+                type="button"
+                class="consultar-btn"
+                onclick="gerarRelatorio()"
+              >
+                Gerar Relatório
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Tela de Resultado do Relatório -->
+        <div id="resultadoRelatorio" class="center-content">
+          <div class="resultado-mensagem">
+            <p>Seu relatório foi gerado com sucesso!</p>
+            <p>Clique no botão abaixo para fazer o download da planilha.</p>
+          </div>
+          <div class="form-btn-download">
+            <button type="button" class="download-btn" onclick="baixarPlanilha()">
+              Baixar Planilha
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function gerarRelatorio() {
+      const dataInicio = document.getElementById("dataInicio").value;
+      const dataFim = document.getElementById("dataFim").value;
+  
+      if (!dataInicio || !dataFim) {
+        alert("Por favor, selecione ambas as datas.");
+        return;
+      }
+  
+      if (new Date(dataInicio) > new Date(dataFim)) {
+        alert("A data de início deve ser anterior à data de fim.");
+        return;
+      }
+  
+      // Se estiver válido, exibe a tela de resultado
+      document.getElementById("telaPeriodo").style.display = "none";
+      document.getElementById("resultadoRelatorio").style.display = "block";
+    }
+  
+    // Função para fechar ou voltar para a tela inicial do modal
+    function fecharOuVoltar() {
+      const telaPeriodo = document.getElementById("telaPeriodo");
+      const resultadoRelatorio = document.getElementById("resultadoRelatorio");
+      const formPeriodo = document.getElementById("periodoForm");
+  
+      if (window.getComputedStyle(resultadoRelatorio).display !== "none") {
+        // Se a tela do relatório estiver visível, volta para a tela de seleção de período
+        resultadoRelatorio.style.display = "none";
+        telaPeriodo.style.display = "flex";
+  
+        formPeriodo.reset();
+      } else {
+        formPeriodo.reset();
+        fecharModal("modalRelatorioVendasCombustivel");
+      }
+    }
+  
+    // Função para fechar o modal completamente
+    function fecharModal(idModal) {
+      document.getElementById(idModal).style.display = "none";
+    }
+  </script>
