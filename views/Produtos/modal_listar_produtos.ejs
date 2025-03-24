@@ -27,20 +27,13 @@
             </tr>
           </thead>
           <tbody id="produtosTbody">
-            <% if (!produtos || produtos.length === 0) { %>
             <tr>
               <td colspan="5" class="loading-message">
                 Nenhum funcionário encontrado.
               </td>
             </tr>
-            <% } else { %> <% produtos.forEach(produto => { %>
-            <tr>
-              <td><%= produto.nome %></td>
-              <td><%= produto.fornecedor %></td>
-              <td><%= produto.quantidade %></td>
-              <td><%= produto.valor %></td>
-              <!-- CPF já formatado no Controller -->
-              <!-- <td class="action-buttons">
+            <!-- CPF já formatado no Controller -->
+            <!-- <td class="action-buttons">
                   <button class="view-button">
                     <i class="eye-icon"
                       ><img src="/assets/Icon.png" alt="consultar" width="40%"
@@ -60,11 +53,85 @@
                     /></i>
                   </button>
                 </td> -->
-            </tr>
-            <% }); %> <% } %>
           </tbody>
         </table>
       </div>
     </div>
   </div>
 </div>
+<script>
+  // ✅ Função para carregar os produtos
+  async function carregarProdutos() {
+    try {
+      const response = await fetch("/produtos/listagem");
+      if (!response.ok) throw new Error("Erro ao carregar produtos.");
+
+      const produtos = await response.json();
+      const tabela = document.getElementById("produtosTbody");
+      tabela.innerHTML = ""; // Limpa antes de preencher
+
+      if (produtos.length === 0) {
+        tabela.innerHTML =
+          '<tr><td colspan="4" class="loading-message">Nenhum produto encontrado.</td></tr>';
+        return;
+      }
+
+      produtos.forEach((produto) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${produto.nome}</td>
+          <td>${produto.fornecedor}</td>
+          <td>${produto.quantidade}</td>
+          <td>R$ ${produto.valor}</td>
+        `;
+        tabela.appendChild(tr);
+      });
+    } catch (error) {
+      console.error("❌ Erro ao carregar produtos:", error);
+    }
+  }
+
+  // ✅ Carrega os produtos ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarProdutos);
+
+  let direcaoOrdenacao = {}; // Guarda a direção de ordenação para cada coluna
+
+  function ordenarTabela(colunaIndex) {
+    const tabela = document.querySelector(".produtos-table tbody");
+    const linhas = Array.from(tabela.querySelectorAll("tr"));
+
+    // Alterna entre crescente (asc) e decrescente (desc)
+    direcaoOrdenacao[colunaIndex] = !direcaoOrdenacao[colunaIndex]
+      ? "asc"
+      : direcaoOrdenacao[colunaIndex] === "asc"
+      ? "desc"
+      : "asc";
+    const direcao = direcaoOrdenacao[colunaIndex];
+
+    linhas.sort((a, b) => {
+      let valorA = a.cells[colunaIndex].textContent.trim();
+      let valorB = b.cells[colunaIndex].textContent.trim();
+
+      // Se for a coluna do CNPJ, remove caracteres especiais
+      if (colunaIndex === 3) {
+        valorA = valorA.replace(/\D/g, ""); // Remove tudo que não for número
+        valorB = valorB.replace(/\D/g, "");
+      }
+
+      // Converte para número se for possível
+      let numeroA = parseFloat(valorA.replace(",", "."));
+      let numeroB = parseFloat(valorB.replace(",", "."));
+
+      if (!isNaN(numeroA) && !isNaN(numeroB)) {
+        return direcao === "asc" ? numeroA - numeroB : numeroB - numeroA;
+      }
+
+      return direcao === "asc"
+        ? valorA.localeCompare(valorB)
+        : valorB.localeCompare(valorA);
+    });
+
+    // Reanexando as linhas ordenadas na tabela
+    linhas.forEach((linha) => tabela.appendChild(linha));
+  }
+</script>

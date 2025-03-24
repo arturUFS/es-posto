@@ -22,43 +22,11 @@ function gerarCodigoVenda() {
 export const produtoController = {
   index: async (req, res) => {
     try {
-      const nomeFuncionario = req.query.nome || "Usuário"; // Obtém o nome do usuário logado
-
-      // Busca todos os produtos e inclui os fornecedores relacionados
-      const produtos = await Produto.findAll({
-        attributes: ["idproduto", "nome", "quantidade", "valor"],
-        include: [
-          {
-            model: Fornecedor,
-            through: { model: FornecedorProduto }, // Especifica a tabela intermediária
-            as: "fornecedores", // Alias definido nas associações
-            attributes: ["nome"], // Obtém apenas o nome do fornecedor
-          },
-        ],
-      });
-
-      // Formata os dados para exibição no EJS
-      const produtosFormatados = produtos.map((produto) => ({
-        idproduto: produto.idproduto,
-        nome: produto.nome,
-        quantidade: produto.quantidade,
-        valor: produto.valor
-          ? `R$ ${parseFloat(produto.valor).toFixed(2).replace(".", ",")}`
-          : "R$ 0,00", // Formata valor
-        fornecedor:
-          produto.fornecedores.length > 0
-            ? produto.fornecedores.map((f) => f.nome).join(", ") // Junta os nomes dos fornecedores
-            : "Não informado", // Caso não tenha fornecedor
-      }));
-
-      // Renderiza a página produtos.ejs e passa os dados formatados
-      res.render("Produtos/produtos", {
-        nomeFuncionario,
-        produtos: produtosFormatados,
-      });
+      const nomeFuncionario = req.query.nome || "Usuário";
+      res.render("Produtos/produtos", { nomeFuncionario });
     } catch (err) {
-      console.error("Erro ao buscar produtos:", err);
-      res.status(500).send("Erro no servidor");
+      console.error("Erro ao carregar a página de produtos:", err);
+      res.status(500).send("Erro ao carregar a página");
     }
   },
 
@@ -286,6 +254,44 @@ export const produtoController = {
     } catch (error) {
       console.error("Erro ao excluir produto:", error);
       res.status(500).json({ message: "Erro ao excluir produto." });
+    }
+  },
+
+  /**
+   * Lista os produtos e seus fornecedores para carregamento assíncrono
+   */
+  listarprodutos: async (req, res) => {
+    try {
+      const produtos = await Produto.findAll({
+        attributes: ["idproduto", "nome", "quantidade", "valor"],
+        include: [
+          {
+            model: Fornecedor,
+            through: { model: FornecedorProduto }, // Especifica a tabela intermediária
+            as: "fornecedores",
+            attributes: ["nome"],
+          },
+        ],
+      });
+
+      // Formata os dados para exibição
+      const produtosFormatados = produtos.map((produto) => ({
+        idproduto: produto.idproduto,
+        nome: produto.nome,
+        quantidade: produto.quantidade,
+        valor: produto.valor
+          ? parseFloat(produto.valor).toFixed(2).replace(".", ",")
+          : "0,00",
+        fornecedor:
+          produto.fornecedores.length > 0
+            ? produto.fornecedores.map((f) => f.nome).join(", ")
+            : "Não informado",
+      }));
+
+      res.json(produtosFormatados);
+    } catch (err) {
+      console.error("❌ Erro ao buscar produtos:", err);
+      res.status(500).json({ message: "Erro ao buscar produtos" });
     }
   },
 };
