@@ -32,7 +32,7 @@ router.get("/produtos", produtoController.index);
 //Rotas Servicos
 router.get("/servicos", servicoController.index);
 //Rota para cadastrar servico
-router.post("/servicos/cadastrar", servicoController.cadastrar);
+router.post("/servico/cadastrar", servicoController.cadastrar);
 
 //Rotas Funcionário
 
