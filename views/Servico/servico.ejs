@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Serviços</title>
     <link rel="stylesheet" href="assets/css/pages_initials.css" />
+    <link
+      rel="stylesheet"
+      href="assets/css/modais-servico/cadastrar_servico.css"
+    />
     <style>
       .menu li:nth-child(4) a {
         background-color: #c31010;
@@ -37,17 +41,35 @@
       </button>
     </div>
     <div class="content">
-      <button>Cadastrar Serviço</button>
+      <button id="cadastrar-servico">Cadastrar Servico</button>
       <button>Agendar serviço</button>
       <button>Consultar Serviços</button>
       <button>Consultar agendamento</button>
       <button>Listar Serviços</button>
       <button>Gerar relatório de serviços realizados</button>
     </div>
+    <%- include('modal_cadastrar') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
       window.location.href = "/logout"; // Redireciona para a rota de logout
     });
+    function abrirModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+    function fecharModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    document
+      .getElementById("cadastrar-servico")
+      .addEventListener("click", () => abrirModal("modalCadastrarServico"));
+
+    // Fechar modal ao clicar fora
+    window.onclick = function (event) {
+      if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+      }
+    };
   </script>
 </html>
