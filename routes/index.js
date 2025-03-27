@@ -29,12 +29,7 @@ router.get("/combustivel", combustivelController.index);
 
 router.get("/produtos", produtoController.index);
 
-//Rotas Servicos
-router.get("/servicos", servicoController.index);
-//Rota para cadastrar servico
-router.post("/servico/cadastrar", servicoController.cadastrar);
-
-//Rotas Funcionário
+//--------------Rotas Funcionário--------------
 
 router.get("/funcionario", funcionarioController.index);
 
@@ -56,7 +51,7 @@ router.get("/funcionario/listar", funcionarioController.listar);
 // Rota para listar funcionários na tabela
 router.get("/funcionario/listagem", funcionarioController.listarFuncionarios);
 
-// Rotas Fornecedor
+// --------------Rotas Fornecedor--------------
 
 router.get("/fornecedores", fornecedorController.index);
 
@@ -78,7 +73,7 @@ router.get("/fornecedores/listar", fornecedorController.listar);
 // Rota para listar fornecedores na tabela
 router.get("/fornecedores/listagem", fornecedorController.listarFornecedores);
 
-//Rotas Combustível
+//--------------Rotas Combustível--------------
 
 router.get("/combustivel", combustivelController.index);
 
@@ -106,7 +101,7 @@ router.put(
 // Rota para listar os combustíveis e fornecedores
 router.get("/combustivel/listagem", combustivelController.listarCombustiveis);
 
-// Rotas Produto
+// --------------Rotas Produto--------------
 
 router.get("/produtos", produtoController.index);
 
@@ -133,5 +128,15 @@ router.delete("/produtos/excluir/:idproduto", produtoController.excluir);
 
 // Rota para listar os combustíveis e fornecedores
 router.get("/produtos/listagem", produtoController.listarprodutos);
+
+//-------------Rotas Servicos--------------
+
+router.get("/servicos", servicoController.index);
+
+//Rota para cadastrar servico
+router.post("/servico/cadastrar", servicoController.cadastrar);
+
+//Rota para agendar servico
+//router.post("/servico/agendarservico",servicoController.agendar_servico);
 
 export default router;

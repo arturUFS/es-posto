@@ -1,0 +1,171 @@
+<div id="modalAgendarServico" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharModal('modalAgendarServico')">
+        <i class="arrow-left">
+          <img src="/assets/Icon (1).png" alt="voltar" />
+        </i>
+      </button>
+      <h2>Agendar Serviço</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon">
+          <img src="/assets/home-lg-alt 1.png" alt="home" />
+        </i>
+      </button>
+    </div>
+
+    <div class="section-divider">Dados do Serviço</div>
+
+    <div class="modal-body">
+      <form id="formAgendarServico">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataServico">Data do serviço:</label>
+            <input
+              type="text"
+              id="dataServico"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="horaServico">Hora:</label>
+            <input type="text" id="horaServico" placeholder="HH:MM" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valorTotal">Valor Total:</label>
+            <input
+              type="text"
+              id="valorTotal"
+              placeholder="R$ 00,00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="servico">Serviço:</label>
+            <select id="servico" required>
+              <option value="" selected disabled>Selecione o serviço</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="funcionarioCPF">Funcionário (CPF):</label>
+            <input
+              type="text"
+              id="funcionarioCPF"
+              placeholder="000.000.000-00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" required>
+              <option value="" selected disabled>Selecione o status</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row formas-pagamento">
+          <div class="form-group">
+            <label>Forma de Pagamento:</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" name="pagamento" value="dinheiro" />
+                Dinheiro
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="pix" /> PIX
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="credito" />
+                Crédito
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="debito" /> Débito
+              </label>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="section-divider">Dados do Veículo</div>
+
+    <div class="modal-body">
+      <form id="formAgendarServico">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nomeCliente">Nome do Cliente:</label>
+            <input
+              type="text"
+              id="nomeCliente"
+              placeholder="Insira o nome do Cliente"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="telefoneCliente">Telefone:</label>
+            <input
+              type="text"
+              id="telefoneCliente"
+              placeholder="(XX) XXXXX-XXXX"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataEntrada">Data de entrada:</label>
+            <input
+              type="text"
+              id="dataEntrada"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipoVeiculo">Tipo do veículo:</label>
+            <select id="tipoVeiculo" required>
+              <option value="" selected disabled>Selecione o tipo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modeloVeiculo">Modelo:</label>
+            <input
+              type="text"
+              id="modeloVeiculo"
+              placeholder="Insira o modelo"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="corVeiculo">Cor:</label>
+            <input type="text" id="corVeiculo" placeholder="Cor" required />
+          </div>
+          <div class="form-group">
+            <label for="placaVeiculo">Placa:</label>
+            <input
+              type="text"
+              id="placaVeiculo"
+              placeholder="XXXX XXXX"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="agendar-btn">Agendar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
