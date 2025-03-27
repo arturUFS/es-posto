@@ -1,5 +1,7 @@
 import { Servico } from "../models/servico.js";
 import { Agendamento} from "../models/agendamento.js";
+
+
 function gerarIdServico() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
 }
@@ -39,6 +41,22 @@ export const servicoController = {
         message: "Erro ao cadastrar serviço",
         error: error.message,
       });
+    }
+  },
+
+// Lista todos os serviços
+  async listar(req, res) {
+    try {
+      // Busca todos os servicos no banco de dados
+      const servicos = await Servico.findAll({
+        attributes: ["idservico","tiposervico"], // Apenas os campos necessários
+      });
+
+      // Retorna os serviços como JSON
+      res.json(servicos);
+    } catch (error) {
+      console.error("❌ Erro ao listar serviços:", error);
+      res.status(500).json({ message: "Erro no servidor" });
     }
   },
 

@@ -65,7 +65,9 @@
           <div class="form-group">
             <label for="status">Status:</label>
             <select id="status" required>
-              <option value="" selected disabled>Selecione o status</option>
+              <option value="pendente" selected>Pendente</option>
+              <option value="concluido">Concluído</option>
+              <option value="em_andamento">Em andamento</option>
             </select>
           </div>
         </div>
@@ -131,9 +133,12 @@
           </div>
           <div class="form-group">
             <label for="tipoVeiculo">Tipo do veículo:</label>
-            <select id="tipoVeiculo" required>
-              <option value="" selected disabled>Selecione o tipo</option>
-            </select>
+            <input
+              type="text"
+              id="tipoVeiculo"
+              placeholder="Categoria do veículo"
+              required
+            />
           </div>
         </div>
 
@@ -169,3 +174,44 @@
     </div>
   </div>
 </div>
+<script>
+  // Carregar lista de serviços
+  async function carregarServicos() {
+    try {
+      const response = await fetch("/servico/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar serviços:", error);
+      }
+      const servicos = await response.json();
+
+      const selectServico = document.getElementById("servico");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectServico.innerHTML =
+        '<option value="" disabled selected>Selecione o serviço</option>';
+
+      servicos.forEach((servico) => {
+        const option = document.createElement("option");
+        option.value = servico.idservico;
+        option.textContent = servico.tiposervico;
+        selectServico.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar função ao carregar a página
+  document.addEventListener("DOMContentLoaded", carregarServicos);
+
+  // Função para fechar o modal
+  function fecharModal2(idModal) {
+    const formResultado = document.getElementById("formAgendarServico");
+    // Fecha o modal e reseta tudo
+    formResultado.reset();
+
+    // Resetando o select manualmente
+    document.getElementById("servico").value = "";
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
