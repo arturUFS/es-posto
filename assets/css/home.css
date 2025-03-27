@@ -79,6 +79,15 @@ body {
   gap: 10px;
 }
 
+.menu li:nth-child(1) a {
+  background-color: #c31010;
+  color: white;
+}
+
+.menu li a img {
+  filter: brightness(0); /* Transforma branco em preto */
+}
+
 .menu a {
   text-decoration: none;
   display: flex;
