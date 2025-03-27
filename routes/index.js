@@ -25,7 +25,14 @@ router.get("/logout", (req, res) => {
 
 router.get("/home", homeController.index);
 
+router.get("/combustivel", combustivelController.index);
+
+router.get("/produtos", produtoController.index);
+
+//Rotas Servicos
 router.get("/servicos", servicoController.index);
+//Rota para cadastrar servico
+router.post("/servico/cadastrar", servicoController.cadastrar);
 
 //Rotas Funcionário
 
