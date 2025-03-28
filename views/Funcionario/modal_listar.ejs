@@ -106,10 +106,10 @@
                     <button class="view-button" onclick="consultarFunc('${func.cpf}')">
                         <img src="/assets/Icon.png" alt="Consultar" width="16">
                     </button>
-                    <button class="edit-button" onclick="editarFuncionario('${func.cpf}')">
+                    <button class="edit-button" onclick="editarFunc('${func.cpf}')">
                         <img src="/assets/Vector (3).png" alt="Editar" width="16">
                     </button>
-                    <button class="delete-button" onclick="excluirFuncionario('${func.cpf}', '${func.nome}')">
+                    <button class="delete-button" onclick="confirmarExclusaoFunc('${func.cpf}', '${func.nome}')">
                         <img src="/assets/Vector (4).png" alt="Excluir" width="16">
                     </button>
                 </td>
@@ -140,17 +140,17 @@
             alert('Erro ao carregar funcionário: ' + error.message);
             });
     }
-    function editarFuncionario(cpf) {
-        consultarFuncionario(cpf); // Carrega os dados no modal
+    function editarFunc(cpf) {
+        consultarFunc(cpf); // Carrega os dados no modal
         habilitarEdicao(); // Habilita a edição diretamente
     }
-    function confirmarExclusao(cpf, nome) {
-  if (confirm(`Tem certeza que deseja excluir o funcionário ${nome} (CPF: ${cpf})?`)) {
-    excluirFuncionario(cpf);
-  }
-}
+    function confirmarExclusaoFunc(cpf, nome) {
+        if (confirm(`Tem certeza que deseja excluir o funcionário ${nome} (CPF: ${cpf})?`)) {
+            excluirFunc(cpf);
+        }
+    }
 
-function excluirFuncionario(cpf) {
+function excluirFunc(cpf) {
   fetch(`/funcionario/excluir/${cpf}`, { method: 'DELETE' })
     .then(response => {
       if (response.ok) {
