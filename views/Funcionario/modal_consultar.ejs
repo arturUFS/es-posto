@@ -319,6 +319,7 @@
       .then((data) => {
         alert(data.message); // Exibe mensagem de sucesso
         cancelarEdicao(); // Volta os campos para readonly
+        carregarFuncionarios(); 
       })
       .catch((error) => {
         alert(error.message);
