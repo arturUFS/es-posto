@@ -51,13 +51,12 @@ export const servicoController = {
   },
 
   // Lista todos os serviços
-  // Lista todos os serviços
   async listar(req, res) {
     try {
       // Busca todos os servicos no banco de dados
       const servicos = await Servico.findAll({
-        attributes: ["idservico", "tiposervico","valor"], // Apenas os campos necessários
-        attributes: ["idservico", "tiposervico","valor"], // Apenas os campos necessários
+        attributes: ["idservico", "tiposervico", "valor"], // Apenas os campos necessários
+        attributes: ["idservico", "tiposervico", "valor"], // Apenas os campos necessários
       });
 
       // Retorna os serviços como JSON
@@ -183,23 +182,22 @@ export const servicoController = {
     }
   },
 
-//Lista todos os agendamentos
+  //Lista todos os agendamentos
   async listar_agendamentos(req, res) {
-      try {
-        // Busca todos os agendamentos no banco de dados
-        const agendamentos = await Agendamento.findAll({
-          attributes: ["data", "idservico", "idplaca", "status"], // Apenas os campos necessários
-        });
-  
-        // Retorna os serviços como JSON (para consumo no front-end)
-        res.json(agendamentos);
-      } catch (error) {
-        console.error("❌ Erro ao listar agendamentos:", error);
-        res.status(500).json({ message: "Erro no servidor" });
-      }
-    },
+    try {
+      // Busca todos os agendamentos no banco de dados
+      const agendamentos = await Agendamento.findAll({
+        attributes: ["idagendamento","data", "idservico", "idplaca", "status"], // Apenas os campos necessários
+      });
 
-   
+      // Retorna os serviços como JSON (para consumo no front-end)
+      res.json(agendamentos);
+    } catch (error) {
+      console.error("❌ Erro ao listar agendamentos:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
   /**
    * Consulta um serviço pelo ID
    */
@@ -231,6 +229,9 @@ export const servicoController = {
     }
   },
 
+  /**
+   * Atualiza os dados de um serviço
+   */
   async atualizar(req, res) {
     try {
       const { idservico } = req.params;
@@ -256,6 +257,10 @@ export const servicoController = {
         .json({ message: "Erro ao atualizar serviço", error: error.message });
     }
   },
+
+  /**
+   *   Exclui um serviço pelo id
+   */
   async excluir(req, res) {
     try {
       const { idservico } = req.params;
@@ -272,6 +277,59 @@ export const servicoController = {
       res
         .status(500)
         .json({ message: "Erro ao excluir serviço", error: error.message });
+    }
+  },
+
+  /**
+   *   Atualizar um agendamento pelo id
+   */
+  async atualizar_agendamento(req, res) {
+    try {
+      const { idagendamento } = req.params;
+      const { idservico, idplaca, valor, hora, status } = req.body;
+
+      const agendamento = await Agendamento.findByPk(idagendamento);
+      if (!agendamento) {
+        return res.status(404).json({ message: "Agendamento não encontrado" });
+      }
+
+      if (idservico) agendamento.idservico = idservico;
+      if (idplaca) agendamento.idplaca = idplaca;
+      if (valor) agendamento.valor = valor;
+      if (hora) agendamento.hora = hora;
+      if (status) agendamento.status = status;
+
+      await agendamento.save();
+
+      res.json({ message: "Agendamento atualizado com sucesso", agendamento });
+    } catch (error) {
+      res.status(500).json({
+        message: "Erro ao atualizar agendamento",
+        error: error.message,
+      });
+    }
+  },
+
+  /**
+   *   Exclui um agendamento pelo id
+   */
+  async excluir_agendamento(req, res) {
+    try {
+      const { idagendamento } = req.params;
+
+      const agendamento = await  Agendamento.findByPk(idagendamento);
+      const venda = await Venda.findOne({ where: { idagendamento } });
+      if (!agendamento) {
+        return res.status(404).json({ message: "Agendamento não encontrado" });
+      }
+      await venda.destroy();
+      await agendamento.destroy();
+
+      res.json({ message: "Agendamento excluído com sucesso" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erro ao excluir agendamento", error: error.message });
     }
   },
 };

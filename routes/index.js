@@ -156,5 +156,21 @@ router.get(
   "/servico/listar_agendamentos",
   servicoController.listar_agendamentos
 );
+// //Rota para consultar agendamento
+// router.get(
+//   "/servico/consultar_agendamento/:idagendamento", 
+//   servicoController.consultar_agendamento);
+
+//Rota para atualizar agendamento
+router.put(
+  "/servico/atualizar_agendamento/:idagendamento",
+  servicoController.atualizar_agendamento
+);
+
+//Rota para excluir um agendamento
+router.delete(
+  "/servico/excluir_agendamento/:idagendamento",
+  servicoController.excluir_agendamento
+);
 
 export default router;

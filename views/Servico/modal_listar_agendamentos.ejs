@@ -35,27 +35,6 @@
                 Nenhum agendamento encontrado.
               </td>
             </tr>
-            <!-- CPF já formatado no Controller -->
-            <!-- <td class="action-buttons">
-                  <button class="view-button">
-                    <i class="eye-icon"
-                      ><img src="/assets/Icon.png" alt="consultar" width="40%"
-                    /></i>
-                  </button>
-                  <button class="edit-button">
-                    <i class="edit-icon"
-                      ><img src="/assets/Vector (3).png" alt="editar" width="30%"
-                    /></i>
-                  </button>
-                  <button class="delete-button">
-                    <i class="delete-icon"
-                      ><img
-                        src="/assets/Vector (4).png"
-                        alt="excluir"
-                        width="30%"
-                    /></i>
-                  </button>
-                </td> -->
           </tbody>
         </table>
       </div>
@@ -79,24 +58,31 @@
         return;
       }
       const mapaServicos = await buscarServicos();
-
+      console.log(agendamentos);
       agendamentos.forEach((agendamento) => {
         const tr = document.createElement("tr");
 
-        // Formatando a data
         const dataFormatada = formatarData(agendamento.data);
-
-        // Definindo o status com cores
         const statusFormatado = formatarStatus(agendamento.status);
-
-        // Obtendo o nome do serviço baseado no idservico
-        const nomeServico = mapaServicos[agendamento.idservico] || "Serviço não encontrado";
-
+        const nomeServico =
+          mapaServicos[agendamento.idservico] || "Serviço não encontrado";
+  
         tr.innerHTML = `
         <td>${dataFormatada}</td>
         <td>${nomeServico}</td>
         <td>${agendamento.idplaca}</td>
         <td>${statusFormatado}</td>
+        <td class="action-buttons">
+            <button class="view-button" onclick="consultarAgendamento('${agendamento.idagendamento}')">
+                <img src="/assets/Icon.png" alt="Consultar" width="16">
+            </button>
+            <button class="edit-button" onclick="editarAgendamento('${agendamento.idagendamento}')">
+                <img src="/assets/Vector (3).png" alt="Editar" width="16">
+            </button>
+            <button class="delete-button" onclick="confirmarExclusaoAgendamento('${agendamento.idagendamento}', '${agendamento.idplaca}')">
+                <img src="/assets/Vector (4).png" alt="Excluir" width="16">
+            </button>
+          </td>
       `;
         tabela.appendChild(tr);
       });
@@ -106,27 +92,26 @@
   }
 
   // Função para buscar os serviços e criar o mapa
-async function buscarServicos() {
-  try {
-    const servicosResponse = await fetch("/servico/listar");
-    if (!servicosResponse.ok)
-      throw new Error("Erro ao carregar os serviços.");
+  async function buscarServicos() {
+    try {
+      const servicosResponse = await fetch("/servico/listar");
+      if (!servicosResponse.ok)
+        throw new Error("Erro ao carregar os serviços.");
 
-    const servicos = await servicosResponse.json();
+      const servicos = await servicosResponse.json();
 
-    // Criação de um mapa de idservico para tiposervico
-    const mapaServicos = servicos.reduce((acc, servico) => {
-      acc[servico.idservico] = servico.tiposervico;
-      return acc;
-    }, {});
+      // Criação de um mapa de idservico para tiposervico
+      const mapaServicos = servicos.reduce((acc, servico) => {
+        acc[servico.idservico] = servico.tiposervico;
+        return acc;
+      }, {});
 
-    return mapaServicos;
-
-  } catch (error) {
-    console.error("❌ Erro ao carregar os serviços:", error);
-    return {};
+      return mapaServicos;
+    } catch (error) {
+      console.error("❌ Erro ao carregar os serviços:", error);
+      return {};
+    }
   }
-}
 
   // Função para formatar a data no formato dd/mm/yyyy
   function formatarData(dataISO) {
@@ -146,10 +131,10 @@ async function buscarServicos() {
       em_andamento: "#b68d2e",
       cancelado: "red",
     };
-    if(status == "em_andamento"){
-      status = "em andamento"
+    if (status == "em_andamento") {
+      status = "em andamento";
     }
-    
+
     const statusCapitalizado = status
       .toLowerCase()
       .split(" ")
@@ -198,4 +183,49 @@ async function buscarServicos() {
     // Reanexando as linhas ordenadas na tabela
     linhas.forEach((linha) => tabela.appendChild(linha));
   }
+  // function consultarAgendamento(idagendamento) {
+  //   fetch(`/servico/consultar_agendamento/${idagendamento}`)
+  //     .then((response) => response.json())
+  //     .then((produto) => {
+  //       // Preenche o modal de consulta com os dados
+  //       preencherFormulario(produto);
+  //       // Abre o modal de consulta
+  //       fecharModal("modalListarAgendamento");
+  //       document.getElementById("modalConsultarAgendamento").style.display =
+  //         "block";
+  //       document.getElementById("telaConsulta").style.display = "none";
+  //       document.getElementById("resultadoConsulta").style.display = "block";
+  //     })
+  //     .catch((error) => {
+  //       alert("Erro ao carregar produto: " + error.message);
+  //     });
+  // }
+
+  // function editarAgendamento(idagendamento) {
+  //       consultarAgendamento(idagendamento); // Carrega os dados no modal
+  //       habilitarEdicao(); // Habilita a edição diretamente
+  //   }
+  function confirmarExclusaoAgendamento(idagendamento, idplaca) {
+    if (
+      confirm(
+        `Tem certeza que deseja excluir o agendamento do carro ${idplaca} (id: ${idagendamento})?`
+      )
+    ) {
+      excluirAgendamento(idagendamento);
+    }
+  }
+   function excluirAgendamento(idagendamento) {
+        fetch(`/servico/excluir_agendamento/${idagendamento}`, { method: 'DELETE' })
+            .then(response => {
+            if (response.ok) {
+                alert('Agendamento excluído com sucesso!');
+                carregarAgendamentos(); // Recarrega a lista
+            } else {
+                throw new Error('Erro ao excluir');
+            }
+            })
+            .catch(error => {
+            alert('Falha na exclusão: ' + error.message);
+            });
+    }
 </script>
