@@ -40,8 +40,8 @@
         <form id="formConsultarServico">
           <div class="form-row">
             <div class="form-group">
-              <label for="tiposervico">Tipo de Serviço:</label>
-              <input type="text" id="tiposervico" readonly />
+              <label for="tiposervico2">Tipo de Serviço:</label>
+              <input type="text" id="tiposervico2" readonly />
             </div>
             <div class="form-group">
               <label for="valorServico2">Valor:</label>
@@ -61,11 +61,7 @@
                   />
                 </i>
               </button>
-              <button
-                class="delete-btn"
-                onclick="confirmarExclusaoServico()"
-                disabled
-              >
+              <button class="delete-btn" onclick="confirmarExclusaoServico()">
                 <i class="delete-icon">
                   <img src="/assets/Vector (4).png" alt="excluir" />
                 </i>
@@ -74,8 +70,8 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label for="duracaoMedia">Duração Média (min):</label>
-              <input type="text" id="duracaoMedia" readonly />
+              <label for="duracaoMedia2">Duração Média (min):</label>
+              <input type="text" id="duracaoMedia2" readonly />
             </div>
             <div class="form-group">
               <label for="localServico2">Local:</label>
@@ -162,14 +158,14 @@
       const servico = await response.json();
 
       // Preencher os campos com os dados do serviço
-      document.getElementById("tiposervico").value = servico.tiposervico;
+      document.getElementById("tiposervico2").value = servico.tiposervico;
       const valor = servico.valor ? parseFloat(servico.valor) : 0;
       document.getElementById("valorServico2").value = `R$ ${valor
         .toFixed(2)
         .replace(".", ",")}`;
 
       // Preenchendo a duração e o local
-      document.getElementById("duracaoMedia").value = servico.duracao;
+      document.getElementById("duracaoMedia2").value = servico.duracao;
 
       // Ajuste no preenchimento do local
       document.getElementById("localServico2").value = servico.local;
@@ -190,13 +186,13 @@
   // Função para salvar as alterações
   async function salvarAlteracoesServico() {
     const idServico = document.getElementById("servico2").value;
-    const tiposervico = document.getElementById("tiposervico").value;
+    const tiposervico = document.getElementById("tiposervico2").value;
     const valor = document
       .getElementById("valorServico2")
       .value.replace("R$ ", "")
       .replace(",", ".");
     const local = document.getElementById("localServico2").value;
-    const duracao = document.getElementById("duracaoMedia").value;
+    const duracao = document.getElementById("duracaoMedia2").value;
     const descricao = document.getElementById("descricaoServico2").value;
 
     if (!idServico || !tiposervico || !valor || !local || !duracao) {
@@ -254,6 +250,39 @@
     document.getElementById("lapisServico").style.visibility = "visible";
   }
 
+  function confirmarExclusaoServico() {
+    const idservico = document.getElementById("servico2").value; // Obtém o id do servico
+
+    if (!idservico) {
+      alert("Nenhum servico selecionado para exclusão.");
+      return;
+    }
+
+    const confirmacao = confirm("Tem certeza que deseja excluir este servico?");
+    if (confirmacao) {
+      excluirServico(idservico);
+    }
+  }
+
+  // Exclui um servico enviando uma requisição DELETE para o backend.
+  function excluirServico(idservico) {
+    fetch(`/servico/excluir/${idservico}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao excluir servico.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.message); // Exibe mensagem de sucesso
+        fecharOuVoltar(); // Retorna para a tela de consulta
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }
   // Função para fechar ou voltar para início do modal
   function fecharOuVoltar() {
     const resultado = document.getElementById("resultadoConsultaServico");

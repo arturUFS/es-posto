@@ -135,7 +135,7 @@ export const produtoController = {
         quantidade,
         valor: valorTotal,
       });
-      
+
       // Criar a venda na tabela "venda"
       await Venda.create({
         codigo: codigoVenda,
