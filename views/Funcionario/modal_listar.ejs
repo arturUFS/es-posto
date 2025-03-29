@@ -137,9 +137,10 @@
             document.getElementById('resultadoConsulta').style.display = 'block';
             })
             .catch(error => {
-            alert('Erro ao carregar funcionário: ' + error.message);
+                alert('Erro ao carregar funcionário: ' + error.message);
             });
     }
+
     function editarFunc(cpf) {
         consultarFunc(cpf); // Carrega os dados no modal
         habilitarEdicao(); // Habilita a edição diretamente
@@ -150,19 +151,19 @@
         }
     }
 
-function excluirFunc(cpf) {
-  fetch(`/funcionario/excluir/${cpf}`, { method: 'DELETE' })
-    .then(response => {
-      if (response.ok) {
-        alert('Funcionário excluído com sucesso!');
-        carregarFuncionarios(); // Recarrega a lista
-      } else {
-        throw new Error('Erro ao excluir');
-      }
-    })
-    .catch(error => {
-      alert('Falha na exclusão: ' + error.message);
-    });
-}
+    function excluirFunc(cpf) {
+        fetch(`/funcionario/excluir/${cpf}`, { method: 'DELETE' })
+            .then(response => {
+            if (response.ok) {
+                alert('Funcionário excluído com sucesso!');
+                carregarFuncionarios(); // Recarrega a lista
+            } else {
+                throw new Error('Erro ao excluir');
+            }
+            })
+            .catch(error => {
+            alert('Falha na exclusão: ' + error.message);
+            });
+    }
   document.addEventListener("DOMContentLoaded", carregarFuncionarios);
 </script>

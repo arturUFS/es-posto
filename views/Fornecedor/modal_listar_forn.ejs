@@ -32,27 +32,6 @@
                 Nenhum fornecedor encontrado.
               </td>
             </tr>
-            <!-- CNPJ já formatado no Controller -->
-            <!-- <td class="action-buttons">
-                  <button class="view-button">
-                    <i class="eye-icon"
-                      ><img src="/assets/Icon.png" alt="consultar" width="40%"
-                    /></i>
-                  </button>
-                  <button class="edit-button">
-                    <i class="edit-icon"
-                      ><img src="/assets/Vector (3).png" alt="editar" width="30%"
-                    /></i>
-                  </button>
-                  <button class="delete-button">
-                    <i class="delete-icon"
-                      ><img
-                        src="/assets/Vector (4).png"
-                        alt="excluir"
-                        width="30%"
-                    /></i>
-                  </button>
-                </td> -->
           </tbody>
         </table>
       </div>
@@ -123,6 +102,17 @@
               <td>${fornecedor.email}</td>
               <td>${fornecedor.telefone}</td>
               <td>${fornecedor.cnpj}</td>
+              <td class="action-buttons">
+                    <button class="view-button" onclick="consultarForn('${fornecedor.cnpj}')">
+                        <img src="/assets/Icon.png" alt="Consultar" width="16">
+                    </button>
+                    <button class="edit-button" onclick="editarForn('${fornecedor.cnpj}')">
+                        <img src="/assets/Vector (3).png" alt="Editar" width="16">
+                    </button>
+                    <button class="delete-button" onclick="confirmarExclusaoForn('${fornecedor.cnpj}', '${fornecedor.nome}')">
+                        <img src="/assets/Vector (4).png" alt="Excluir" width="16">
+                    </button>
+              </td>
             </tr>
           `;
           tbody.innerHTML += row;
@@ -132,6 +122,51 @@
       console.error("Erro ao carregar fornecedores:", error);
     }
   }
+
+  function consultarForn(cnpj) {
+        cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
+        fetch(`/fornecedores/consultar/${cnpj}`)
+            .then(response => response.json())
+            .then(fornecedor => {
+            // Preenche o modal de consulta com os dados
+            preencherFormulario(fornecedor);
+            // Abre o modal de consulta
+            fecharModal('modalListarForn');
+            document.getElementById('modalConsultarForn').style.display = 'block';
+            document.getElementById('telaConsulta').style.display = 'none';
+            document.getElementById('resultadoConsulta').style.display = 'block';
+            })
+            .catch(error => {
+                alert('Erro ao carregar fornecedor: ' + error.message);
+            });
+    }
+
+    function editarForn(cnpj) {
+        consultarForn(cnpj); // Carrega os dados no modal
+        habilitarEdicao(); // Habilita a edição diretamente
+    }
+
+    function confirmarExclusaoForn(cnpj, nome) {
+        if (confirm(`Tem certeza que deseja excluir o fornecedor ${nome} (CNPJ: ${cnpj})?`)) {
+            excluirForn(cnpj);
+        }
+    }
+
+    function excluirForn(cnpj) {
+        cnpj = cnpj.replace(/\D/g, ""); // Remove caracteres especiais do CNPJ
+        fetch(`/fornecedores/excluir/${cnpj}`, { method: 'DELETE' })
+            .then(response => {
+            if (response.ok) {
+                alert('Fornecedor excluído com sucesso!');
+                carregarFornecedores(); // Recarrega a lista
+            } else {
+                throw new Error('Erro ao excluir');
+            }
+            })
+            .catch(error => {
+            alert('Falha na exclusão: ' + error.message);
+            });
+    }
 
   document.addEventListener("DOMContentLoaded", carregarFornecedores);
 </script>

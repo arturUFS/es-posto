@@ -372,6 +372,7 @@
       })
       .then((data) => {
         alert(data.message); // Exibe mensagem de sucesso
+        carregarFornecedores(); // Recarrega a lista
         fecharOuVoltar(); // Retorna para a tela de consulta
       })
       .catch((error) => {
@@ -398,6 +399,7 @@
       limparCamposResultado();
     } else {
       cancelarEdicao();
+      carregarFornecedores(); // Recarrega a lista
       // Fecha o modal e reseta tudo
       formConsulta.reset();
       limparCamposResultado();
