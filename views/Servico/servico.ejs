@@ -11,6 +11,10 @@
     />
     <link
       rel="stylesheet"
+      href="/assets/css/modais-servico/consultar_servicos.css"
+    />
+    <link
+      rel="stylesheet"
       href="/assets/css/modais-servico/modal_agendar_servico.css"
     />
     <link
@@ -54,11 +58,13 @@
       <button id="consultar-servico">Consultar Serviços</button>
       <button id="consultar-agendamento">Consultar agendamento</button>
       <button id="listar-agendamentos">Listar Agendamentos</button>
-      <button id="gerar-relatorio">Gerar relatório de serviços realizados</button>
+      <button id="gerar-relatorio">
+        Gerar relatório de serviços realizados
+      </button>
     </div>
-    <%- include('modal_cadastrar') %><%- include('modal_agendar_servico') %>
-    <%- include('modal_listar_agendamentos') %>
-    
+    <%- include('modal_cadastrar') %><%- include('modal_agendar_servico') %> <%-
+    include('modal_listar_agendamentos') %> <%-
+    include('modal_consultar_servico') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -82,7 +88,7 @@
     document
       .getElementById("listar-agendamentos")
       .addEventListener("click", () => abrirModal("modalListarAgendamentos"));
-      
+
     document
       .getElementById("consultar-servico")
       .addEventListener("click", () => abrirModal("modalConsultarServico"));
