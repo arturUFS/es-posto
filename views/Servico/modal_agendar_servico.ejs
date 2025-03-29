@@ -88,9 +88,10 @@
             </div>
           </div>
         </div>
+      </div>
 
         <div class="section-divider">Dados do Veículo</div>
-
+      <div class="modal-body">
         <div class="form-row">
           <div class="form-group">
             <label for="nome">Nome do Cliente:</label>
@@ -181,15 +182,27 @@
         '<option value="" disabled selected>Selecione o serviço</option>';
 
       servicos.forEach((servico) => {
-        const option = document.createElement("option");
-        option.value = servico.idservico;
-        option.textContent = servico.tiposervico;
-        selectServico.appendChild(option);
-      });
+      const option = document.createElement("option");
+      option.value = servico.idservico;
+      option.textContent = servico.tiposervico;
+      option.setAttribute('valorservico', servico.valor);
+      selectServico.appendChild(option);
+    });
     } catch (error) {
       console.error(error);
     }
   }
+
+  //Apresenta o valor do serviço selecionado
+  document.
+  getElementById("servico").addEventListener("change", function (event) {
+  const selectServico = event.target;
+  const valorServico = selectServico.options[selectServico.selectedIndex].getAttribute('valorservico');
+
+  // Atualizar o campo de valor total
+  const campoValor = document.getElementById("valor");
+  campoValor.value = `R$ ${parseFloat(valorServico).toFixed(2).replace(".", ",")}`;
+  });
 
   // Máscara para CPF
   document

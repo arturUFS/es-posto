@@ -56,8 +56,8 @@ export const servicoController = {
     try {
       // Busca todos os servicos no banco de dados
       const servicos = await Servico.findAll({
-        attributes: ["idservico", "tiposervico"], // Apenas os campos necessários
-        attributes: ["idservico", "tiposervico"], // Apenas os campos necessários
+        attributes: ["idservico", "tiposervico","valor"], // Apenas os campos necessários
+        attributes: ["idservico", "tiposervico","valor"], // Apenas os campos necessários
       });
 
       // Retorna os serviços como JSON
