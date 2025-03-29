@@ -213,7 +213,7 @@
     };
 
     try {
-      const response = await fetch(`/servicos/atualizar/${idServico}`, {
+      const response = await fetch(`/servico/atualizar/${idServico}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dadosAtualizados),
