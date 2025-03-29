@@ -43,12 +43,12 @@
     <div class="content">
       <button id="cadastrar-servico">Cadastrar Servico</button>
       <button>Agendar serviço</button>
-      <button>Consultar Serviços</button>
+      <button id="consultar-servico">Consultar Serviços</button>
       <button>Consultar agendamento</button>
       <button>Listar Serviços</button>
       <button>Gerar relatório de serviços realizados</button>
     </div>
-    <%- include('modal_cadastrar') %>
+    <%- include('modal_cadastrar') %> <%- include('modal_consultar_servico') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -64,6 +64,10 @@
     document
       .getElementById("cadastrar-servico")
       .addEventListener("click", () => abrirModal("modalCadastrarServico"));
+
+    document
+      .getElementById("consultar-servico")
+      .addEventListener("click", () => abrirModal("modalConsultarServico"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {

@@ -41,4 +41,56 @@ export const servicoController = {
       });
     }
   },
+  /**
+   * Consulta um serviço pelo ID
+   */
+  async consultar(req, res) {
+    try {
+      const { idservico } = req.params;
+
+      // Buscar o serviço pelo ID
+      const servico = await Servico.findOne({
+        where: { idservico },
+      });
+
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+
+      // Retorna os dados do serviço
+      res.json({
+        idservico: servico.idservico,
+        tiposervico: servico.tiposervico,
+        descricao: servico.descricao,
+        valor: servico.valor,
+        duracao: servico.duracao,
+        local: servico.local,
+      });
+    } catch (error) {
+      console.error("Erro ao consultar serviço:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+  // Rota para listar todos os serviços
+  async listar(req, res) {
+    try {
+      // Busca todos os serviços no banco de dados com os campos necessários
+      const servicos = await Servico.findAll({
+        attributes: [
+          "idservico",
+          "tiposervico",
+          "valor",
+          "duracao",
+          "local",
+          "descricao",
+        ], // Apenas os campos necessários
+      });
+
+      // Retorna os serviços como JSON (para consumo no front-end)
+      res.json(servicos);
+    } catch (error) {
+      console.error("❌ Erro ao listar serviços:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
 };
