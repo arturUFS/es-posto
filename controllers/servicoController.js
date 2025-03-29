@@ -198,4 +198,36 @@ export const servicoController = {
         res.status(500).json({ message: "Erro no servidor" });
       }
     },
+
+    /**
+   * Consulta um serviço pelo ID
+   */
+  async consultar(req, res) {
+    try {
+      const { idservico } = req.params;
+
+      // Buscar o serviço pelo ID
+      const servico = await Servico.findOne({
+        where: { idservico },
+      });
+
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+
+      // Retorna os dados do serviço
+      res.json({
+        idservico: servico.idservico,
+        tiposervico: servico.tiposervico,
+        descricao: servico.descricao,
+        valor: servico.valor,
+        duracao: servico.duracao,
+        local: servico.local,
+      });
+    } catch (error) {
+      console.error("Erro ao consultar serviço:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+  
 };

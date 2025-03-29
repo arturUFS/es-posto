@@ -1,0 +1,269 @@
+<div id="modalConsultarServico" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button class="back-button" onclick="fecharOuVoltar()">
+        <i class="arrow-left">
+          <img src="/assets/Icon (1).png" alt="voltar" />
+        </i>
+      </button>
+      <h2>Consultar Serviços</h2>
+      <button class="home-button" onclick="window.location.href='/home'">
+        <i class="home-icon">
+          <img src="/assets/home-lg-alt 1.png" alt="home" />
+        </i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Tela de Consulta -->
+      <div id="telaConsultaServico" class="center-content">
+        <form id="consultaServicoForm">
+          <div class="form-group">
+            <label for="servico">Serviço:</label>
+            <select id="servico" required>
+              <option value="" disabled selected>Carregando serviços...</option>
+            </select>
+          </div>
+          <div class="form-btn-cons" style="margin-top: 20px">
+            <button
+              type="button"
+              class="consultar-btn"
+              onclick="consultarServico()"
+            >
+              Consultar
+            </button>
+          </div>
+        </form>
+      </div>
+      <!-- Tela de Resultado -->
+      <div id="resultadoConsultaServico" style="display: none">
+        <form id="formConsultarServico">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="nomeServico">Nome:</label>
+              <input type="text" id="nomeServico" readonly />
+            </div>
+            <div class="form-group">
+              <label for="prestadorServico">Prestador:</label>
+              <input type="text" id="prestadorServico" readonly />
+            </div>
+            <div class="action-buttons">
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="habilitarEdicaoServico()"
+              >
+                <i class="edit-icon">
+                  <img
+                    id="lapisServico"
+                    src="/assets/Vector (3).png"
+                    alt="editar"
+                  />
+                </i>
+              </button>
+              <button
+                class="delete-btn"
+                onclick="confirmarExclusaoServico()"
+                disabled
+              >
+                <i class="delete-icon">
+                  <img src="/assets/Vector (4).png" alt="excluir" />
+                </i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="valorServico">Valor:</label>
+              <input type="text" id="valorServico" readonly />
+            </div>
+            <div class="form-group">
+              <label for="descricaoServico">Descrição:</label>
+              <textarea
+                id="descricaoServico"
+                rows="4"
+                readonly
+                style="resize: none"
+              ></textarea>
+            </div>
+          </div>
+          <div id="botoesEdicaoServico" style="display: none">
+            <div class="form-btn-res">
+              <button
+                type="button"
+                class="save-btn"
+                onclick="salvarAlteracoesServico()"
+              >
+                Salvar
+              </button>
+              <button
+                type="button"
+                class="cancel-btn"
+                onclick="cancelarEdicaoServico()"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Função para carregar os Serviços e preencher o select
+  async function carregarServicos() {
+    try {
+      const response = await fetch("/servico/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar serviços.");
+      }
+
+      const servicos = await response.json();
+      const selectServico = document.getElementById("servico");
+
+      selectServico.innerHTML =
+        '<option value="" disabled selected>Selecione o serviço</option>';
+
+      servicos.forEach((servico) => {
+        const option = document.createElement("option");
+        option.value = servico.idservico;
+        option.textContent = servico.nome;
+        selectServico.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // Chamar a função ao abrir o modal
+  document.addEventListener("DOMContentLoaded", carregarServicos);
+
+  // Função para consultar serviço
+  async function consultarServico() {
+    const idServico = document.getElementById("servico").value;
+
+    if (!idServico) {
+      alert("Por favor, selecione um serviço.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/servicos/consultar/${idServico}`);
+      if (!response.ok) {
+        throw new Error("Serviço não encontrado.");
+      }
+
+      const servico = await response.json();
+
+      document.getElementById("nomeServico").value = servico.nome;
+      document.getElementById("prestadorServico").value = servico.prestador;
+      const valor = servico.valor ? parseFloat(servico.valor) : 0;
+      document.getElementById("valorServico").value = `R$ ${valor
+        .toFixed(2)
+        .replace(".", ",")}`;
+      document.getElementById("descricaoServico").textContent =
+        servico.descricao || "";
+
+      document.getElementById("telaConsultaServico").style.display = "none";
+      document.getElementById("resultadoConsultaServico").style.display =
+        "block";
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  // Função para salvar as alterações
+  async function salvarAlteracoesServico() {
+    const idServico = document.getElementById("servico").value;
+    const nome = document.getElementById("nomeServico").value;
+    const valor = document
+      .getElementById("valorServico")
+      .value.replace("R$ ", "")
+      .replace(",", ".");
+    const descricao = document.getElementById("descricaoServico").value;
+    const prestador = document.getElementById("prestadorServico").value;
+
+    if (!idServico || !nome || !valor || !prestador) {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    const dadosAtualizados = {
+      nome,
+      valor: parseFloat(valor),
+      descricao,
+      prestador,
+    };
+
+    try {
+      const response = await fetch(`/servicos/atualizar/${idServico}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dadosAtualizados),
+      });
+
+      if (!response.ok) throw new Error("Erro ao atualizar o serviço.");
+
+      alert("Serviço atualizado com sucesso!");
+      fecharOuVoltar();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  // Função para habilitar edição dos campos
+  function habilitarEdicaoServico() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsultaServico input, #resultadoConsultaServico textarea"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = false;
+    });
+
+    document.getElementById("botoesEdicaoServico").style.display = "block";
+    document.getElementById("lapisServico").style.visibility = "hidden";
+  }
+
+  // Função para cancelar edição
+  function cancelarEdicaoServico() {
+    const campos = document.querySelectorAll(
+      "#resultadoConsultaServico input, #resultadoConsultaServico textarea"
+    );
+    campos.forEach((campo) => {
+      campo.readOnly = true;
+    });
+
+    document.getElementById("botoesEdicaoServico").style.display = "none";
+    document.getElementById("lapisServico").style.visibility = "visible";
+  }
+
+  // Função para fechar ou voltar para início do modal
+  function fecharOuVoltar() {
+    const resultado = document.getElementById("resultadoConsultaServico");
+    const telaConsulta = document.getElementById("telaConsultaServico");
+    const formConsulta = document.getElementById("consultaServicoForm");
+    const formResultado = document.getElementById("formConsultarServico");
+
+    if (window.getComputedStyle(resultado).display !== "none") {
+      resultado.style.display = "none";
+      telaConsulta.style.display = "flex";
+      cancelarEdicaoServico();
+      formConsulta.reset();
+      formResultado.reset();
+      document.getElementById("servico").value = "";
+    } else {
+      fecharModal("modalConsultarServico");
+      formConsulta.reset();
+      formResultado.reset();
+      document.getElementById("servico").value = "";
+    }
+  }
+
+  // Função para fechar o modal
+  function fecharModal(idModal) {
+    document.getElementById(idModal).style.display = "none";
+  }
+</script>
