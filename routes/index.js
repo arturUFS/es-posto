@@ -142,9 +142,6 @@ router.post("/servico/agendarservico",servicoController.agendar_servico);
 //Rota para consultar servico
 router.get("/servico/consultar/:idservico", servicoController.consultar);
 
-//Rota para consultar servico
-router.get("/servico/consultar/:idservico", servicoController.consultar);
-
 //Rota para listar serviços
 router.get("/servico/listar", servicoController.listar);
 
