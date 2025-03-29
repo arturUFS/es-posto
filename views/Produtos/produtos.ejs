@@ -61,7 +61,6 @@
       <button id="cadastrar-produto">Cadastrar Produto</button>
       <button id="consultar-produto">Consultar Produto</button>
       <button id="listar-produtos">Listar Produtos</button>
-      <button id="relatorio-vendas-produto">Gerar Relatório de Vendas</button>
     </div>
     <%- include('modal_registrar_venda') %> <%-
     include('modal_cadastrar_produto') %> <%- include('modal_consultar_produto')
@@ -98,10 +97,6 @@
       .getElementById("listar-produtos")
       .addEventListener("click", () => abrirModal("modalListarProdutos"));
 
-    document
-      .getElementById("relatorio-vendas-produto")
-      .addEventListener("click", () =>
-        abrirModal("modalRelatorioVendasProduto")
-      );
+    
   </script>
 </html>
