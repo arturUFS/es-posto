@@ -137,13 +137,16 @@ router.get("/servicos", servicoController.index);
 router.post("/servico/cadastrar", servicoController.cadastrar);
 
 //Rota para agendar servico
-router.post("/servico/agendarservico",servicoController.agendar_servico);
+router.post("/servico/agendarservico", servicoController.agendar_servico);
 
 //Rota para consultar servico
 router.get("/servico/consultar/:idservico", servicoController.consultar);
 
-//Rota para consultar servico
-router.get("/servico/consultar/:idservico", servicoController.consultar);
+//Rota para atualizar servico
+router.put("/servico/atualizar/:idservico", servicoController.atualizar);
+
+//Rota para excluir um servico
+router.delete("/servico/excluir/:idservico", servicoController.excluir);
 
 //Rota para listar serviços
 router.get("/servico/listar", servicoController.listar);
@@ -153,6 +156,5 @@ router.get(
   "servicos/listar_agendamentos",
   servicoController.listar_agendamentos
 );
-
 
 export default router;

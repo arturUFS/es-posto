@@ -1,9 +1,8 @@
 import { Servico } from "../models/servico.js";
-import { Agendamento} from "../models/agendamento.js";
+import { Agendamento } from "../models/agendamento.js";
 import { Venda } from "../models/venda.js";
-import { Veiculo} from "../models/veiculo.js";
+import { Veiculo } from "../models/veiculo.js";
 import { Funcionario } from "../models/funcionario.js";
-
 
 function gerarIdServico() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
@@ -51,12 +50,12 @@ export const servicoController = {
     }
   },
 
-// Lista todos os serviços
+  // Lista todos os serviços
   async listar(req, res) {
     try {
       // Busca todos os servicos no banco de dados
       const servicos = await Servico.findAll({
-        attributes: ["idservico","tiposervico"], // Apenas os campos necessários
+        attributes: ["idservico", "tiposervico"], // Apenas os campos necessários
       });
 
       // Retorna os serviços como JSON
@@ -67,12 +66,12 @@ export const servicoController = {
     }
   },
 
-  async agendar_servico(req,res){
+  async agendar_servico(req, res) {
     try {
       const {
         dataServico,
         hora,
-        valor, 
+        valor,
         idservico,
         cpfFuncionario,
         status,
@@ -89,7 +88,7 @@ export const servicoController = {
 
       // ✅ Validação dos campos obrigatórios
       if (
-        !dataServico||
+        !dataServico ||
         !cpfFuncionario ||
         !hora ||
         !valor ||
@@ -97,12 +96,12 @@ export const servicoController = {
         !formaPagamento ||
         !status ||
         !nome ||
-        !telefone||
-        !dataEntrada||
-        !tipoveiculo||
+        !telefone ||
+        !dataEntrada ||
+        !tipoveiculo ||
         !placa ||
         !cor ||
-        !modelo||
+        !modelo ||
         !ano
       ) {
         console.log(dataServico);
@@ -149,7 +148,7 @@ export const servicoController = {
         ano: ano,
         cor: cor,
         modelo: modelo,
-      })
+      });
 
       //Registra o agendamento
       await Agendamento.create({
@@ -160,7 +159,7 @@ export const servicoController = {
         data: dataServico,
         hora: hora,
         status: status,
-      })
+      });
 
       //Registra a venda
       const novaVenda = await Venda.create({
@@ -175,31 +174,31 @@ export const servicoController = {
       console.log(novaVenda);
 
       res.json({ message: "✅ Agendamento registrado com sucesso!" });
-    } catch (error){
+    } catch (error) {
       console.error("❌ Erro ao registrar agendamento:", error);
-      res
-        .status(500)
-        .json({ message: "Erro ao registrar agendamento.", error: error.message });
+      res.status(500).json({
+        message: "Erro ao registrar agendamento.",
+        error: error.message,
+      });
     }
-
   },
-//Lista todos os agendamentos
+  //Lista todos os agendamentos
   async listar_agendamentos(req, res) {
-      try {
-        // Busca todos os serviços no banco de dados
-        const agendamentos = await Agendamento.findAll({
-          attributes: ["data", "idservico", "idplaca", "status"], // Apenas os campos necessários
-        });
-  
-        // Retorna os serviços como JSON (para consumo no front-end)
-        res.json(agendamentos);
-      } catch (error) {
-        console.error("❌ Erro ao listar agendamentos:", error);
-        res.status(500).json({ message: "Erro no servidor" });
-      }
-    },
+    try {
+      // Busca todos os serviços no banco de dados
+      const agendamentos = await Agendamento.findAll({
+        attributes: ["data", "idservico", "idplaca", "status"], // Apenas os campos necessários
+      });
 
-    /**
+      // Retorna os serviços como JSON (para consumo no front-end)
+      res.json(agendamentos);
+    } catch (error) {
+      console.error("❌ Erro ao listar agendamentos:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
+  /**
    * Consulta um serviço pelo ID
    */
   async consultar(req, res) {
@@ -229,5 +228,48 @@ export const servicoController = {
       res.status(500).json({ message: "Erro no servidor" });
     }
   },
-  
+
+  async atualizar(req, res) {
+    try {
+      const { idservico } = req.params;
+      const { tiposervico, valor, duracao, local, descricao } = req.body;
+
+      const servico = await Servico.findByPk(idservico);
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+
+      if (tiposervico) servico.tiposervico = tiposervico;
+      if (valor) servico.valor = valor;
+      if (duracao) servico.duracao = duracao;
+      if (local) servico.local = local;
+      if (descricao) servico.descricao = descricao;
+
+      await servico.save();
+
+      res.json({ message: "Serviço atualizado com sucesso", servico });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erro ao atualizar serviço", error: error.message });
+    }
+  },
+  async excluir(req, res) {
+    try {
+      const { idservico } = req.params;
+
+      const servico = await Servico.findByPk(idservico);
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+
+      await servico.destroy();
+
+      res.json({ message: "Serviço excluído com sucesso" });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ message: "Erro ao excluir serviço", error: error.message });
+    }
+  },
 };
