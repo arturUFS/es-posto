@@ -126,7 +126,16 @@ export const produtoController = {
 
       // Gerar um código único para a venda
       const codigoVenda = gerarCodigoVenda();
+      const iditemvenda = gerarCodigoVenda();
 
+      // Criar o item de venda na tabela "itemvenda"
+      await ItemVenda.create({
+        iditemvenda: iditemvenda,
+        idproduto: idProduto,
+        quantidade,
+        valor: valorTotal,
+      });
+      
       // Criar a venda na tabela "venda"
       await Venda.create({
         codigo: codigoVenda,
@@ -134,14 +143,7 @@ export const produtoController = {
         valor: valorTotal,
         cpf: cpfFuncionario,
         formapagamento: formaPagamento,
-      });
-
-      // Criar o item de venda na tabela "itemvenda"
-      await ItemVenda.create({
-        iditemvenda: gerarCodigoVenda(),
-        idproduto: idProduto,
-        quantidade,
-        valor: valorTotal,
+        iditemvenda: iditemvenda,
       });
 
       // Atualizar a quantidade do produto
