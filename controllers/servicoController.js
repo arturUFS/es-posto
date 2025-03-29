@@ -3,6 +3,7 @@ import { Agendamento} from "../models/agendamento.js";
 import { Venda } from "../models/venda.js";
 import { Veiculo} from "../models/veiculo.js";
 import { Funcionario } from "../models/funcionario.js";
+import { FuncionarioAgendamento } from "../models/funcionario_agendamento.js";
 
 
 function gerarIdServico() {
@@ -198,4 +199,171 @@ export const servicoController = {
         res.status(500).json({ message: "Erro no servidor" });
       }
     },
+
+  async consultar(req, res) {
+    try {
+      const { idagendamento } = req.params;
+
+      const agendamento = await Agendamento.findOne({
+        where: { idagendamento },
+        include: [
+          {
+            model: Servico,
+            as: "servico",
+            attributes: ["tiposervico", "valor", "duracao"],
+          },
+          {
+            model: Veiculo,
+            as: "veiculo",
+            attributes: ["nomeResponsavel", "telefone", "modelo", "cor"],
+          },
+        ],
+      });
+  
+  
+      if (!agendamento) {
+        return res.status(404).json({ message: "Agendamento não encontrado" });
+      }
+  
+  
+      // Buscar funcionários associados ao agendamento
+      const funcionarios = await FuncionarioAgendamento.findAll({
+        where: { idservico: agendamento.idservico },
+        include: [
+          {
+            model: Funcionario,
+            attributes: ["nome", "cpf", "telefone"],
+          },
+        ],
+      });
+  
+  
+      res.json({
+        agendamento,
+        funcionarios: funcionarios.map(f => f.funcionario),
+      });
+    } catch (error) {
+      console.error("Erro ao consultar agendamento:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+  
+  
+  // Gera relatório de serviços realizados
+  async gerarRelatorioServicos(req, res) {
+    try {
+      const { dataInicio, dataFim } = req.query;
+  
+      if (!dataInicio || !dataFim) {
+        return res.status(400).json({
+          message: "Datas de início e fim são obrigatórias"
+        });
+      }
+  
+  
+      // Busca agendamentos concluídos no período
+      const agendamentos = await Agendamento.findAll({
+        where: {
+          status: "Concluído",
+          data: {
+            [Op.between]: [dataInicio, dataFim],
+          },
+        },
+        include: [
+          {
+            model: Servico,
+            attributes: ["tiposervico", "valor"],
+          },
+          {
+            model: Veiculo,
+            attributes: ["modelo", "cor"],
+          },
+        ],
+        order: [["data", "ASC"]],
+      });
+  
+  
+      // Calcula totais
+      const totalServicos = agendamentos.length;
+      const totalValor = agendamentos.reduce((sum, ag) => sum + parseFloat(ag.servico.valor), 0);
+  
+  
+      // Formata os dados para o relatório
+      const relatorio = {
+        periodo: `${dataInicio} até ${dataFim}`,
+        totalServicos,
+        totalValor: totalValor.toFixed(2),
+        servicosRealizados: agendamentos.map(ag => ({
+          data: ag.data,
+          tipoServico: ag.servico.tiposervico,
+          valor: ag.servico.valor,
+          veiculo: `${ag.veiculo.modelo} (${ag.veiculo.cor})`,
+        })),
+      };
+  
+  
+      res.json(relatorio);
+    } catch (error) {
+      console.error("Erro ao gerar relatório de serviços:", error);
+      res.status(500).json({ message: "Erro ao gerar relatório" });
+    }
+  },
+  
+  
+  // Atualiza um serviço
+  async atualizarServico(req, res) {
+    try {
+      const { idservico } = req.params;
+      const { tiposervico, valor, duracao, local, descricao } = req.body;
+  
+  
+      const servico = await Servico.findByPk(idservico);
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+  
+  
+      await servico.update({
+        tiposervico,
+        valor,
+        duracao,
+        local,
+        descricao,
+      });
+  
+  
+      res.json({ message: "Serviço atualizado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao atualizar serviço:", error);
+      res.status(500).json({ message: "Erro ao atualizar serviço" });
+    }
+  },
+  
+  
+  // Exclui um serviço
+  async excluirServico(req, res) {
+    try {
+      const { idservico } = req.params;
+  
+  
+      // Verifica se existem agendamentos para este serviço
+      const agendamentos = await Agendamento.count({
+        where: { idservico },
+      });
+  
+  
+      if (agendamentos > 0) {
+        return res.status(400).json({
+          message: "Não é possível excluir o serviço pois existem agendamentos vinculados"
+        });
+      }
+  
+      await Servico.destroy({ where: { idservico } });
+
+      res.json({ message: "Serviço excluído com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao excluir serviço:", error);
+      res.status(500).json({ message: "Erro ao excluir serviço" });
+    }
+  }
 };

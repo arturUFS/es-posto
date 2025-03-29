@@ -143,10 +143,12 @@ router.post("/servico/agendarservico",servicoController.agendar_servico);
 router.get("/servico/listar", servicoController.listar);
 
 //Rota para listar agendamentos
-router.get(
-  "servicos/listar_agendamentos",
-  servicoController.listar_agendamentos
-);
+router.get("servicos/listar_agendamentos", servicoController.listar_agendamentos);
 
+// Rota para consultar agendamento específico
+router.get("/servicos/agendamentos/:idagendamento", servicoController.consultar);
+
+// Rota para gerar relatório de serviços
+router.get("/servicos/relatorio", servicoController.gerarRelatorioServicos);
 
 export default router;

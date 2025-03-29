@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Serviços</title>
-    <link rel="stylesheet" href="assets/css/pages_initials.css" />
+    <link rel="stylesheet" href="/assets/css/pages_initials.css" />
     <link
       rel="stylesheet"
       href="/assets/css/modais-servico/cadastrar_servico.css"
@@ -51,7 +51,7 @@
     <div class="content">
       <button id="cadastrar-servico">Cadastrar Serviço</button>
       <button id="agendar-servico">Agendar Serviço</button>
-      <button>Consultar Serviço</button>
+      <button id="consultar-servico">Consultar Serviço</button>
       <button id="consultar-agendamento">Consultar agendamento</button>
       <button id="listar-agendamentos">Listar Agendamentos</button>
       <button id="gerar-relatorio">Gerar relatório de serviços realizados</button>
@@ -79,9 +79,21 @@
       .addEventListener("click", () => abrirModal("modalAgendarServico"));
 
     document
+      .getElementById("consultar-servico")
+      .addEventListener("click", () => abrirModal("modalConsultarServico"));
+
+    document
+      .getElementById("consultar-agendamento")
+      .addEventListener("click", () => abrirModal("modalConsultarAgendamento"));
+
+    document
       .getElementById("listar-agendamentos")
       .addEventListener("click", () => abrirModal("modalListarAgendamentos"));
 
+    document
+      .getElementById("gerar-relatorio")
+      .addEventListener("click", () => abrirModal("modalGerarRelatorio"));
+        
     // Fechar modal ao clicar fora
     window.onclick = function (event) {
       if (event.target.classList.contains("modal")) {

@@ -1,0 +1,168 @@
+<div id="modalConsultarAgendamento" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="back-button" onclick="fecharOuVoltarAgendamento()">
+          <i class="arrow-left"><img src="/assets/Icon (1).png" alt="voltar"/></i>
+        </button>
+        <h2>Consultar agendamento</h2>
+        <button class="home-button" onclick="window.location.href='/home'">
+          <i class="home-icon"><img src="/assets/home-lg-alt 1.png" alt="home"/></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <!-- Tela de Consulta -->
+        <div id="telaConsultaAgendamento" class="center-content">
+          <form id="consultaFormAgendamento">
+            <div class="form-group">
+              <label for="agendamentoSelect">Agendamento:</label>
+              <select id="agendamentoSelect" required>
+                <option value="" disabled selected>Carregando agendamentos...</option>
+              </select>
+            </div>
+            <div class="form-btn-cons" style="margin-top: 20px">
+              <button type="button" class="consultar-btn" onclick="consultarAgendamento()">
+                Consultar
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Tela de Resultado -->
+        <div id="resultadoConsultaAgendamento">
+          <form id="formConsultarAgendamento">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dataAgendamento">Data:</label>
+                <input type="text" id="dataAgendamento" readonly />
+              </div>
+              <div class="form-group">
+                <label for="horaAgendamento">Hora:</label>
+                <input type="text" id="horaAgendamento" readonly />
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group">
+                <label for="servicoAgendamento">Serviço:</label>
+                <input type="text" id="servicoAgendamento" readonly />
+              </div>
+              <div class="form-group">
+                <label for="statusAgendamento">Status:</label>
+                <input type="text" id="statusAgendamento" readonly />
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group">
+                <label for="veiculoAgendamento">Veículo:</label>
+                <input type="text" id="veiculoAgendamento" readonly />
+              </div>
+              <div class="form-group">
+                <label for="responsavelAgendamento">Responsável:</label>
+                <input type="text" id="responsavelAgendamento" readonly />
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group" style="flex-basis: 100%">
+                <label>Funcionários Alocados:</label>
+                <div id="funcionariosAgendamento" class="funcionarios-list"></div>
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group" style="flex-basis: 100%">
+                <label for="valorAgendamento">Valor Total:</label>
+                <input type="text" id="valorAgendamento" readonly />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Carrega os agendamentos
+    async function carregarAgendamentos() {
+      try {
+        const response = await fetch("/agendamentos/listar");
+        if (!response.ok) throw new Error("Erro ao carregar agendamentos.");
+  
+        const agendamentos = await response.json();
+        const selectAgendamento = document.getElementById("agendamentoSelect");
+  
+        selectAgendamento.innerHTML = '<option value="" disabled selected>Selecione o agendamento</option>';
+  
+        agendamentos.forEach(agendamento => {
+          const option = document.createElement("option");
+          option.value = agendamento.idagendamento;
+          option.textContent = `${formatarData(agendamento.data)} - ${agendamento.idservico}`;
+          selectAgendamento.appendChild(option);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  
+    // Consulta um agendamento específico
+    async function consultarAgendamento() {
+      const idAgendamento = document.getElementById("agendamentoSelect").value;
+  
+      if (!idAgendamento) {
+        alert("Por favor, selecione um agendamento.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/agendamentos/consultar/${idAgendamento}`);
+        if (!response.ok) throw new Error("Agendamento não encontrado.");
+  
+        const { agendamento, funcionarios } = await response.json();
+  
+        // Preenche os campos
+        document.getElementById("dataAgendamento").value = formatarData(agendamento.data);
+        document.getElementById("horaAgendamento").value = agendamento.hora || "Não informado";
+        document.getElementById("servicoAgendamento").value = agendamento.servico.tiposervico;
+        document.getElementById("statusAgendamento").value = agendamento.status;
+        document.getElementById("veiculoAgendamento").value = `${agendamento.veiculo.modelo} (${agendamento.veiculo.placa})`;
+        document.getElementById("responsavelAgendamento").value = agendamento.veiculo.nomeResponsavel;
+        document.getElementById("valorAgendamento").value = agendamento.valor ? `R$ ${parseFloat(agendamento.valor).toFixed(2).replace(".", ",")}` : "R$ 0,00";
+  
+        // Preenche a lista de funcionários
+        const funcionariosDiv = document.getElementById("funcionariosAgendamento");
+        funcionariosDiv.innerHTML = funcionarios.map(func => 
+          `<div class="funcionario-item">${func.nome} (${func.cpf})</div>`
+        ).join("");
+  
+        // Mostra resultado
+        document.getElementById("telaConsultaAgendamento").style.display = "none";
+        document.getElementById("resultadoConsultaAgendamento").style.display = "block";
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    function formatarData(dataString) {
+      const data = new Date(dataString);
+      return data.toLocaleDateString('pt-BR');
+    }
+  
+    function fecharOuVoltarAgendamento() {
+      const resultado = document.getElementById("resultadoConsultaAgendamento");
+      const telaConsulta = document.getElementById("telaConsultaAgendamento");
+  
+      if (window.getComputedStyle(resultado).display !== "none") {
+        resultado.style.display = "none";
+        telaConsulta.style.display = "flex";
+        document.getElementById("consultaFormAgendamento").reset();
+        document.getElementById("agendamentoSelect").value = "";
+      } else {
+        document.getElementById("modalConsultarAgendamento").style.display = "none";
+      }
+    }
+  
+    document.addEventListener("DOMContentLoaded", carregarAgendamentos);
+  </script>
+  
