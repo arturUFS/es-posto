@@ -58,7 +58,7 @@
                   ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
                 /></i>
               </button>
-              <button class="delete-btn" onclick="confirmarExclusao()" disabled>
+              <button class="delete-btn" onclick="confirmarExclusao()" >
                 <i class="delete-icon"
                   ><img src="/assets/Vector (4).png" alt="excluir"
                 /></i>
@@ -186,6 +186,19 @@
     }
   }
 
+  async function preencherFormulario(produto) {
+    document.getElementById("nomeProduto2").value = produto.nome;
+    document.getElementById("fornecedor2").value = produto.fornecedor;
+    const valor = produto.valor ? parseFloat(produto.valor) : 0;
+    document.getElementById("valorProduto2").value = `R$ ${valor
+      .toFixed(2)
+      .replace(".", ",")}`;
+    document.getElementById("quantidadeDisponivel2").value =
+      produto.quantidade;
+    document.getElementById("descricaoProduto2").textContent =
+      produto.descricao || "";
+  }
+
   async function salvarAlteracoes() {
     const idProduto = document.getElementById("produto2").value;
     const nome = document.getElementById("nomeProduto2").value;
@@ -220,7 +233,7 @@
       if (!response.ok) throw new Error("Erro ao atualizar o produto.");
 
       alert("Produto atualizado com sucesso!");
-
+      carregarProdutos(); // Recarrega a lista
       // Voltar para a tela de consulta após salvar
       fecharOuVoltar();
     } catch (error) {
@@ -229,7 +242,7 @@
   }
 
   // Exibe uma mensagem de confirmação antes de excluir um produto.
-  /*  function confirmarExclusao() {
+    function confirmarExclusao() {
     const idproduto = document.getElementById("produto2").value; // Obtém o idproduto
 
     if (!idproduto) {
@@ -241,10 +254,10 @@
     if (confirmacao) {
       excluirProduto(idproduto);
     }
-  } */
+  } 
 
   // Exclui um produto enviando uma requisição DELETE para o backend.
-  /* function excluirProduto(idproduto) {
+   function excluirProduto(idproduto) {
     fetch(`/produtos/excluir/${idproduto}`, {
       method: "DELETE",
     })
@@ -261,7 +274,7 @@
       .catch((error) => {
         alert(error.message);
       });
-  } */
+  } 
 
   // Função para habilitar a edição dos campos
   async function habilitarEdicao() {
