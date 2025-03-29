@@ -61,8 +61,13 @@
   overflow-y: auto;
 }
 
-/* Centralização de conteúdo na tela de consulta */
-.center-content {
+
+
+#resultadoConsultaServico {
+  display: none;
+}
+
+.center-content{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -77,6 +82,16 @@
 }
 
 /* Estilos para o formulário de consulta */
+#consultaServicoForm #servico {
+  width: 130%;
+  transform: translateX(-12.3%);
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
 #consultaServicoForm {
   display: flex;
   flex-direction: column;
@@ -242,7 +257,9 @@ label[for="duracaoMedia"] {
 }
 
 /* Botões de salvar e cancelar */
-.form-btn-res {
+
+
+.form-btn-res-servico {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -292,4 +309,73 @@ label[for="duracaoMedia"] {
   #duracaoMedia {
     width: 100%; /* Garantir largura 100% na tela pequena */
   }
+.form-btn-cons-servico {
+  display: flex;
+  width: 110%;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 15px;
+  justify-content: center;
+}
+
+.consultar-btn-servico {
+  background-color: #292929;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 130%;
+}
+
+.consultar-btn-servico:hover {
+  background-color: #1a1a1a;
+}
+
+/* Formulário */
+
+/* Botões de ação (editar e excluir) */
+.action-buttons-servico {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.edit-btn-servico,
+.delete-btn-servico {
+  color: #d70000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.edit-btn-servico img,
+.delete-btn-servico img {
+  width: 50%;
+}
+
+#nomeServico,
+#prestadorServico {
+  width: 70%;
+}
+
+#valorServico,
+#duracaoServico {
+  width: 61%;
+}
+
+#duracaoServico,
+label[for="duracaoServico"] {
+  margin-left: -55px;
+}
+
+#formConsultarServico .form-actions {
+  gap: 20px;
+}
+
+#selectPrestador {
+  width: 70%;
+}
 }
