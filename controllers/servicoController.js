@@ -181,12 +181,12 @@ export const servicoController = {
         .status(500)
         .json({ message: "Erro ao registrar agendamento.", error: error.message });
     }
-
   },
+
 //Lista todos os agendamentos
   async listar_agendamentos(req, res) {
       try {
-        // Busca todos os serviços no banco de dados
+        // Busca todos os agendamentos no banco de dados
         const agendamentos = await Agendamento.findAll({
           attributes: ["data", "idservico", "idplaca", "status"], // Apenas os campos necessários
         });

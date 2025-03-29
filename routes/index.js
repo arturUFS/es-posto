@@ -144,7 +144,7 @@ router.get("/servico/listar", servicoController.listar);
 
 //Rota para listar agendamentos
 router.get(
-  "servicos/listar_agendamentos",
+  "/servico/listar_agendamentos",
   servicoController.listar_agendamentos
 );
 

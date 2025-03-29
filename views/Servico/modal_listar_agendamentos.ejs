@@ -1,7 +1,10 @@
 <div id="modalListarAgendamentos" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <button class="back-button" onclick="fecharModal('modalListarAgendamentos')">
+      <button
+        class="back-button"
+        onclick="fecharModal('modalListarAgendamentos')"
+      >
         <i class="arrow-left"
           ><img src="/assets/Icon (1).png" alt="voltar"
         /></i>
@@ -63,7 +66,7 @@
   // ✅ Função para carregar os agendamentos
   async function carregarAgendamentos() {
     try {
-      const response = await fetch("/servicos/listar_agendamentos");
+      const response = await fetch("/servico/listar_agendamentos");
       if (!response.ok) throw new Error("Erro ao carregar os agendamentos.");
 
       const agendamentos = await response.json();
@@ -75,20 +78,87 @@
           '<tr><td colspan="4" class="loading-message">Nenhum serviço encontrado.</td></tr>';
         return;
       }
+      const mapaServicos = await buscarServicos();
 
       agendamentos.forEach((agendamento) => {
         const tr = document.createElement("tr");
+
+        // Formatando a data
+        const dataFormatada = formatarData(agendamento.data);
+
+        // Definindo o status com cores
+        const statusFormatado = formatarStatus(agendamento.status);
+
+        // Obtendo o nome do serviço baseado no idservico
+        const nomeServico = mapaServicos[agendamento.idservico] || "Serviço não encontrado";
+
         tr.innerHTML = `
-          <td>${agendamento.data}</td>
-          <td>${agendamento.tipodoservico}</td>
-          <td>${agendamento.placa}</td>
-          <td>${agendamento.status}</td>
-        `;
+        <td>${dataFormatada}</td>
+        <td>${nomeServico}</td>
+        <td>${agendamento.idplaca}</td>
+        <td>${statusFormatado}</td>
+      `;
         tabela.appendChild(tr);
       });
     } catch (error) {
       console.error("❌ Erro ao carregar agendamentos:", error);
     }
+  }
+
+  // Função para buscar os serviços e criar o mapa
+async function buscarServicos() {
+  try {
+    const servicosResponse = await fetch("/servico/listar");
+    if (!servicosResponse.ok)
+      throw new Error("Erro ao carregar os serviços.");
+
+    const servicos = await servicosResponse.json();
+
+    // Criação de um mapa de idservico para tiposervico
+    const mapaServicos = servicos.reduce((acc, servico) => {
+      acc[servico.idservico] = servico.tiposervico;
+      return acc;
+    }, {});
+
+    return mapaServicos;
+
+  } catch (error) {
+    console.error("❌ Erro ao carregar os serviços:", error);
+    return {};
+  }
+}
+
+  // Função para formatar a data no formato dd/mm/yyyy
+  function formatarData(dataISO) {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  // Função para formatar o status (cores e capitalizar)
+  function formatarStatus(status) {
+    const cores = {
+      pendente: "orange",
+      concluído: "green",
+      em_andamento: "#b68d2e",
+      cancelado: "red",
+    };
+    if(status == "em_andamento"){
+      status = "em andamento"
+    }
+    
+    const statusCapitalizado = status
+      .toLowerCase()
+      .split(" ")
+      .map((palavra) => palavra.charAt(0).toUpperCase() + palavra.slice(1))
+      .join(" ");
+
+    return `<span style="color:${
+      cores[status] || "black"
+    }; font-weight: bold;">${statusCapitalizado}</span>`;
   }
 
   // ✅ Carrega os agendamentos ao abrir o modal
