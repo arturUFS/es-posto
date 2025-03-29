@@ -229,5 +229,26 @@ export const servicoController = {
       res.status(500).json({ message: "Erro no servidor" });
     }
   },
-  
+  // Rota para listar todos os serviços
+//   async listar(req, res) {
+//     try {
+//       // Busca todos os serviços no banco de dados com os campos necessários
+//       const servicos = await Servico.findAll({
+//         attributes: [
+//           "idservico",
+//           "tiposervico",
+//           "valor",
+//           "duracao",
+//           "local",
+//           "descricao",
+//         ], // Apenas os campos necessários
+//       });
+
+//       // Retorna os serviços como JSON (para consumo no front-end)
+//       res.json(servicos);
+//     } catch (error) {
+//       console.error("❌ Erro ao listar serviços:", error);
+//       res.status(500).json({ message: "Erro no servidor" });
+//     }
+//  },
 };
