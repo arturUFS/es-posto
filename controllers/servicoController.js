@@ -1,8 +1,6 @@
 import { Servico } from "../models/servico.js";
 import { Agendamento } from "../models/agendamento.js";
-import { Agendamento } from "../models/agendamento.js";
 import { Venda } from "../models/venda.js";
-import { Veiculo } from "../models/veiculo.js";
 import { Veiculo } from "../models/veiculo.js";
 import { Funcionario } from "../models/funcionario.js";
 
