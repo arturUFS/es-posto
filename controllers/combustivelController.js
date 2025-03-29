@@ -50,7 +50,6 @@ export const combustivelController = {
         descricao: descricao || null, //Permite que seja opcional
         qtddisponivel,
       });
-      console.log("Novo combustível cadastrado:", novoCombustivel);
 
       // cria a associação na tabela Fornecedor_combustivel
       await FornecedorCombustivel.create({
@@ -148,6 +147,7 @@ export const combustivelController = {
         valor: valorTotal,
         cpf: cpfFuncionario,
         formapagamento: formaPagamento,
+        idabastecimento: idAbastecimento,
       });
 
       // ✅ Atualizar o estoque do combustível

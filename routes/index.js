@@ -137,7 +137,7 @@ router.get("/servicos", servicoController.index);
 router.post("/servico/cadastrar", servicoController.cadastrar);
 
 //Rota para agendar servico
-//router.post("/servico/agendarservico",servicoController.agendar_servico);
+router.post("/servico/agendarservico",servicoController.agendar_servico);
 
 //Rota para listar serviços
 router.get("/servico/listar", servicoController.listar);

@@ -1,8 +1,15 @@
 import { Servico } from "../models/servico.js";
 import { Agendamento} from "../models/agendamento.js";
+import { Venda } from "../models/venda.js";
+import { Veiculo} from "../models/veiculo.js";
+import { Funcionario } from "../models/funcionario.js";
 
 
 function gerarIdServico() {
+  return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
+}
+
+function gerarIdAgendamento() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
 }
 
@@ -60,6 +67,123 @@ export const servicoController = {
     }
   },
 
+  async agendar_servico(req,res){
+    try {
+      const {
+        dataServico,
+        hora,
+        valor, 
+        idservico,
+        cpfFuncionario,
+        status,
+        formaPagamento,
+        nome,
+        telefone,
+        dataEntrada,
+        tipoveiculo,
+        ano,
+        placa,
+        cor,
+        modelo,
+      } = req.body;
+
+      // ✅ Validação dos campos obrigatórios
+      if (
+        !dataServico||
+        !cpfFuncionario ||
+        !hora ||
+        !valor ||
+        !idservico ||
+        !formaPagamento ||
+        !status ||
+        !nome ||
+        !telefone||
+        !dataEntrada||
+        !tipoveiculo||
+        !placa ||
+        !cor ||
+        !modelo||
+        !ano
+      ) {
+        console.log(dataServico);
+        console.log(cpfFuncionario);
+        console.log(hora);
+        console.log(valor);
+        console.log(idservico);
+        console.log(formaPagamento);
+        console.log(status);
+        console.log(nome);
+        console.log(telefone);
+        console.log(dataEntrada);
+        console.log(tipoveiculo);
+        console.log(placa);
+
+        return res
+          .status(400)
+          .json({ message: "Todos os campos são obrigatórios!" });
+      }
+
+      // ✅ Verificar se o funcionário existe
+      const funcionario = await Funcionario.findByPk(cpfFuncionario);
+      if (!funcionario) {
+        return res.status(404).json({ message: "Funcionário não encontrado!" });
+      }
+
+      // ✅ Verificar se o combustível existe
+      const servico = await Servico.findByPk(idservico);
+      if (!servico) {
+        return res.status(404).json({ message: "Serviço não encontrado" });
+      }
+
+      //Gerar IDs únicos
+      const idAgendamento = gerarIdAgendamento();
+      const idVenda = gerarIdAgendamento();
+
+      //Registra o veículo
+      await Veiculo.create({
+        idplaca: placa,
+        nomeresponsavel: nome,
+        dataentrada: dataEntrada,
+        telefone: telefone,
+        tipoveiculo: tipoveiculo,
+        ano: ano,
+        cor: cor,
+        modelo: modelo,
+      })
+
+      //Registra o agendamento
+      await Agendamento.create({
+        idagendamento: idAgendamento,
+        idservico: idservico,
+        idplaca: placa,
+        valor: valor,
+        data: dataServico,
+        hora: hora,
+        status: status,
+      })
+
+      //Registra a venda
+      const novaVenda = await Venda.create({
+        codigo: idVenda,
+        data: dataServico,
+        valor: valor,
+        cpf: cpfFuncionario,
+        formapagamento: formaPagamento,
+        idagendamento: idAgendamento,
+      });
+
+      console.log(novaVenda);
+
+      res.json({ message: "✅ Agendamento registrado com sucesso!" });
+    } catch (error){
+      console.error("❌ Erro ao registrar agendamento:", error);
+      res
+        .status(500)
+        .json({ message: "Erro ao registrar agendamento.", error: error.message });
+    }
+
+  },
+//Lista todos os agendamentos
   async listar_agendamentos(req, res) {
       try {
         // Busca todos os serviços no banco de dados

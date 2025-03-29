@@ -22,7 +22,7 @@
           <div class="form-group">
             <label for="dataServico">Data do serviço:</label>
             <input
-              type="text"
+              type="date"
               id="dataServico"
               placeholder="DD/MM/AAAA"
               required
@@ -30,19 +30,14 @@
           </div>
           <div class="form-group">
             <label for="horaServico">Hora:</label>
-            <input type="text" id="horaServico" placeholder="HH:MM" required />
+            <input type="time" id="horaServico" placeholder="HH:MM" required />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="valorTotal">Valor Total:</label>
-            <input
-              type="text"
-              id="valorTotal"
-              placeholder="R$ 00,00"
-              required
-            />
+            <label for="valor">Valor Total:</label>
+            <input type="text" id="valor" placeholder="R$ 00,00" required />
           </div>
           <div class="form-group">
             <label for="servico">Serviço:</label>
@@ -54,10 +49,10 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="funcionarioCPF">Funcionário (CPF):</label>
+            <label for="funcionario">Funcionário (CPF):</label>
             <input
               type="text"
-              id="funcionarioCPF"
+              id="funcionario"
               placeholder="000.000.000-00"
               required
             />
@@ -93,28 +88,24 @@
             </div>
           </div>
         </div>
-      </form>
-    </div>
 
-    <div class="section-divider">Dados do Veículo</div>
+        <div class="section-divider">Dados do Veículo</div>
 
-    <div class="modal-body">
-      <form id="formAgendarServico">
         <div class="form-row">
           <div class="form-group">
-            <label for="nomeCliente">Nome do Cliente:</label>
+            <label for="nome">Nome do Cliente:</label>
             <input
               type="text"
-              id="nomeCliente"
+              id="nome"
               placeholder="Insira o nome do Cliente"
               required
             />
           </div>
           <div class="form-group">
-            <label for="telefoneCliente">Telefone:</label>
+            <label for="telefone">Telefone:</label>
             <input
               type="text"
-              id="telefoneCliente"
+              id="telefone"
               placeholder="(XX) XXXXX-XXXX"
               required
             />
@@ -125,7 +116,7 @@
           <div class="form-group">
             <label for="dataEntrada">Data de entrada:</label>
             <input
-              type="text"
+              type="date"
               id="dataEntrada"
               placeholder="DD/MM/AAAA"
               required
@@ -144,26 +135,25 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label for="modeloVeiculo">Modelo:</label>
+            <label for="modelo">Modelo:</label>
             <input
               type="text"
-              id="modeloVeiculo"
+              id="modelo"
               placeholder="Insira o modelo"
               required
             />
           </div>
           <div class="form-group">
-            <label for="corVeiculo">Cor:</label>
-            <input type="text" id="corVeiculo" placeholder="Cor" required />
+            <label for="cor">Cor:</label>
+            <input type="text" id="cor" placeholder="Cor" required />
           </div>
           <div class="form-group">
-            <label for="placaVeiculo">Placa:</label>
-            <input
-              type="text"
-              id="placaVeiculo"
-              placeholder="XXXX XXXX"
-              required
-            />
+            <label for="ano">Ano:</label>
+            <input type="text" id="ano" placeholder="XXXX" required />
+          </div>
+          <div class="form-group">
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" placeholder="XXXX XXXX" required />
           </div>
         </div>
 
@@ -201,8 +191,109 @@
     }
   }
 
+  // Máscara para CPF
+  document
+    .getElementById("funcionario")
+    .addEventListener("input", async function (event) {
+      let cpf = event.target.value;
+      cpf = cpf.replace(/\D/g, "");
+
+      if (cpf.length > 11) {
+        cpf = cpf.substring(0, 11);
+      }
+
+      if (cpf.length > 9) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      } else if (cpf.length > 6) {
+        cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})/, "$1.$2.$3");
+      } else if (cpf.length > 3) {
+        cpf = cpf.replace(/(\d{3})(\d{3})/, "$1.$2");
+      }
+
+      event.target.value = cpf;
+    });
+
+  // Máscara para o valor total
+  document.getElementById("valor").addEventListener("input", function (event) {
+    let valor = event.target.value;
+    valor = valor.replace(/\D/g, "");
+    valor = (parseInt(valor || "0") / 100).toFixed(2);
+    valor = "R$ " + valor.replace(".", ",");
+
+    event.target.value = valor;
+  });
+
   // Chamar função ao carregar a página
   document.addEventListener("DOMContentLoaded", carregarServicos);
+
+  // Envio do formulário
+  document
+    .getElementById("formAgendarServico")
+    .addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const dataServico = document.getElementById("dataServico").value;
+      const hora = document.getElementById("horaServico").value;
+      const valor = parseFloat(
+        document
+          .getElementById("valor")
+          .value.replace("R$", "")
+          .replace(",", ".")
+      );
+      const idservico = document.getElementById("servico").value;
+      const cpfFuncionario = document.getElementById("funcionario").value;
+      const status = document.getElementById("status").value;
+
+      let formaPagamento = "";
+      document.getElementsByName("pagamento").forEach((opcao) => {
+        if (opcao.checked) formaPagamento = opcao.value;
+      });
+
+      const nome = document.getElementById("nome").value;
+      const telefone = document.getElementById("telefone").value;
+      const dataEntrada = document.getElementById("dataEntrada").value;
+      const tipoveiculo = document.getElementById("tipoVeiculo").value;
+      const ano = document.getElementById("ano").value;
+      const placa = document.getElementById("placa").value;
+      const cor = document.getElementById("cor").value;
+      const modelo = document.getElementById("modelo").value;
+
+      try {
+        const response = await fetch("/servico/agendarservico", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            dataServico,
+            hora,
+            valor,
+            idservico,
+            cpfFuncionario,
+            status,
+            formaPagamento,
+            nome,
+            telefone,
+            dataEntrada,
+            tipoveiculo,
+            ano,
+            placa,
+            cor,
+            modelo,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Erro ao agendar serviço.");
+        }
+
+        alert("✅ Serviço Agendado com sucesso!");
+        fecharModal("modalAgendarServico");
+        document.getElementById("formAgendarServico").reset();
+      } catch (error) {
+        alert(`❌ ${error.message}`);
+      }
+    });
 
   // Função para fechar o modal
   function fecharModal2(idModal) {

@@ -30,6 +30,27 @@ export const Venda = database.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    idagendamento: {
+      type: DataTypes.STRING(14),
+      references: {
+        model: "agendamento", // Nome da tabela referenciada
+        key: "idagendamento", // Chave primária da tabela referenciada
+      },
+    },
+    idabastecimento: {
+      type: DataTypes.STRING(14),
+      references: {
+        model: "abastecimento", // Nome da tabela referenciada
+        key: "idabastecimento", // Chave primária da tabela referenciada
+      },
+    },
+    iditemvenda: {
+      type: DataTypes.STRING(14),
+      references: {
+        model: "itemvenda", // Nome da tabela referenciada
+        key: "iditemvenda", // Chave primária da tabela referenciada
+      },
+    },
   },
   {
     tableName: "venda",
