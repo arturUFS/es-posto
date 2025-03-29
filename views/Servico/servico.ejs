@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gas Station - Serviços</title>
-    <link rel="stylesheet" href="assets/css/pages_initials.css" />
+    <link rel="stylesheet" href="/assets/css/pages_initials.css" />
     <link
       rel="stylesheet"
       href="/assets/css/modais-servico/cadastrar_servico.css"
@@ -83,6 +83,14 @@
       .addEventListener("click", () => abrirModal("modalAgendarServico"));
 
     document
+      .getElementById("consultar-servico")
+      .addEventListener("click", () => abrirModal("modalConsultarServico"));
+
+    document
+      .getElementById("consultar-agendamento")
+      .addEventListener("click", () => abrirModal("modalConsultarAgendamento"));
+
+    document
       .getElementById("listar-agendamentos")
       .addEventListener("click", () => abrirModal("modalListarAgendamentos"));
 
@@ -90,6 +98,7 @@
       .getElementById("consultar-servico")
       .addEventListener("click", () => abrirModal("modalConsultarServico"));
 
+        
     // Fechar modal ao clicar fora
     window.onclick = function (event) {
       if (event.target.classList.contains("modal")) {
