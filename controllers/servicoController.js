@@ -1,6 +1,8 @@
 import { Servico } from "../models/servico.js";
 import { Agendamento } from "../models/agendamento.js";
+import { Agendamento } from "../models/agendamento.js";
 import { Venda } from "../models/venda.js";
+import { Veiculo } from "../models/veiculo.js";
 import { Veiculo } from "../models/veiculo.js";
 import { Funcionario } from "../models/funcionario.js";
 
@@ -51,10 +53,12 @@ export const servicoController = {
   },
 
   // Lista todos os serviços
+  // Lista todos os serviços
   async listar(req, res) {
     try {
       // Busca todos os servicos no banco de dados
       const servicos = await Servico.findAll({
+        attributes: ["idservico", "tiposervico"], // Apenas os campos necessários
         attributes: ["idservico", "tiposervico"], // Apenas os campos necessários
       });
 
