@@ -164,7 +164,7 @@ export const servicoController = {
       });
 
       //Registra a venda
-      const novaVenda = await Venda.create({
+      await Venda.create({
         codigo: idVenda,
         data: dataServico,
         valor: valor,
@@ -172,8 +172,6 @@ export const servicoController = {
         formapagamento: formaPagamento,
         idagendamento: idAgendamento,
       });
-
-      console.log(novaVenda);
 
       res.json({ message: "✅ Agendamento registrado com sucesso!" });
     } catch (error) {
