@@ -1,6 +1,5 @@
 /* Modal Listar Quantidade de Combustível Disponível */
 
-/* Corpo do Modal */
 .modal-body {
   padding: 20px;
   overflow-y: auto;
@@ -9,7 +8,6 @@
   flex-direction: column;
 }
 
-/* Tabela de Funcionários */
 .table-container {
   width: 100%;
   justify-self: center;
@@ -24,7 +22,7 @@
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
-  table-layout: fixed; /* 🔥 Garante que todas as colunas tenham o mesmo tamanho */
+  table-layout: fixed;
 }
 
 .combustiveis-table th,
@@ -32,7 +30,7 @@
   padding: 12px;
   text-align: center;
   border-bottom: 1px solid white;
-  white-space: nowrap; /* 🔥 Impede que o texto quebre para outra linha */
+  white-space: nowrap; 
 }
 
 .combustiveis-table th {

@@ -75,6 +75,9 @@ export const produtoController = {
     }
   },
 
+  /*
+    Lista os produtos
+  */
   async listar(req, res) {
     try {
       // Busca todos os produtos no banco de dados

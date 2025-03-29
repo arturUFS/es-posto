@@ -76,7 +76,9 @@ export const fornecedorController = {
     }
   },
 
-  // Lista todos os fornecedores
+  /*
+    Lista todos os fornecedores
+  */
   async listar(req, res) {
     try {
       // Busca todos os fornecedores no banco de dados
@@ -92,6 +94,9 @@ export const fornecedorController = {
     }
   },
 
+  /*
+    Consulta os fornecedores pelo seu cnpj
+  */
   async consultar(req, res) {
     try {
       var { cnpj } = req.params;

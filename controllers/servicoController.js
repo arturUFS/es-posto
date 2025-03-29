@@ -23,6 +23,9 @@ export const servicoController = {
     }
   },
 
+  /*
+    Cadastra um novo serviço no banco de dados
+  */
   async cadastrar(req, res) {
     try {
       const { tiposervico, valor, duracao, local, descricao } = req.body;
@@ -66,7 +69,9 @@ export const servicoController = {
       res.status(500).json({ message: "Erro no servidor" });
     }
   },
-
+  /*
+    Agenda um novo serviço para um veículo
+  */
   async agendar_servico(req, res) {
     try {
       const {
@@ -187,7 +192,7 @@ export const servicoController = {
     try {
       // Busca todos os agendamentos no banco de dados
       const agendamentos = await Agendamento.findAll({
-        attributes: ["idagendamento","data", "idservico", "idplaca", "status"], // Apenas os campos necessários
+        attributes: ["idagendamento", "data", "idservico", "idplaca", "status"], // Apenas os campos necessários
       });
 
       // Retorna os serviços como JSON (para consumo no front-end)
@@ -317,7 +322,7 @@ export const servicoController = {
     try {
       const { idagendamento } = req.params;
 
-      const agendamento = await  Agendamento.findByPk(idagendamento);
+      const agendamento = await Agendamento.findByPk(idagendamento);
       const venda = await Venda.findOne({ where: { idagendamento } });
       if (!agendamento) {
         return res.status(404).json({ message: "Agendamento não encontrado" });

@@ -104,7 +104,9 @@ export const funcionarioController = {
     }
   },
 
-  // Lista todos os funcionários
+  /*
+    Lista todos os funcionários
+  */
   async listar(req, res) {
     try {
       // Busca todos os funcionários no banco de dados
@@ -122,6 +124,9 @@ export const funcionarioController = {
     }
   },
 
+  /*
+    Consulta o funcionário pelo seu cpf
+  */
   async consultar(req, res) {
     try {
       const { cpf } = req.params;

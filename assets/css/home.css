@@ -1,3 +1,4 @@
+/* Modal Home */
 * {
   margin: 0;
   padding: 0;
@@ -85,7 +86,7 @@ body {
 }
 
 .menu li a img {
-  filter: brightness(0); /* Transforma branco em preto */
+  filter: brightness(0);
 }
 
 .menu a {

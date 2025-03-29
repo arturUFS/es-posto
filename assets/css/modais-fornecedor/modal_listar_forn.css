@@ -1,6 +1,5 @@
-/* Modal Listar Funcionários */
+/* Modal Listar Fornecedores */
 
-/* Corpo do Modal */
 .modal-body {
   padding: 20px;
   overflow-y: auto;
@@ -9,7 +8,6 @@
   flex-direction: column;
 }
 
-/* Tabela de Funcionários */
 .table-container {
   width: 100%;
   overflow-x: auto;

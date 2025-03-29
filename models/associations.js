@@ -91,18 +91,21 @@ Produto.belongsToMany(Fornecedor, {
 });
 
 //Venda - ItemVenda
+
 Venda.belongsTo(ItemVenda, {
   foreignKey: "iditemvenda",
   as: "itemvenda",
 });
 
 //Venda - Abastecimento
+
 Venda.belongsTo(Abastecimento, {
   foreignKey: "idabastecimento",
   as: "abastecimento",
 });
 
 //Venda - Abastecimento
+
 Venda.belongsTo(Agendamento, {
   foreignKey: "idagendamento",
   as: "agendamento",

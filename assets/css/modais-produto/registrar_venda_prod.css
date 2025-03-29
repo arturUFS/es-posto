@@ -1,4 +1,5 @@
 /* Modal Registro de Venda de Produto */
+
 .modal {
   display: none;
   position: fixed;
@@ -142,7 +143,7 @@ input[type="checkbox"] {
   background-color: #1a1a1a;
 }
 
-/* Estilos específicos para o layout de checkboxes */
+
 .checkbox-container {
   display: flex;
   gap: 35px;
