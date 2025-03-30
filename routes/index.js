@@ -178,7 +178,7 @@ router.delete(
   "/servico/excluir_agendamento/:idagendamento",
   servicoController.excluir_agendamento
 );
-router.get("servico/listar_agendamentos", servicoController.listar_agendamentos);
+
 
 // Rota para consultar agendamento específico
 router.get("/servico/agendamentos/:idagendamento", servicoController.consultar);

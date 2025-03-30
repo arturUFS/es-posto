@@ -114,7 +114,7 @@
     // Função para carregar os serviços no select
     async function carregarServicos() {
       try {
-        const response = await fetch("/servicos/listar");
+        const response = await fetch("/servico/listar");
         if (response.ok) {
           const servicos = await response.json();
           const selectServico = document.getElementById("servico2");
@@ -123,7 +123,7 @@
           servicos.forEach((servico) => {
             const option = document.createElement("option");
             option.value = servico.idservico;
-            option.textContent = servico.nome;
+            option.textContent = servico.tiposervico;
             selectServico.appendChild(option);
           });
         }
@@ -142,14 +142,14 @@
       }
   
       try {
-        const response = await fetch(`/servicos/consultar/${idServico}`);
+        const response = await fetch(`/servico/consultar/${idServico}`);
         if (!response.ok) {
           throw new Error("Serviço não encontrado.");
         }
   
         const servico = await response.json();
   
-        document.getElementById("nomeServico2").value = servico.nome;
+        document.getElementById("nomeServico2").value = servico.tiposervico;
         const valor = servico.valor ? parseFloat(servico.valor) : 0;
         document.getElementById("valorServico2").value = `R$ ${valor.toFixed(2).replace(".", ",")}`;
         document.getElementById("descricaoServico2").value = servico.descricao || "";
@@ -185,7 +185,7 @@
       }
   
       try {
-        const response = await fetch(`/servicos/atualizar/${idServico}`, {
+        const response = await fetch(`/servico/atualizar/${idServico}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -235,7 +235,7 @@
     // Função para excluir o serviço
     async function excluirServico(idServico) {
       try {
-        const response = await fetch(`/servicos/excluir/${idServico}`, {
+        const response = await fetch(`/servico/excluir/${idServico}`, {
           method: "DELETE"
         });
   
