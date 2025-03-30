@@ -1,0 +1,452 @@
+<div id="modalConsultarAgendamento" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="back-button" onclick="fecharOuVoltarAgendamento()">
+          <i class="arrow-left"><img src="/assets/Icon (1).png" alt="voltar"/></i>
+        </button>
+        <h2>Consultar Agendamento</h2>
+        <button class="home-button" onclick="window.location.href='/home'">
+          <i class="home-icon"><img src="/assets/home-lg-alt 1.png" alt="home"/></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <!-- Tela de Consulta -->
+        <div id="telaConsultaAgendamento" class="center-content">
+          <form id="consultaFormAgendamento">
+            <div class="form-group">
+              <label for="agendamentoSelect">Agendamento:</label>
+              <select id="agendamentoSelect" required>
+                <option value="" disabled selected>Selecione o agendamento</option>
+              </select>
+            </div>
+            <div class="form-btn-cons" style="margin-top: 20px">
+              <button type="button" class="consultar-btn" onclick="consultarAgendamento()">
+                Consultar
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Tela de Resultado -->
+        <div id="resultadoConsultaAgendamento" style="display: none;">
+          <form id="formConsultarAgendamento">
+            <div class="section-divider">Dados do Serviço</div>
+
+    <div class="modal-body">
+      <form id="formAgendarServico">
+        <div class="form-row">
+          <div class="form-group">
+            
+            <label for="dataServico3">Data do serviço:</label>
+            <input
+              type="date"
+              id="dataServico3"
+              placeholder="DD/MM/AAAA"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="horaServico3">Hora:</label>
+            <input type="time" id="horaServico3" placeholder="HH:MM" readonly />
+          </div>
+          <div class="action-buttons">
+              <button
+                type="button"
+                class="edit-btn"
+                onclick="habilitarEdicao()"
+              >
+                <i class="edit-icon"
+                  ><img id="lapis" src="/assets/Vector (3).png" alt="editar"
+                /></i>
+              </button>
+              <button class="delete-btn" onclick="confirmarExclusaoAgendamento()" >
+                <i class="delete-icon"
+                  ><img src="/assets/Vector (4).png" alt="excluir"
+                /></i>
+              </button>
+            </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valor3">Valor Total:</label>
+            <input type="text" id="valor3" placeholder="R$ 00,00" readonly />
+          </div>
+           <div class="form-group">
+              <label for="servico3">Serviço:</label>
+              <input type="text" id="servico3" readonly />
+              <select id="selectServico" style="display: none"></select>
+            </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="funcionario3">Funcionário (CPF):</label>
+            <input
+              type="text"
+              id="funcionario3"
+              placeholder="000.000.000-00"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="status3">Status:</label>
+          <input type ="text" id="status3" readonly/>
+            <select id="selectStatus" style="display: none">
+              <option value="pendente" selected>Pendente</option>
+              <option value="concluido">Concluído</option>
+              <option value="em_andamento">Em andamento</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row formas-pagamento">
+          <div class="form-group">
+            <label>Forma de Pagamento:</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" name="pagamento" value="dinheiro" readonly />
+                Dinheiro
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="pix" readonly/> PIX
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="credito" readonly/>
+                Crédito
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="debito" readonly/> Débito
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="section-divider">Dados do Veículo</div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome3">Nome do Cliente:</label>
+            <input
+              type="text"
+              id="nome3"
+              placeholder="Insira o nome do Cliente"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="telefone3">Telefone:</label>
+            <input
+              type="text"
+              id="telefone3"
+              placeholder="(XX) XXXXX-XXXX"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataEntrada3">Data de entrada:</label>
+            <input
+              type="date"
+              id="dataEntrada3"
+              placeholder="DD/MM/AAAA"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipoVeiculo3">Tipo do veículo:</label>
+            <input
+              type="text"
+              id="tipoVeiculo3"
+              placeholder="Categoria do veículo"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modelo3">Modelo:</label>
+            <input
+              type="text"
+              id="modelo3"
+              placeholder="Insira o modelo"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="cor3">Cor:</label>
+            <input type="text" id="cor3" placeholder="Cor" readonly />
+          </div>
+          <div class="form-group">
+            <label for="ano3">Ano:</label>
+            <input type="text" id="ano3" placeholder="XXXX" readonly />
+          </div>
+          <div class="form-group">
+            <label for="placa3">Placa:</label>
+            <input type="text" id="placa3" placeholder="XXXX XXXX" readonly />
+          </div>
+        </div>
+            <div id="botoesEdicao" style="display: none">
+            <div class="form-btn-res">
+              <button
+                type="button"
+                class="save-btn"
+                onclick="salvarAlteracoes()"
+              >
+                Salvar
+              </button>
+              <button
+                type="button"
+                class="cancel-btn"
+                onclick="cancelarEdicao()"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+   
+   document.addEventListener("DOMContentLoaded", function() {
+       carregarAgendamentos2();
+    });
+  
+    // Função para carregar os agendamentos no select
+    async function carregarAgendamentos2() {
+      try {
+        const response = await fetch("/servico/listar_agendamentos");
+        if (response.ok) {
+          const agendamentos = await response.json();
+          const selectAgendamento = document.getElementById("agendamentoSelect");
+  
+          selectAgendamento.innerHTML = '<option value="" disabled selected>Selecione o agendamento</option>';
+          agendamentos.forEach(agendamento => {
+            const option = document.createElement("option");
+            option.value = agendamento.idagendamento;
+            option.textContent = agendamento.idplaca;
+            selectAgendamento.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.log("Carregando agendamentos...");
+      }
+    }
+// Função para carregar os fornecedores e preencher o select
+  async function carregarServicos() {
+    try {
+      const response = await fetch("/servico/listar");
+      if (!response.ok) {
+        throw new Error("Erro ao carregar serviços.");
+      }
+
+      const servicos = await response.json();
+      const selectServico = document.getElementById("selectServico");
+
+      // Limpa as opções existentes (exceto a padrão)
+      selectServico.innerHTML =
+        '<option value="" disabled selected>Selecione o serviço</option>';
+
+   
+      servicos.forEach((servico) => {
+        const option = document.createElement("option");
+        option.value = servico.idservico; // O valor será o CNPJ
+        option.textContent = servico.tiposervico; // O texto será o nome do servico
+
+        // Se for o servico atual, já seleciona ele
+        if (servico.tiposervico === document.getElementById("servico3").value) {
+          option.selected = true;
+        }
+
+        selectServico.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+    // Consulta um agendamento específico
+    async function consultarAgendamento() {
+      const idAgendamento = document.getElementById("agendamentoSelect").value;
+  
+      if (!idAgendamento) {
+        alert("Por favor, selecione um agendamento.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/servico/agendamentos/${idAgendamento}`);
+        if (!response.ok) throw new Error("Agendamento não encontrado.");
+  
+        const { agendamento, funcionario, veiculo, servico, venda } = await response.json();
+    
+
+      //Preenche os dados
+      document.getElementById("dataServico3").value = agendamento.data.split('T')[0];
+      // Preenche hora (formato HH:MM)
+      document.getElementById("horaServico3").value = agendamento.hora || "00:00";
+
+      document.getElementById("valor3").value = `R$ ${parseFloat(agendamento.valor)
+      .toFixed(2)
+      .replace(".", ",")}`;
+
+      // Preenche select "servico" (supondo que servico.id_servico seja o value da opção)
+      document.getElementById("servico3").value = servico.tiposervico;
+
+      // Preenche funcionário (CPF)
+      document.getElementById("funcionario3").value = funcionario.cpf || "";
+
+      // Preenche status
+      document.getElementById("status3").value = agendamento.status || "pendente";
+
+        // Preenche as formas de pagamento
+        const formasPagamento = venda.formapagamento; 
+        const checkboxes = document.querySelectorAll('input[name="pagamento"]');
+
+        checkboxes.forEach(checkbox => {
+            if (formasPagamento.includes(checkbox.value)) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
+
+        document.getElementById("placa3").value = veiculo.idplaca;
+        document.getElementById("nome3").value = veiculo.nomeresponsavel || "Não informado";
+        document.getElementById("telefone3").value = veiculo.telefone || "Não informado";
+        document.getElementById("dataEntrada3").value = veiculo.dataentrada || "Não informado";
+        document.getElementById("tipoVeiculo3").value = veiculo.tipoveiculo || "Não informado";
+        document.getElementById("ano3").value = veiculo.ano || "Não informado";
+        document.getElementById("cor3").value = veiculo.cor || "Não informado";
+        document.getElementById("modelo3").value = veiculo.modelo || "Não informado";
+        
+    
+        // Mostra resultado e esconde consulta
+        document.getElementById("telaConsultaAgendamento").style.display = "none";
+        document.getElementById("resultadoConsultaAgendamento").style.display = "block";
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função para habilitar edição
+    function habilitarEdicao() {
+
+      // Obtém os elementos do input e do select
+        const statusInput = document.getElementById('status3');
+        const selectStatus = document.getElementById('selectStatus');
+
+        // Define o valor do select com base no valor do input
+        const status = statusInput.value;
+
+        // Atualiza a seleção do selectStatus
+        if (status === 'Pendente') {
+          selectStatus.value = 'pendente';
+        } else if (status === 'Concluído') {
+          selectStatus.value = 'concluido';
+        } else if (status === 'Em andamento') {
+          selectStatus.value = 'em_andamento';
+        }
+
+      document.getElementById("selectStatus").style.display = "block";
+      document.getElementById("status3").style.display  = "none";
+
+      document.getElementById("botoesEdicao").style.display = "block";
+      document.getElementById("lapis").style.visibility = "hidden";
+    }
+  
+    // Função para salvar alterações
+    async function salvarAlteracoes() {
+      const idAgendamento = document.getElementById("agendamentoSelect").value;
+      const status = document.getElementById("selectStatus").value;
+  
+      try {
+        const response = await fetch(`/servico/atualizar_agendamento/${idAgendamento}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            status
+          }),
+        });
+  
+        if (!response.ok) throw new Error("Erro ao atualizar agendamento.");
+  
+        alert("Agendamento atualizado com sucesso!");
+        cancelarEdicao();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função para cancelar edição
+    function cancelarEdicao() {
+      document.getElementById("selectStatus").style.display = "none";
+      document.getElementById("status3").disabled = false;
+      document.getElementById("botoesEdicao").style.display = "none";
+      document.getElementById("lapis").style.visibility = "visible";
+    }
+  
+    // Função para confirmar exclusão
+    function confirmarExclusaoAgendamento() {
+      const idAgendamento = document.getElementById("agendamentoSelect").value;
+      
+      if (!idAgendamento) {
+        alert("Nenhum agendamento selecionado para exclusão.");
+        return;
+      }
+  
+      if (confirm("Tem certeza que deseja excluir este agendamento?")) {
+        excluirAgendamento(idAgendamento);
+      }
+    }
+  
+    // Função para excluir agendamento
+    async function excluirAgendamento(idAgendamento) {
+      try {
+        const response = await fetch(`/servico/excluir_agendamento/${idAgendamento}`, {
+          method: "DELETE"
+        });
+  
+        if (!response.ok) throw new Error("Erro ao excluir agendamento.");
+  
+        alert("Agendamento excluído com sucesso!");
+        fecharOuVoltarAgendamento();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função auxiliar para formatar data
+    function formatarData(dataString) {
+      const data = new Date(dataString);
+      return data.toLocaleDateString('pt-BR');
+    }
+  
+    // Função para fechar ou voltar
+    function fecharOuVoltarAgendamento() {
+      const resultado = document.getElementById("resultadoConsultaAgendamento");
+      const consulta = document.getElementById("telaConsultaAgendamento");
+  
+      if (resultado.style.display !== "none") {
+        resultado.style.display = "none";
+        consulta.style.display = "flex";
+        cancelarEdicaoAgendamento();
+      } else {
+        document.getElementById("modalConsultarAgendamento").style.display = "none";
+      }
+  
+      document.getElementById("consultaFormAgendamento").reset();
+      document.getElementById("formConsultarAgendamento").reset();
+      document.getElementById("agendamentoSelect").value = "";
+    }
+  </script>

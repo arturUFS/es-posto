@@ -3,6 +3,7 @@ import { Agendamento } from "../models/agendamento.js";
 import { Venda } from "../models/venda.js";
 import { Veiculo } from "../models/veiculo.js";
 import { Funcionario } from "../models/funcionario.js";
+import { FuncionarioAgendamento } from "../models/funcionario_agendamento.js";
 
 function gerarIdServico() {
   return Math.random().toString(36).substring(2, 17); // Gera um ID de 15 caracteres
@@ -177,6 +178,12 @@ export const servicoController = {
         idagendamento: idAgendamento,
       });
 
+      await FuncionarioAgendamento.create({
+        cpf: cpfFuncionario,
+        idagendamento: idAgendamento,
+      });
+
+
       res.json({ message: "✅ Agendamento registrado com sucesso!" });
     } catch (error) {
       console.error("❌ Erro ao registrar agendamento:", error);
@@ -337,4 +344,49 @@ export const servicoController = {
         .json({ message: "Erro ao excluir agendamento", error: error.message });
     }
   },
+
+  async consultarAgendamento(req, res) {
+    try {
+      const { idagendamento } = req.params;
+
+      const agendamento = await Agendamento.findOne({
+        where: { idagendamento },
+      });
+
+      const servico = await Servico.findOne({
+        where: { idservico: agendamento.idservico },
+      });
+
+      if (!agendamento) {
+        return res.status(404).json({ message: "Agendamento não encontrado" });
+      }
+
+      const veiculo = await Veiculo.findByPk(agendamento.idplaca);
+
+      // Buscar funcionários associados ao agendamento
+      const funcionarioAgendamento = await FuncionarioAgendamento.findOne({
+        where: { idagendamento: agendamento.idagendamento },
+      });
+
+      const venda = await Venda.findOne({
+        where: { idagendamento: agendamento.idagendamento },
+      });
+
+      const funcionario = await Funcionario.findByPk(
+        funcionarioAgendamento.cpf
+      );
+
+      res.json({
+        agendamento,
+        funcionario,
+        veiculo,
+        servico,
+        venda,
+      });
+    } catch (error) {
+      console.error("Erro ao consultar agendamento:", error);
+      res.status(500).json({ message: "Erro no servidor" });
+    }
+  },
+
 };

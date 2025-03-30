@@ -21,6 +21,10 @@
       rel="stylesheet"
       href="/assets/css/modais-servico/modal_listar_agendamentos.css"
     />
+    <link
+      rel="stylesheet"
+      href="/assets/css/modais-servico/modal_consultar_agendamento.css"
+    />
     <style>
       .menu li:nth-child(4) a {
         background-color: #c31010;
@@ -60,8 +64,9 @@
       <button id="listar-agendamentos">Listar Agendamentos</button>
     </div>
     <%- include('modal_cadastrar') %><%- include('modal_agendar_servico') %> <%-
-    include('modal_listar_agendamentos') %> <%-
-    include('modal_consultar_servico') %>
+    include('modal_listar_agendamentos') %> 
+    <%- include('modal_consultar_servico') %>
+    <%- include('modal_consultar_agendamento') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
@@ -89,6 +94,10 @@
     document
       .getElementById("consultar-servico")
       .addEventListener("click", () => abrirModal("modalConsultarServico"));
+
+    document
+      .getElementById("consultar-agendamento")
+      .addEventListener("click", () => abrirModal("modalConsultarAgendamento"));
 
     // Fechar modal ao clicar fora
     window.onclick = function (event) {
