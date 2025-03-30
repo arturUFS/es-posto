@@ -58,7 +58,7 @@
         return;
       }
       const mapaServicos = await buscarServicos();
-      console.log(agendamentos);
+     
       agendamentos.forEach((agendamento) => {
         const tr = document.createElement("tr");
 
@@ -73,13 +73,13 @@
         <td>${agendamento.idplaca}</td>
         <td>${statusFormatado}</td>
         <td class="action-buttons">
-            <button class="view-button" onclick="consultarAgendamento('${agendamento.idagendamento}')">
+            <button class="view-button" onclick="consultarAgendamentoListar('${agendamento.idagendamento}')">
                 <img src="/assets/Icon.png" alt="Consultar" width="16">
             </button>
-            <button class="edit-button" onclick="editarAgendamento('${agendamento.idagendamento}')">
+            <button class="edit-button" onclick="editarAgendamentoListar('${agendamento.idagendamento}')">
                 <img src="/assets/Vector (3).png" alt="Editar" width="16">
             </button>
-            <button class="delete-button" onclick="confirmarExclusaoAgendamento('${agendamento.idagendamento}', '${agendamento.idplaca}')">
+            <button class="delete-button" onclick="confirmarExclusaoAgendamentoListar('${agendamento.idagendamento}', '${agendamento.idplaca}')">
                 <img src="/assets/Vector (4).png" alt="Excluir" width="16">
             </button>
           </td>
@@ -183,38 +183,93 @@
     // Reanexando as linhas ordenadas na tabela
     linhas.forEach((linha) => tabela.appendChild(linha));
   }
-  // function consultarAgendamento(idagendamento) {
-  //   fetch(`/servico/consultar_agendamento/${idagendamento}`)
-  //     .then((response) => response.json())
-  //     .then((produto) => {
-  //       // Preenche o modal de consulta com os dados
-  //       preencherFormulario(produto);
-  //       // Abre o modal de consulta
-  //       fecharModal("modalListarAgendamento");
-  //       document.getElementById("modalConsultarAgendamento").style.display =
-  //         "block";
-  //       document.getElementById("telaConsulta").style.display = "none";
-  //       document.getElementById("resultadoConsulta").style.display = "block";
-  //     })
-  //     .catch((error) => {
-  //       alert("Erro ao carregar produto: " + error.message);
-  //     });
-  // }
 
-  // function editarAgendamento(idagendamento) {
-  //       consultarAgendamento(idagendamento); // Carrega os dados no modal
-  //       habilitarEdicao(); // Habilita a edição diretamente
-  //   }
-  function confirmarExclusaoAgendamento(idagendamento, idplaca) {
+  // Consulta um agendamento específico
+  async function consultarAgendamentoListar(idAgendamento) {
+      
+  
+      if (!idAgendamento) {
+        alert("Por favor, selecione um agendamento.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/servico/agendamentos/${idAgendamento}`);
+        if (!response.ok) throw new Error("Agendamento não encontrado.");
+  
+        const { agendamento, funcionario, veiculo, servico, venda } = await response.json();
+    
+
+      //Preenche os dados
+      document.getElementById("agendamentoSelect").value = idAgendamento;
+
+      //Preenche os dados
+      document.getElementById("dataServico3").value = agendamento.data.split('T')[0];
+      // Preenche hora (formato HH:MM)
+      document.getElementById("horaServico3").value = agendamento.hora || "00:00";
+
+      document.getElementById("valor3").value = `R$ ${parseFloat(agendamento.valor)
+      .toFixed(2)
+      .replace(".", ",")}`;
+
+      // Preenche select "servico" (supondo que servico.id_servico seja o value da opção)
+      document.getElementById("servico3").value = servico.tiposervico;
+
+      // Preenche funcionário (CPF)
+      document.getElementById("funcionario3").value = funcionario.cpf || "";
+
+      // Preenche status
+      document.getElementById("status3").value = agendamento.status || "pendente";
+
+        // Preenche as formas de pagamento
+        const formasPagamento = venda.formapagamento; 
+        const checkboxes = document.querySelectorAll('input[name="pagamento"]');
+
+        checkboxes.forEach(checkbox => {
+            if (formasPagamento.includes(checkbox.value)) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
+
+        document.getElementById("placa3").value = veiculo.idplaca;
+        document.getElementById("nome3").value = veiculo.nomeresponsavel || "Não informado";
+        document.getElementById("telefone3").value = veiculo.telefone || "Não informado";
+        document.getElementById("dataEntrada3").value = veiculo.dataentrada || "Não informado";
+        document.getElementById("tipoVeiculo3").value = veiculo.tipoveiculo || "Não informado";
+        document.getElementById("ano3").value = veiculo.ano || "Não informado";
+        document.getElementById("cor3").value = veiculo.cor || "Não informado";
+        document.getElementById("modelo3").value = veiculo.modelo || "Não informado";
+
+        fecharModal("modalListarAgendamentos"); // Fecha o modal de listagem
+        document.getElementById("modalConsultarAgendamento").style.display = "block"; // Abre o modal de consulta
+        document.getElementById("telaConsultaAgendamento").style.display = "block"; // Mostra tela de consulta
+        
+    
+        // Mostra resultado e esconde consulta
+        document.getElementById("telaConsultaAgendamento").style.display = "none";
+        document.getElementById("resultadoConsultaAgendamento").style.display = "block";
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+
+    function editarAgendamentoListar(idagendamento) {
+        consultarAgendamentoListar(idagendamento); // Carrega os dados no modal
+        habilitarEdicao(); // Habilita a edição diretamente
+    }
+
+  function confirmarExclusaoAgendamentoListar(idagendamento, idplaca) {
     if (
       confirm(
         `Tem certeza que deseja excluir o agendamento do carro ${idplaca} (id: ${idagendamento})?`
       )
     ) {
-      excluirAgendamento(idagendamento);
+      excluirAgendamentoListar(idagendamento);
     }
   }
-   function excluirAgendamento(idagendamento) {
+   function excluirAgendamentoListar(idagendamento) {
         fetch(`/servico/excluir_agendamento/${idagendamento}`, { method: 'DELETE' })
             .then(response => {
             if (response.ok) {
