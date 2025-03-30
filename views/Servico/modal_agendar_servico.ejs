@@ -226,6 +226,22 @@
       event.target.value = cpf;
     });
 
+    // Máscara de Telefone ((XX) XXXXX-XXXX)
+  document
+    .getElementById("telefone")
+    .addEventListener("input", function (event) {
+      let telefone = event.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+      if (telefone.length > 2) {
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+      }
+      if (telefone.length > 7) {
+        telefone = telefone.replace(/^((\d{2}) \d{5})(\d)/, "$1-$2");
+      }
+
+      event.target.value = telefone;
+    });
+
   // Máscara para o valor total
   document.getElementById("valor").addEventListener("input", function (event) {
     let valor = event.target.value;

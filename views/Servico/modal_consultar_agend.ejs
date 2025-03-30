@@ -31,76 +31,150 @@
         <!-- Tela de Resultado -->
         <div id="resultadoConsultaAgendamento" style="display: none;">
           <form id="formConsultarAgendamento">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="dataAgendamento">Data:</label>
-                <input type="text" id="dataAgendamento" readonly />
-              </div>
-              <div class="form-group">
-                <label for="horaAgendamento">Hora:</label>
-                <input type="text" id="horaAgendamento" readonly />
-              </div>
-              <div class="action-buttons">
-                <button type="button" class="edit-btn" onclick="habilitarEdicaoAgendamento()">
-                  <i class="edit-icon"><img id="lapisAgendamento" src="/assets/Vector (3).png" alt="editar"/></i>
-                </button>
-                <button type="button" class="delete-btn" onclick="confirmarExclusaoAgendamento()">
-                  <i class="delete-icon"><img src="/assets/Vector (4).png" alt="excluir"/></i>
-                </button>
-              </div>
+            <div class="section-divider">Dados do Serviço</div>
+
+    <div class="modal-body">
+      <form id="formAgendarServico">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataServico">Data do serviço:</label>
+            <input
+              type="date"
+              id="dataServico"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="horaServico">Hora:</label>
+            <input type="time" id="horaServico" placeholder="HH:MM" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="valor">Valor Total:</label>
+            <input type="text" id="valor" placeholder="R$ 00,00" required />
+          </div>
+          <div class="form-group">
+            <label for="servico">Serviço:</label>
+            <select id="servico" required>
+              <option value="" selected disabled>Selecione o serviço</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="funcionario">Funcionário (CPF):</label>
+            <input
+              type="text"
+              id="funcionario"
+              placeholder="000.000.000-00"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="status">Status:</label>
+            <select id="status" required>
+              <option value="pendente" selected>Pendente</option>
+              <option value="concluido">Concluído</option>
+              <option value="em_andamento">Em andamento</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row formas-pagamento">
+          <div class="form-group">
+            <label>Forma de Pagamento:</label>
+            <div class="checkbox-group">
+              <label>
+                <input type="checkbox" name="pagamento" value="dinheiro" />
+                Dinheiro
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="pix" /> PIX
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="credito" />
+                Crédito
+              </label>
+              <label>
+                <input type="checkbox" name="pagamento" value="debito" /> Débito
+              </label>
             </div>
-  
-            <div class="form-row">
-              <div class="form-group">
-                <label for="servicoAgendamento">Serviço:</label>
-                <input type="text" id="servicoAgendamento" readonly />
-              </div>
-              <div class="form-group">
-                <label for="statusAgendamento">Status:</label>
-                <select id="statusAgendamento" disabled>
-                  <option value="Agendado">Agendado</option>
-                  <option value="Em andamento">Em andamento</option>
-                  <option value="Concluído">Concluído</option>
-                  <option value="Cancelado">Cancelado</option>
-                </select>
-              </div>
-            </div>
-  
-            <div class="form-row">
-              <div class="form-group">
-                <label for="veiculoAgendamento">Veículo:</label>
-                <input type="text" id="veiculoAgendamento" readonly />
-              </div>
-              <div class="form-group">
-                <label for="responsavelAgendamento">Responsável:</label>
-                <input type="text" id="responsavelAgendamento" readonly />
-              </div>
-            </div>
-  
-            <div class="form-row">
-              <div class="form-group" style="flex-basis: 100%">
-                <label>Funcionários Alocados:</label>
-                <div id="funcionariosAgendamento" class="funcionarios-list"></div>
-              </div>
-            </div>
-  
-            <div class="form-row">
-              <div class="form-group" style="flex-basis: 100%">
-                <label for="valorAgendamento">Valor Total:</label>
-                <input type="text" id="valorAgendamento" readonly />
-              </div>
-            </div>
-  
-            <div id="botoesEdicaoAgendamento" style="display: none">
-              <div class="form-btn-res">
-                <button type="button" class="save-btn" onclick="salvarAlteracoesAgendamento()">
-                  Salvar
-                </button>
-                <button type="button" class="cancel-btn" onclick="cancelarEdicaoAgendamento()">
-                  Cancelar
-                </button>
-              </div>
-            </div>
+          </div>
+        </div>
+      </div>
+
+        <div class="section-divider">Dados do Veículo</div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome do Cliente:</label>
+            <input
+              type="text"
+              id="nome"
+              placeholder="Insira o nome do Cliente"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input
+              type="text"
+              id="telefone"
+              placeholder="(XX) XXXXX-XXXX"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="dataEntrada">Data de entrada:</label>
+            <input
+              type="date"
+              id="dataEntrada"
+              placeholder="DD/MM/AAAA"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="tipoVeiculo">Tipo do veículo:</label>
+            <input
+              type="text"
+              id="tipoVeiculo"
+              placeholder="Categoria do veículo"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="modelo">Modelo:</label>
+            <input
+              type="text"
+              id="modelo"
+              placeholder="Insira o modelo"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="cor">Cor:</label>
+            <input type="text" id="cor" placeholder="Cor" required />
+          </div>
+          <div class="form-group">
+            <label for="ano">Ano:</label>
+            <input type="text" id="ano" placeholder="XXXX" required />
+          </div>
+          <div class="form-group">
+            <label for="placa">Placa:</label>
+            <input type="text" id="placa" placeholder="XXXX XXXX" required />
+          </div>
+        </div>
+            
           </form>
         </div>
       </div>
@@ -108,25 +182,25 @@
   </div>
   
   <script>
-    // Carrega os agendamentos ao abrir o modal
-    document.addEventListener("DOMContentLoaded", function() {
-      carregarAgendamentos();
+   
+   document.addEventListener("DOMContentLoaded", function() {
+       carregarAgendamentos2();
+       console.log("aaaaaa");
     });
   
     // Função para carregar os agendamentos no select
-    async function carregarAgendamentos() {
+    async function carregarAgendamentos2() {
       try {
-        const response = await fetch("/agendamentos/listar");
+        const response = await fetch("/servico/listar_agendamentos");
         if (response.ok) {
           const agendamentos = await response.json();
           const selectAgendamento = document.getElementById("agendamentoSelect");
   
           selectAgendamento.innerHTML = '<option value="" disabled selected>Selecione o agendamento</option>';
-  
           agendamentos.forEach(agendamento => {
             const option = document.createElement("option");
             option.value = agendamento.idagendamento;
-            option.textContent = `${formatarData(agendamento.data)} - ${agendamento.servico?.tiposervico || 'Sem serviço'}`;
+            option.textContent = agendamento.idplaca;
             selectAgendamento.appendChild(option);
           });
         }
@@ -134,6 +208,8 @@
         console.log("Carregando agendamentos...");
       }
     }
+
+
   
     // Consulta um agendamento específico
     async function consultarAgendamento() {
@@ -145,26 +221,41 @@
       }
   
       try {
-        const response = await fetch(`/agendamentos/consultar/${idAgendamento}`);
+        const response = await fetch(`/servico/agendamentos/${idAgendamento}`);
         if (!response.ok) throw new Error("Agendamento não encontrado.");
   
-        const { agendamento, funcionarios } = await response.json();
-  
+        const { agendamento, funcionario, veiculo, servico, venda } = await response.json();
+        console.log(agendamento);
         // Preenche os campos
-        document.getElementById("dataAgendamento").value = formatarData(agendamento.data);
-        document.getElementById("horaAgendamento").value = agendamento.hora || "Não informado";
-        document.getElementById("servicoAgendamento").value = agendamento.servico?.tiposervico || "Não informado";
-        document.getElementById("statusAgendamento").value = agendamento.status;
-        document.getElementById("veiculoAgendamento").value = agendamento.veiculo ? `${agendamento.veiculo.modelo} (${agendamento.veiculo.placa})` : "Não informado";
-        document.getElementById("responsavelAgendamento").value = agendamento.veiculo?.nomeResponsavel || "Não informado";
-        document.getElementById("valorAgendamento").value = agendamento.valor ? `R$ ${parseFloat(agendamento.valor).toFixed(2).replace(".", ",")}` : "R$ 0,00";
+        document.getElementById("dataServico").value = formatarData(agendamento.data);
+        document.getElementById("horaServico").value = agendamento.hora ;
+        document.getElementById("valor").value = `R$ ${parseFloat(agendamento.valor)
+            .toFixed(2)
+            .replace(".", ",")}`;
+        document.getElementById("servico").value = servico.tiposervico;
+        document.getElementById("funcionario").value = funcionario.cpf;
+        document.getElementById("status").value = agendamento.status;
+        // Preenche as formas de pagamento
+        const formasPagamento = venda.formapagamento; // Supondo que isso retorne um array como ["dinheiro", "credito"]
+        const checkboxes = document.querySelectorAll('input[name="pagamento"]');
+
+        checkboxes.forEach(checkbox => {
+            if (formasPagamento.includes(checkbox.value)) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+        });
+
+        // document.getElementById("veiculoAgendamento").value = veiculo.idplaca;
+        // document.getElementById("responsavelAgendamento").value = agendamento.veiculo?.nomeResponsavel || "Não informado";
   
-        // Preenche a lista de funcionários
-        const funcionariosDiv = document.getElementById("funcionariosAgendamento");
-        funcionariosDiv.innerHTML = funcionarios && funcionarios.length > 0 ? 
-          funcionarios.map(func => 
-            `<div class="funcionario-item">${func.nome} (${func.cpf})</div>`
-          ).join("") : "<div class='funcionario-item'>Nenhum funcionário alocado</div>";
+        // // Preenche a lista de funcionários
+        // const funcionariosDiv = document.getElementById("funcionariosAgendamento");
+        // funcionariosDiv.innerHTML = funcionarios && funcionarios.length > 0 ? 
+        //   funcionarios.map(func => 
+        //     `<div class="funcionario-item">${func.nome} (${func.cpf})</div>`
+        //   ).join("") : "<div class='funcionario-item'>Nenhum funcionário alocado</div>";
   
         // Mostra resultado e esconde consulta
         document.getElementById("telaConsultaAgendamento").style.display = "none";

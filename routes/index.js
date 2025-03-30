@@ -181,7 +181,7 @@ router.delete(
 
 
 // Rota para consultar agendamento específico
-router.get("/servico/agendamentos/:idagendamento", servicoController.consultar);
+router.get("/servico/agendamentos/:idagendamento", servicoController.consultarAgendamento);
 
 
 export default router;

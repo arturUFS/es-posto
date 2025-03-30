@@ -41,6 +41,7 @@ export const servicoController = {
         descricao,
       });
 
+
       res.json({
         message: "Serviço cadastrado com sucesso!",
         servico: novoServico,
@@ -174,6 +175,11 @@ export const servicoController = {
         valor: valor,
         cpf: cpfFuncionario,
         formapagamento: formaPagamento,
+        idagendamento: idAgendamento,
+      });
+
+      await FuncionarioAgendamento.create({
+        cpf: cpfFuncionario,
         idagendamento: idAgendamento,
       });
 
@@ -345,41 +351,40 @@ export const servicoController = {
 
       const agendamento = await Agendamento.findOne({
         where: { idagendamento },
-        include: [
-          {
-            model: Servico,
-            as: "servico",
-            attributes: ["tiposervico", "valor", "duracao"],
-          },
-          {
-            model: Veiculo,
-            as: "veiculo",
-            attributes: ["nomeResponsavel", "telefone", "modelo", "cor"],
-          },
-        ],
       });
-  
+      
+      const servico = await Servico.findOne({
+        where: { idservico: agendamento.idservico },
+      });
   
       if (!agendamento) {
         return res.status(404).json({ message: "Agendamento não encontrado" });
       }
-  
+      
+      const veiculo = await Veiculo.findByPk(agendamento.placa);
   
       // Buscar funcionários associados ao agendamento
-      const funcionarios = await FuncionarioAgendamento.findAll({
-        where: { idservico: agendamento.idservico },
-        include: [
-          {
-            model: Funcionario,
-            attributes: ["nome", "cpf", "telefone"],
-          },
-        ],
-      });
+      const funcionarioAgendamento = await FuncionarioAgendamento.findOne(
+        {
+            where: { idagendamento: agendamento.idagendamento },
+        }
+      );
+
+      const venda = await Venda.findOne(
+        {
+            where: { idagendamento: agendamento.idagendamento },
+        }
+      );
+
+      const funcionario = await Funcionario.findByPk(funcionarioAgendamento.cpf);
   
   
       res.json({
         agendamento,
-        funcionarios: funcionarios.map(f => f.funcionario),
+        funcionario,
+        veiculo,
+        servico, 
+        venda
       });
     } catch (error) {
       console.error("Erro ao consultar agendamento:", error);
