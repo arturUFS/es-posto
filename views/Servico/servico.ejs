@@ -19,7 +19,11 @@
     />
     <link
       rel="stylesheet"
-      href="/assets/css/modais-servico/modal_listar_agendamentos.css"
+      href="/assets/css/modais-servico/consultar_agendamento.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/assets/css/modais-servico/agendar_serv.css"
     />
     <style>
       .menu li:nth-child(4) a {
@@ -59,9 +63,11 @@
       <button id="consultar-agendamento">Consultar agendamento</button>
       <button id="listar-agendamentos">Listar Agendamentos</button>
     </div>
-    <%- include('modal_cadastrar') %><%- include('modal_agendar_servico') %> <%-
-    include('modal_listar_agendamentos') %> <%-
-    include('modal_consultar_servico') %>
+    <%- include('modal_cadastrar') %>
+    <%- include('modal_agendar_servico') %>
+    <%- include('modal_consultar_serv') %>
+    <%- include('modal_consultar_agend') %>
+    <%- include('modal_listar_agendamentos') %>
   </body>
   <script>
     document.getElementById("logoutButton").addEventListener("click", () => {
