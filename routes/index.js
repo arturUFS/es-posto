@@ -142,7 +142,7 @@ router.post("/servico/agendarservico",servicoController.agendar_servico);
 //Rota para listar serviços
 router.get("/servico/listar", servicoController.listar);
 
-//Rota para listar agendamentos
+//Rota para consultar agendamentos
 router.get("servicos/listar_agendamentos", servicoController.listar_agendamentos);
 
 // Rota para consultar agendamento específico

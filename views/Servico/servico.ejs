@@ -11,11 +11,19 @@
     />
     <link
       rel="stylesheet"
-      href="/assets/css/modais-servico/modal_agendar_servico.css"
+      href="/assets/css/modais-servico/agendar_servico.css"
+      />
+    <link
+      rel="stylesheet"
+      href="/assets/css/modais-servico/consultar_servico.css"
     />
     <link
       rel="stylesheet"
-      href="/assets/css/modais-servico/modal_listar_agendamentos.css"
+      href="/assets/css/modais-servico/consultar_agendamento.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/assets/css/modais-servico/agendar_serv.css"
     />
     <style>
       .menu li:nth-child(4) a {
@@ -52,11 +60,14 @@
       <button id="cadastrar-servico">Cadastrar Serviço</button>
       <button id="agendar-servico">Agendar Serviço</button>
       <button id="consultar-servico">Consultar Serviço</button>
-      <button id="consultar-agendamento">Consultar agendamento</button>
+      <button id="consultar-agendamento">Consultar Agendamento</button>
       <button id="listar-agendamentos">Listar Agendamentos</button>
       <button id="gerar-relatorio">Gerar relatório de serviços realizados</button>
     </div>
-    <%- include('modal_cadastrar') %><%- include('modal_agendar_servico') %>
+    <%- include('modal_cadastrar') %>
+    <%- include('modal_agendar_servico') %>
+    <%- include('modal_consultar_serv') %>
+    <%- include('modal_consultar_agend') %>
     <%- include('modal_listar_agendamentos') %>
   </body>
   <script>

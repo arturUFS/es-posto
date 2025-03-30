@@ -1,0 +1,269 @@
+<div id="modalConsultarServico" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="back-button" onclick="fecharOuVoltarServ()">
+          <i class="arrow-left"><img src="/assets/Icon (1).png" alt="voltar"/></i>
+        </button>
+        <h2>Consultar Serviço</h2>
+        <button class="home-button" onclick="window.location.href='/home'">
+          <i class="home-icon"><img src="/assets/home-lg-alt 1.png" alt="home"/></i>
+        </button>
+      </div>
+  
+      <div class="modal-body">
+        <!-- Tela de Consulta -->
+        <div id="telaConsultaServ" class="center-content">
+          <form id="consultaFormServ">
+            <div class="form-group">
+              <label for="servico2">Serviço:</label>
+              <select id="servico2" required>
+                <option value="" disabled selected>Selecione o serviço</option>
+              </select>
+            </div>
+            <div class="form-btn-cons" style="margin-top: 20px">
+              <button
+                type="button"
+                class="consultar-btn"
+                onclick="consultarServico()"
+              >
+                Consultar
+              </button>
+            </div>
+          </form>
+        </div>
+  
+        <!-- Tela de Resultado -->
+        <div id="resultadoConsultaServ" style="display: none;">
+          <form id="formConsultarServico">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nomeServico2">Nome:</label>
+                <input type="text" id="nomeServico2" readonly />
+              </div>
+              <div class="form-group">
+                <label for="valorServico2">Valor:</label>
+                <input type="text" id="valorServico2" readonly />
+              </div>
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="edit-btn"
+                  onclick="habilitarEdicaoServ()"
+                >
+                  <i class="edit-icon"
+                    ><img id="lapisServ" src="/assets/Vector (3).png" alt="editar"
+                  /></i>
+                </button>
+                <button type="button" class="delete-btn" onclick="confirmarExclusaoServ()">
+                  <i class="delete-icon"
+                    ><img src="/assets/Vector (4).png" alt="excluir"
+                  /></i>
+                </button>
+              </div>
+            </div>
+  
+            <div class="form-row">
+              <div class="form-group" style="flex-basis: 100%">
+                <label for="descricaoServico2">Descrição:</label>
+                <textarea
+                  id="descricaoServico2"
+                  rows="4"
+                  readonly
+                  style="resize: none"
+                ></textarea>
+              </div>
+            </div>
+  
+            <div id="botoesEdicaoServ" style="display: none">
+              <div class="form-btn-res">
+                <button
+                  type="button"
+                  class="save-btn"
+                  onclick="salvarAlteracoesServ()"
+                >
+                  Salvar
+                </button>
+                <button
+                  type="button"
+                  class="cancel-btn"
+                  onclick="cancelarEdicaoServ()"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Formatação para o campo de valor
+    document.getElementById("valorServico2").addEventListener("input", function (e) {
+      let value = e.target.value.replace(/\D/g, "");
+      value = (parseInt(value || "0") / 100).toFixed(2).replace(".", ",");
+      e.target.value = "R$ " + value;
+    });
+  
+    // Carrega os serviços ao abrir o modal
+    document.addEventListener("DOMContentLoaded", function() {
+      carregarServicos();
+    });
+  
+    // Função para carregar os serviços no select
+    async function carregarServicos() {
+      try {
+        const response = await fetch("/servicos/listar");
+        if (response.ok) {
+          const servicos = await response.json();
+          const selectServico = document.getElementById("servico2");
+          selectServico.innerHTML = '<option value="" disabled selected>Selecione o serviço</option>';
+  
+          servicos.forEach((servico) => {
+            const option = document.createElement("option");
+            option.value = servico.idservico;
+            option.textContent = servico.nome;
+            selectServico.appendChild(option);
+          });
+        }
+      } catch (error) {
+        console.log("Carregando serviços...");
+      }
+    }
+  
+    // Função para consultar o serviço selecionado
+    async function consultarServico() {
+      const idServico = document.getElementById("servico2").value;
+  
+      if (!idServico) {
+        alert("Por favor, selecione um serviço.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/servicos/consultar/${idServico}`);
+        if (!response.ok) {
+          throw new Error("Serviço não encontrado.");
+        }
+  
+        const servico = await response.json();
+  
+        document.getElementById("nomeServico2").value = servico.nome;
+        const valor = servico.valor ? parseFloat(servico.valor) : 0;
+        document.getElementById("valorServico2").value = `R$ ${valor.toFixed(2).replace(".", ",")}`;
+        document.getElementById("descricaoServico2").value = servico.descricao || "";
+  
+        document.getElementById("telaConsultaServ").style.display = "none";
+        document.getElementById("resultadoConsultaServ").style.display = "block";
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função para habilitar edição dos campos
+    function habilitarEdicaoServ() {
+      document.getElementById("nomeServico2").readOnly = false;
+      document.getElementById("valorServico2").readOnly = false;
+      document.getElementById("descricaoServico2").readOnly = false;
+      document.getElementById("botoesEdicaoServ").style.display = "block";
+      document.getElementById("lapisServ").style.visibility = "hidden";
+    }
+  
+    // Função para salvar as alterações
+    async function salvarAlteracoesServ() {
+      const idServico = document.getElementById("servico2").value;
+      const nome = document.getElementById("nomeServico2").value;
+      const valor = document.getElementById("valorServico2").value
+        .replace("R$ ", "")
+        .replace(",", ".");
+      const descricao = document.getElementById("descricaoServico2").value;
+  
+      if (!nome || !valor) {
+        alert("Por favor, preencha todos os campos obrigatórios.");
+        return;
+      }
+  
+      try {
+        const response = await fetch(`/servicos/atualizar/${idServico}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nome,
+            valor: parseFloat(valor),
+            descricao
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erro ao atualizar o serviço.");
+        }
+  
+        alert("Serviço atualizado com sucesso!");
+        cancelarEdicaoServ();
+        fecharOuVoltarServ();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função para cancelar a edição
+    function cancelarEdicaoServ() {
+      document.getElementById("nomeServico2").readOnly = true;
+      document.getElementById("valorServico2").readOnly = true;
+      document.getElementById("descricaoServico2").readOnly = true;
+      document.getElementById("botoesEdicaoServ").style.display = "none";
+      document.getElementById("lapisServ").style.visibility = "visible";
+    }
+  
+    // Função para confirmar exclusão do serviço
+    function confirmarExclusaoServ() {
+      const idServico = document.getElementById("servico2").value;
+      
+      if (!idServico) {
+        alert("Nenhum serviço selecionado para exclusão.");
+        return;
+      }
+  
+      if (confirm("Tem certeza que deseja excluir este serviço?")) {
+        excluirServico(idServico);
+      }
+    }
+  
+    // Função para excluir o serviço
+    async function excluirServico(idServico) {
+      try {
+        const response = await fetch(`/servicos/excluir/${idServico}`, {
+          method: "DELETE"
+        });
+  
+        if (!response.ok) {
+          throw new Error("Erro ao excluir o serviço.");
+        }
+  
+        alert("Serviço excluído com sucesso!");
+        fecharOuVoltarServ();
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+  
+    // Função para fechar o modal ou voltar para a tela de consulta
+    function fecharOuVoltarServ() {
+      const resultado = document.getElementById("resultadoConsultaServ");
+      const consulta = document.getElementById("telaConsultaServ");
+  
+      if (resultado.style.display !== "none") {
+        resultado.style.display = "none";
+        consulta.style.display = "flex";
+        cancelarEdicaoServ();
+      } else {
+        document.getElementById("modalConsultarServico").style.display = "none";
+      }
+  
+      document.getElementById("consultaFormServ").reset();
+      document.getElementById("formConsultarServico").reset();
+    }
+  </script>
