@@ -65,10 +65,11 @@ Arquivo de variáveis de ambiente, utilizado para armazenar credenciais e config
    ```sh
    npm start
 
-## Observações
 
-1. A rota '/" vai listar os usuarios e senhas afim de teste para avaliação
    ```
    Para rodar a aplicação use ```npm start``` ou ```npm run dev``` no terminal.
    Quando aparecer "Servidor rodando na porta 3000", abra um navegador seu e abra o link http://localhost:3000/.
 
+## Observações
+
+1. A rota '/" vai listar os usuarios e senhas afim de teste para avaliação
