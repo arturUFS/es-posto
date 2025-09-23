@@ -1,6 +1,7 @@
 # Sistema de Gerenciamento do Posto de Gasolina
 
-Projeto desenvolvido durante a disciplina de Engenharia de Software I e Engenharia de Software II do curso de Ciência da Computação da Universidade Federal de Sergipe.
+Projeto desenvolvido em equipe durante a disciplina de Engenharia de Software (I e II) do curso de Ciência da Computação da Universidade Federal de Sergipe. 
+Sistema de Gestão de um Posto de Gasolina fictício, com funcionalidades CRUD para venda de combustível, produtos e serviços e gerenciamento de funcionários, aplicando práticas de Engenharia de Software, Metodologia Ágil e Arquitetura 4+1.
 
 # Integrantes da Equipe
 
@@ -10,6 +11,15 @@ Projeto desenvolvido durante a disciplina de Engenharia de Software I e Engenhar
 - **Lanna Luara Novaes Silva** ([Perfil no Github](github.com/lannalua))
 - **Lavínia Louise Rosa Santos** ([Perfil no Github](github.com/lavinialouisee))
 - **Luis Eduardo Cardoso de Santana** ([Perfil no Github](github.com/luisedu2106))
+
+# Ferramentas e Metodologias Utilizadas
+- JavaScript
+- Node.js
+- HTML e CSS
+- Express
+- PostgreSQL ORM Sequelize
+- Arquitetura MVC
+- Modelagem UML
 
 # Estrutura do Projeto
 
